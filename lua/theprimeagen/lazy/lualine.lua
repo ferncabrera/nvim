@@ -33,7 +33,7 @@ return {
               sections = {
                 lualine_a = {'mode'},
                 lualine_b = {'branch', 'diff', 'diagnostics'},
-                lualine_c = {'filename', window },
+                lualine_c = {'filename'},
                 lualine_x = {'encoding', 'fileformat', 'filetype', 'lsp_status' },
                 lualine_y = {'progress'},
                 lualine_z = {'location'}
@@ -41,14 +41,23 @@ return {
               inactive_sections = {
                 lualine_a = {},
                 lualine_b = {"filename"},
-                lualine_c = { window },
-                lualine_x = {'location'},
-                lualine_y = {},
-                lualine_z = {}
+                lualine_c = {},
+                lualine_x = {},
+                lualine_y = {'progress'},
+                lualine_z = {'location'}
               },
-              tabline = {},
-              winbar = {},
-              inactive_winbar = {},
+              tabline = {
+                -- lualine_a = {"filename"},
+                -- lualine_b = { window },
+                },
+              winbar = {
+                lualine_a = {},
+                lualine_z = { window },
+                },
+              inactive_winbar = {
+                lualine_a = {},
+                lualine_z = { window },
+                },
                 extensions =
                     {
                         "oil",
