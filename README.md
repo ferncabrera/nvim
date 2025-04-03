@@ -1,4 +1,6 @@
 ### Fernando's init.lua
-Prerequisite: install [ripgrep](https://github.com/BurntSushi/ripgrep).
+Prerequisites: 
+install [ripgrep](https://github.com/BurntSushi/ripgrep).
+ensure you have yarn installed
 
 I think that this should just work.... :D
