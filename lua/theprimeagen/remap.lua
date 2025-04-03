@@ -29,15 +29,17 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 
 vim.keymap.set("n", "<leader>Y", [["+Y]])
--- vim.opt. clipboard = "unnamedplus"
---     if vim.fn.has('wsl') == 1 then
---        vim.api.nvim_create_autocmd('TextYankPost', {
---        group = vim.api.nvim_create_augroup('Yank', { clear = true }),
---        callbac
--- 
---     end
--- Delete to void register
+vim.opt.clipboard = "unnamedplus"
+if vim.fn.has('wsl') == 1 then
+    vim.api.nvim_create_autocmd('TextYankPost', {
+        group = vim.api.nvim_create_augroup('Yank', { clear = true }),
+        callback = function()
+            vim.fn.system('clip.exe', vim.fn.getreg('"'))
+        end
+    })
+end
 
+-- Delete to void register
 vim.keymap.set({ "n", "v" }, "<leader>d", "\"_d")
 
 -- This is going to get me cancelled
