@@ -34,7 +34,12 @@ return {
                 "lua_ls",
                 "rust_analyzer",
                 "gopls",
+                "ts_ls",
+                "eslint",
+                "html",
+                "cssls",
             },
+            automatic_installation = true,
             handlers = {
                 function(server_name) -- default handler (optional)
                     require("lspconfig")[server_name].setup {
@@ -56,7 +61,6 @@ return {
                     })
                     vim.g.zig_fmt_parse_errors = 0
                     vim.g.zig_fmt_autosave = 0
-
                 end,
                 ["lua_ls"] = function()
                     local lspconfig = require("lspconfig")
