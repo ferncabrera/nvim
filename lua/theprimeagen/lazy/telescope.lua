@@ -9,6 +9,12 @@ return {
 
         telescope.setup({
             extensions = {
+                oil = {
+                    hidden = true,
+                    debug = false,
+                    no_ignore = false,
+                    show_preview = true,
+                },
                 media_files = {
                     -- filetypes whitelist
                     -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
@@ -25,6 +31,7 @@ return {
 
         telescope.load_extension("file_browser")
         telescope.load_extension("media_files")
+        telescope.load_extension("oil")
 
         local builtin = require("telescope.builtin")
 
@@ -35,6 +42,8 @@ return {
         -- For raw folder and git project searches
         vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
         vim.keymap.set('n', '<leader>pg', builtin.git_files, {})
+        vim.keymap.set('n', '<leader>pb', builtin.buffers, {})
+        vim.keymap.set('n', '<leader>pl', builtin.lsp_document_symbols, {})
 
         -- For quickly searching words that the cursor is hovering over
         vim.keymap.set('n', '<leader>pws', function()
@@ -58,9 +67,14 @@ return {
         -- New key mapping for file browser previewer
         vim.keymap.set('n', '<leader>fb', builtin.file_browser, { desc = "File Browser" })
 
+         -- New key mapping for oil-telescope
+        vim.keymap.set('n', '<leader>-', function()
+            telescope.extensions.oil.oil()
+        end, { desc = "Oil-Telescope" })
+
         -- New key mapping for media files
         vim.keymap.set('n', '<leader>fm', function()
-            require("telescope").extensions.media_files.media_files()
+            telescope.extensions.media_files.media_files()
         end, { desc = "Media Files" })
     end,
 }
