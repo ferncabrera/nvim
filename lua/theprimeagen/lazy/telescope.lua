@@ -3,17 +3,40 @@ return {
     tag = "0.1.5",
     dependencies = {
         "nvim-lua/plenary.nvim",
-        "ahmedkhalf/project.nvim" -- Add project.nvim as a dependency
     },
     config = function()
-        require('telescope').setup({})
+        local telescope = require("telescope")
 
-        -- Load the project.nvim extension
-        require('telescope').load_extension('projects')
+        telescope.setup({
+            extensions = {
+                media_files = {
+                    -- filetypes whitelist
+                    -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+                    filetypes = { "png", "webp", "jpg", "jpeg" },
+                    -- find command (defaults to `fd`)
+                    find_cmd = "rg"
+                },
+                file_browser = {
+                    theme = "ivy",
+                    hijack_netrw = true, -- disables netrw in favor of telescope-file-browser
+                },
+            },
+        })
 
-        local builtin = require('telescope.builtin')
+        telescope.load_extension("file_browser")
+        telescope.load_extension("media_files")
+
+        local builtin = require("telescope.builtin")
+
+        --! REQUIRED SINCE FOR SOME REASON Projects.nvim CALLS IT AS A BUILTIN
+        -- Reassign the file_browser function into the builtin table.
+        builtin.file_browser = telescope.extensions.file_browser.file_browser
+
+        -- For raw folder and git project searches
         vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
         vim.keymap.set('n', '<leader>pg', builtin.git_files, {})
+
+        -- For quickly searching words that the cursor is hovering over
         vim.keymap.set('n', '<leader>pws', function()
             local word = vim.fn.expand("<cword>")
             builtin.grep_string({ search = word })
@@ -22,13 +45,22 @@ return {
             local word = vim.fn.expand("<cWORD>")
             builtin.grep_string({ search = word })
         end)
+
+        -- Live and efficient greps
         vim.keymap.set('n', '<leader>ps', function()
             builtin.grep_string({ search = vim.fn.input("Grep > ") })
         end)
+        vim.keymap.set('n', '<leader>lg', builtin.live_grep, { desc = 'Telescope live grep' })
+
+        -- Some quick reference links
         vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
 
-        -- Optionally set a keymap to open the projects list
-        vim.keymap.set('n', '<leader>pp', require('telescope').extensions.projects.projects, {})
-    end
-}
+        -- New key mapping for file browser previewer
+        vim.keymap.set('n', '<leader>fb', builtin.file_browser, { desc = "File Browser" })
 
+        -- New key mapping for media files
+        vim.keymap.set('n', '<leader>fm', function()
+            require("telescope").extensions.media_files.media_files()
+        end, { desc = "Media Files" })
+    end,
+}
