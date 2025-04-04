@@ -62,7 +62,7 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 -- Easy logging
 vim.keymap.set(
     "n",
-    "<leader>ef",
+    "<leader>lo",
     "oif err != nil {<CR>}<Esc>Olog.Fatalf(\"error: %s\\n\", err.Error())<Esc>jj"
 )
 
