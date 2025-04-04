@@ -37,7 +37,7 @@ return {
         "ts_ls",
         "html",
         "cssls",
-        "astrolsp"
+        "astro"
       },
       automatic_installation = true,
       handlers = {
