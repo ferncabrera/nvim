@@ -5,8 +5,8 @@
 vim.keymap.set("n", "<leader>ww", ":w<CR>", { desc = "Save" })
 
 -- Take lines and move them (VSCode opt/alt functionality)
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+-- vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+-- vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- For concating(???) strings to the same line but preserving mouse position
 vim.keymap.set("n", "J", "mzJ`z")
