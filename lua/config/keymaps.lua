@@ -19,19 +19,25 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 -- vim.keymap.set("x", "<leader>pp", [["_dP]])
 
 -- next greatest remap ever : asbjornHaland
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
-vim.keymap.set("n", "<leader>Y", [["+Y]])
+vim.keymap.set({ "n", "v" }, "<leader>ty", [["+y]], { desc = "greatest remap ever" })
+vim.keymap.set("n", "<leader>tY", [["+Y]], { desc = "greatest remap ever (line-mode)" })
 
 -- Delete to void register
 -- vim.keymap.set({ "n", "v" }, "<leader>pd", '"_d', { desc = "primeage void register delete" })
 
 -- Sweet regex string replacement and easily create executable file!!!
--- vim.keymap.set(
---   "n",
---   "<leader>ps",
---   [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
---   { desc = "primeagen string swap!!!" }
--- )
+vim.keymap.set(
+  "n",
+  "<leader>ts",
+  [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+  { desc = "primeagen string swap" }
+)
+vim.keymap.set(
+  "n",
+  "<leader>tS",
+  [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]],
+  { desc = "primeagen string swap (prompt)" }
+)
 -- vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 -- Just in case
