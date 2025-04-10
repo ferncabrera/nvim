@@ -46,3 +46,6 @@ vim.keymap.set("n", "Q", "<nop>")
 -- Exit easy!!!!!
 vim.keymap.set("i", "jj", "<Esc>", { noremap = false })
 vim.keymap.set("i", "jk", "<Esc>", { noremap = false })
+
+-- C root
+vim.keymap.set("n", "<leader>tr", "<cmd>LazyRoot<CR>", { desc = "LazyRoot" })
