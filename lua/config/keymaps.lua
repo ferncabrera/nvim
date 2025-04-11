@@ -19,8 +19,8 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 -- vim.keymap.set("x", "<leader>pp", [["_dP]])
 
 -- next greatest remap ever : asbjornHaland
-vim.keymap.set({ "n", "v" }, "<leader>ty", [["+y]], { desc = "greatest remap ever" })
-vim.keymap.set("n", "<leader>tY", [["+Y]], { desc = "greatest remap ever (line-mode)" })
+-- vim.keymap.set({ "n", "v" }, "<leader>ty", [["+y]], { desc = "greatest remap ever" })
+-- vim.keymap.set("n", "<leader>tY", [["+Y]], { desc = "greatest remap ever (line-mode)" })
 
 -- Delete to void register
 -- vim.keymap.set({ "n", "v" }, "<leader>pd", '"_d', { desc = "primeage void register delete" })
