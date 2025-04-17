@@ -38,7 +38,7 @@ vim.keymap.set(
   [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]],
   { desc = "primeagen string swap (prompt)" }
 )
--- vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+vim.keymap.set("n", "<leader>tx", "<cmd>!chmod +x %<CR>", { silent = true })
 
 -- Just in case
 vim.keymap.set("n", "Q", "<nop>")
