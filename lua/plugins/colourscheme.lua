@@ -1,12 +1,13 @@
+-- lua/plugins/colorschemes.lua
 return {
-  -- add gruvbox
-  { "ellisonleao/gruvbox.nvim" },
-
-  -- Configure LazyVim to load gruvbox
   {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "gruvbox",
-    },
+    "rebelot/kanagawa.nvim",
+    lazy = false, -- load immediately (so our colorscheme isn’t overridden later)
+    priority = 1000, -- load before any other colorscheme
+    config = function()
+      require("config.kanagawa")
+
+      vim.cmd("colorscheme kanagawa") -- :contentReference[oaicite:0]{index=0}
+    end,
   },
 }
