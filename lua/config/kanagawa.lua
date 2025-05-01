@@ -31,27 +31,38 @@ kanagawa.setup({
   },
 
   overrides = function(colors)
-    local c = colors.theme
+    local theme = colors.theme
+    local makeDiagnosticColor = function(color)
+      local c = require("kanagawa.lib.color")
+      return { fg = color, bg = c(color):blend(theme.ui.bg, 0.95):to_hex() }
+    end
     return {
-      WinSeparator = { fg = c.ui.border, bg = c.ui.bg },
-      Pmenu = { fg = c.ui.shade0, bg = c.ui.bg_p1 }, -- add `blend = vim.o.pumblend` to enable transparency,,
-      PmenuSel = { fg = "NONE", bg = c.ui.bg_p2 },
-      PmenuSbar = { bg = c.ui.bg_m1 },
-      PmenuThumb = { bg = "#C0A36E" },
+      DiagnosticVirtualTextHint = makeDiagnosticColor(theme.diag.hint),
+      DiagnosticVirtualTextInfo = makeDiagnosticColor(theme.diag.info),
+      DiagnosticVirtualTextWarn = makeDiagnosticColor(theme.diag.warning),
+      DiagnosticVirtualTextError = makeDiagnosticColor(theme.diag.error),
+
+      WinSeparator = { fg = theme.ui.border, bg = theme.ui.bg },
+
+      Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 }, -- add `blend = vim.o.pumblend` to enable transparency
+      PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+      PmenuSbar = { bg = theme.ui.bg_m1 },
+      PmenuThumb = { bg = theme.ui.bg_p2 },
+
       BlinkCmpMenuBorder = { fg = "", bg = "" },
 
-      -- LineNr = { fg = "#C0A36E", bg = "NONE" },
       CursorLineNr = { fg = colors.palette.sakuraPink, bg = "NONE" },
+
       NormalFloat = { bg = "none" },
       FloatBorder = { bg = "none" },
       FloatTitle = { bg = "none" },
 
       -- A “dark” Normal highlight with dimmed fg for use in e.g. terminals
-      NormalDark = { fg = c.ui.fg_dim, bg = c.ui.bg_m3 },
+      NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
 
       -- Popular float-based plugins (Lazy, Mason)
-      LazyNormal = { fg = c.ui.fg_dim, bg = c.ui.bg_m3 },
-      MasonNormal = { fg = c.ui.fg_dim, bg = c.ui.bg_m3 },
+      LazyNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
+      MasonNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
     }
   end,
 })

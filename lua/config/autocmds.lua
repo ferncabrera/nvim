@@ -6,3 +6,9 @@
 --
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+
+-- Set highlight for matching brackets/parentheses/quotes
+vim.api.nvim_set_hl(0, "MatchParen", { fg = "#FFFFFF", bg = "#B02669", bold = true })
+
+-- Set highlight for the cursor
+-- vim.api.nvim_set_hl(0, "Cursor", { fg = "#000000", bg = "#00FF00" })
