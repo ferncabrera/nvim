@@ -5,7 +5,7 @@ return {
       completion = {
         menu = {
           border = "rounded",
-          winblend = vim.o.pumblend,
+          -- winblend = vim.o.pumblend,
         },
         documentation = {
           window = {

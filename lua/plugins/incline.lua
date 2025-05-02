@@ -1,9 +1,9 @@
 return {
   "b0o/incline.nvim",
   event = "BufReadPre",
-  priority = 1200,
+  priority = 999,
   config = function()
-    vim.api.nvim_set_hl(0, "InclineModified", { fg = "#B02669" })
+    vim.api.nvim_set_hl(0, "InclineModified", { fg = "#FFFFFF", bg = "#B02669" })
     require("incline").setup({
       -- highlight = {
       --   groups = {
@@ -17,7 +17,7 @@ return {
       },
       render = function(props)
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-        local modified_icon = vim.bo[props.buf].modified and "[󰦒] " or ""
+        local modified_icon = vim.bo[props.buf].modified and "[󰦒]" or ""
 
         local function get_git_diff()
           local icons = { removed = "", changed = "", added = "" }
@@ -60,7 +60,7 @@ return {
           { get_git_diff() },
           { icon, guifg = color },
           { " " },
-          { { modified_icon, group = "InclineModified" }, filename },
+          { { modified_icon, group = "InclineModified" }, " ", filename },
         }
       end,
     })
