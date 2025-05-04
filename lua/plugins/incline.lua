@@ -4,7 +4,10 @@ return {
   priority = 999,
   config = function()
     local colors = require("kanagawa.colors").setup()
-    vim.api.nvim_set_hl(0, "InclineModified", { fg = colors.palette.sumiInk0, bg = colors.palette.sakuraPink })
+    vim.api.nvim_set_hl(0, "InclineModified", {
+      -- bg = colors.palette.sakuraPink,
+      -- fg = colors.palette.sumiInk0,
+    })
     require("incline").setup({
       ignore = {
         floating_wins = false,
@@ -16,12 +19,12 @@ return {
           return wintype ~= ""
         end,
       },
-      -- highlight = {
-      --   groups = {
-      --     InclineNormal = { guibg = colors.palette.sakuraPink, guifg = colors.palette.sumiInk0 },
-      --     InclineNormalNC = { guibg = colors.palette.oniViolet, guifg = colors.palette.fujiWhite },
-      --   },
-      -- },
+      highlight = {
+        groups = {
+          InclineNormal = { guibg = colors.palette.peachRed, guifg = colors.palette.sumiInk0 },
+          InclineNormalNC = { guibg = colors.palette.oniViolet, guifg = colors.palette.fujiWhite },
+        },
+      },
       window = { margin = { vertical = 0, horizontal = 1 } },
       hide = {
         cursorline = false,
@@ -67,8 +70,8 @@ return {
         local icon, color = require("nvim-web-devicons").get_icon_color(filename)
 
         return {
-          { get_diagnostic_label() },
-          { get_git_diff() },
+          -- { get_diagnostic_label() },
+          -- { get_git_diff() },
           { icon, guifg = color },
           { " " },
           { { modified_icon, group = "InclineModified" }, " ", filename },
