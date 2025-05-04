@@ -3,12 +3,23 @@ return {
   event = "BufReadPre",
   priority = 999,
   config = function()
-    vim.api.nvim_set_hl(0, "InclineModified", { fg = "#FFFFFF", bg = "#B02669" })
+    local colors = require("kanagawa.colors").setup()
+    vim.api.nvim_set_hl(0, "InclineModified", { fg = colors.palette.sumiInk0, bg = colors.palette.sakuraPink })
     require("incline").setup({
+      ignore = {
+        floating_wins = false,
+        wintypes = function(winid, wintype)
+          local zen_view = package.loaded["zen-mode.view"]
+          if zen_view and zen_view.is_open() then
+            return winid ~= zen_view.win
+          end
+          return wintype ~= ""
+        end,
+      },
       -- highlight = {
       --   groups = {
-      --     InclineNormal = { guibg = colors.magenta500, guifg = colors.base04 },
-      --     InclineNormalNC = { guifg = colors.violet500, guibg = colors.base03 },
+      --     InclineNormal = { guibg = colors.palette.sakuraPink, guifg = colors.palette.sumiInk0 },
+      --     InclineNormalNC = { guibg = colors.palette.oniViolet, guifg = colors.palette.fujiWhite },
       --   },
       -- },
       window = { margin = { vertical = 0, horizontal = 1 } },
