@@ -1,6 +1,6 @@
 local discipline = require("fern.discipline")
 
-discipline.cowboy()
+-- discipline.cowboy()
 
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
@@ -16,8 +16,18 @@ vim.keymap.set("n", "<leader>ww", ":w<CR>", { desc = "Save" })
 vim.keymap.set("n", "J", "mzJ`z")
 
 -- For jumping up and down the page
--- vim.keymap.set("n", "<C-d>", "<C-d>zz")
--- vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
+-- For diffing all open windows
+vim.keymap.set("n", "<leader>td", function()
+  local diff = vim.wo.diff
+  if diff then
+    vim.cmd("diffoff!")
+  else
+    vim.cmd("windo diffthis")
+  end
+end, { desc = "Toggle diff for all windows" })
 
 -- greatest remap ever
 -- vim.keymap.set("x", "<leader>pp", [["_dP]])
