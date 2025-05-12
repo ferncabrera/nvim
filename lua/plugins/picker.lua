@@ -17,7 +17,7 @@ return {
           },
         },
         explorer = {
-          ignored = true,
+          ignored = false,
           hidden = true,
           exclude = {},
         },
