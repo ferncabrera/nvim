@@ -2,6 +2,9 @@ return {
   {
     "saghen/blink.cmp",
     opts = {
+      keymap = {
+        preset = "super-tab",
+      },
       completion = {
         menu = {
           border = "rounded",
@@ -14,6 +17,7 @@ return {
         },
       },
       signature = {
+        enabled = true,
         window = {
           winblend = vim.o.pumblend,
         },
