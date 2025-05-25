@@ -2,8 +2,8 @@ return {
   "sphamba/smear-cursor.nvim",
 
   opts = {
-    stiffness = 0.94, -- closer to 1 = faster convergence
-    trailing_stiffness = 0.94, -- also closer to 1 for quicker smear disappearance
+    stiffness = 0.6,
+    trailing_stiffness = 0.49,
     -- Smear cursor when switching buffers or windows.
     smear_between_buffers = true,
     -- Smear cursor when moving within line or to neighbor lines.
