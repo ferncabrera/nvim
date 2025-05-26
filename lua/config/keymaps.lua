@@ -63,3 +63,7 @@ vim.keymap.set("i", "jk", "<Esc>", { noremap = false })
 
 -- C root
 vim.keymap.set("n", "<leader>tr", "<cmd>LazyRoot<CR>", { desc = "LazyRoot" })
+
+-- Better resizing
+vim.keymap.set("n", "<leader>w>", "<cmd>vertical resize +20<CR>", { desc = "Increase window width (20)" })
+vim.keymap.set("n", "<leader>w<", "<cmd>vertical resize -20<CR>", { desc = "Decrease window width (20)" })
