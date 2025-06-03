@@ -9,3 +9,5 @@
 
 -- Set highlight for matching brackets/parentheses/quotes
 vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
+
+vim.opt.relativenumber = false
