@@ -6,7 +6,7 @@ return {
     local colors = require("kanagawa.colors").setup()
     vim.api.nvim_set_hl(0, "InclineModified", {
       -- bg = colors.palette.sakuraPink,
-      -- fg = colors.palette.sumiInk0,
+      fg = "#EEF5FF",
     })
     require("incline").setup({
       ignore = {
@@ -21,8 +21,8 @@ return {
       },
       highlight = {
         groups = {
-          InclineNormal = { guibg = colors.palette.peachRed, guifg = colors.palette.sumiInk0 },
-          InclineNormalNC = { guibg = colors.palette.oniViolet, guifg = colors.palette.fujiWhite },
+          InclineNormal = { guibg = "#d27e99", guifg = "#16161d" },
+          InclineNormalNC = { guibg = "#938aa9", guifg = "#16161d" },
         },
       },
       window = { margin = { vertical = 0, horizontal = 1 } },
@@ -31,7 +31,7 @@ return {
       },
       render = function(props)
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-        local modified_icon = vim.bo[props.buf].modified and "[󰦒]" or ""
+        local modified_icon = vim.bo[props.buf].modified and "" or ""
 
         local function get_git_diff()
           local icons = { removed = "", changed = "", added = "" }
@@ -74,7 +74,7 @@ return {
           -- { get_git_diff() },
           { icon, guifg = color },
           { " " },
-          { { modified_icon, group = "InclineModified" }, " ", filename },
+          { filename, " ", { modified_icon, group = "InclineModified" } },
         }
       end,
     })
