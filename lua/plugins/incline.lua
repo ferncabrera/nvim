@@ -21,8 +21,8 @@ return {
       },
       highlight = {
         groups = {
-          InclineNormal = { guibg = "#d27e99", guifg = "#16161d" },
-          InclineNormalNC = { guibg = "#938aa9", guifg = "#16161d" },
+          InclineNormal = { guibg = "#b35b79", guifg = "#f2ecbc" },
+          InclineNormalNC = { guibg = "#d9a594", guifg = "#f2ecbc" },
         },
       },
       window = { margin = { vertical = 0, horizontal = 1 } },
