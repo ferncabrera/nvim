@@ -49,8 +49,16 @@ return {
         separator = "|",
       },
       { getWordsV2, padding = { left = 1, right = 1 }, separator = "|" },
+    }
+    opts.sections.lualine_z = {
       { "location", separator = "", padding = { left = 0, right = 1 } },
-      { "progress", padding = { left = 0, right = 1 } },
+      {
+        "progress",
+        padding = { left = 0, right = 1 },
+        fmt = function(str)
+          return str .. " "
+        end,
+      },
     }
   end,
 }
