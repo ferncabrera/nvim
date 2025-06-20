@@ -12,6 +12,6 @@ vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = tr
 
 vim.opt.relativenumber = false
 
-vim.opt.colorcolumn = "80"
+vim.opt.colorcolumn = "120"
 
 -- vim.cmd("highlight ColorColumn ctermbg=0 guibg=#c8c093")
