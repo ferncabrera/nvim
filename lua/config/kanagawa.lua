@@ -7,7 +7,7 @@ kanagawa.setup({
 
   -- map `vim.o.background` to your preferred variants:
   background = {
-    dark = "wave", -- when background=dark → use wave
+    dark = "dragon", -- when background=dark → use wave
     light = "lotus", -- if you ever switch to background=light
   },
 

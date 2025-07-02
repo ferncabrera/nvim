@@ -32,7 +32,8 @@
     "lazyvim.plugins.extras.ui.treesitter-context",
     "lazyvim.plugins.extras.util.dot",
     "lazyvim.plugins.extras.util.gitui",
-    "lazyvim.plugins.extras.util.mini-hipatterns"
+    "lazyvim.plugins.extras.util.mini-hipatterns",
+    "lazyvim.plugins.extras.util.octo"
   ],
   "install_version": 8,
   "news": {

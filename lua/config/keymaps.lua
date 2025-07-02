@@ -68,5 +68,9 @@ vim.keymap.set("n", "<leader>tr", "<cmd>LazyRoot<CR>", { desc = "LazyRoot" })
 vim.keymap.set("n", "<leader>w>", "<cmd>vertical resize +20<CR>", { desc = "Increase window width (20)" })
 vim.keymap.set("n", "<leader>w<", "<cmd>vertical resize -20<CR>", { desc = "Decrease window width (20)" })
 
+-- Better resizing (vert)
+vim.keymap.set("n", "<leader>w+", "<cmd>resize +10<CR>", { desc = "Increase window height (10)" })
+vim.keymap.set("n", "<leader>w-", "<cmd>resize -10<CR>", { desc = "Decrease window height (10)" })
+
 vim.keymap.set("n", "Q", "q", { noremap = true, desc = "Record macro" })
 vim.keymap.set("n", "q", "<Nop>", { noremap = true, desc = "Disable q macro" })
