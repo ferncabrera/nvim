@@ -74,3 +74,19 @@ vim.keymap.set("n", "<leader>w-", "<cmd>resize -10<CR>", { desc = "Decrease wind
 
 vim.keymap.set("n", "Q", "q", { noremap = true, desc = "Record macro" })
 vim.keymap.set("n", "q", "<Nop>", { noremap = true, desc = "Disable q macro" })
+
+function insertFullPath()
+  local filepath = vim.fn.expand("%")
+  vim.fn.setreg("+", filepath) -- write to clippoard
+end
+
+vim.keymap.set("n", "<leader>tf", insertFullPath, { noremap = true, silent = true, desc = "Copy full path" })
+
+vim.keymap.set("n", "<leader>tc", function()
+  local path = vim.fn.expand("%:.")
+  -- local line = vim.fn.line(".")
+  -- vim.fn.setreg("+", path .. ":" .. line)
+  vim.fn.setreg("+", path)
+end, { noremap = true, silent = true, desc = "Copy relative path" })
+
+vim.keymap.set("n", "<leader>to", ":e <C-r>+<CR>", { noremap = true, desc = "Go to location in clipboard" })
