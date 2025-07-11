@@ -47,7 +47,39 @@ return {
         end,
         separator = "|",
       },
-      { getWordsV2, padding = { left = 1, right = 1 }, separator = "|" },
+      {
+        function()
+          if vim.bo.buftype == "" then
+            return getWordsV2()
+          end
+          return ""
+        end,
+        padding = { left = 1, right = 1 },
+        separator = "|",
+      },
+      {
+        function()
+          local buftype = vim.bo.buftype
+          if buftype ~= "" then
+            return ""
+          end
+
+          local filepath = vim.fn.expand("%:p")
+          local handle = io.popen("stat -f %B " .. vim.fn.shellescape(filepath))
+          if not handle then
+            return "N/A 󰚰"
+          end
+          local creation_date = handle:read("*a"):gsub("%s+", "")
+          handle:close()
+          if creation_date == "?" or creation_date == "" then
+            return "N/A 󰚰"
+          else
+            return os.date("%Y %B %d %H:%M", tonumber(creation_date)) .. " 󰚰"
+          end
+        end,
+        padding = { left = 1, right = 1 },
+        separator = "|",
+      },
     }
     opts.sections.lualine_z = {
       { "location", separator = "", padding = { left = 0, right = 1 } },
