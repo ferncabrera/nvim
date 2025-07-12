@@ -21,7 +21,7 @@ local function getWordsV2()
   local selection = selectionCount()
 
   if wc.visual_words then
-    -- in visual mode: show selected words/chars
+    return string.format("%s:%s:%s ", selection, wc.visual_words, wc.visual_chars)
   else
     -- no selection: show total words/chars
     return string.format("%s:%s:%s ", selection, wc.words, wc.chars)
@@ -47,16 +47,17 @@ return {
         end,
         separator = "|",
       },
-      {
-        function()
-          if vim.bo.buftype == "" then
-            return getWordsV2()
-          end
-          return ""
-        end,
-        padding = { left = 1, right = 1 },
-        separator = "|",
-      },
+      { getWordsV2, padding = { left = 1, right = 1 }, separator = "|" },
+      -- {
+      --   function()
+      --     if vim.bo.buftype == "" then
+      --       return getWordsV2()
+      --     end
+      --     return ""
+      --   end,
+      --   padding = { left = 1, right = 1 },
+      --   separator = "|",
+      -- },
       {
         function()
           local buftype = vim.bo.buftype
