@@ -33,6 +33,8 @@ return {
   optional = true,
   event = "VeryLazy",
   opts = function(_, opts)
+    opts.options.component_separators = { left = "╲", right = "╱" }
+    opts.options.section_separators = { left = "", right = "" }
     opts.sections.lualine_y = {
       { "encoding", padding = { left = 1, right = 0 }, separator = "" },
       {
@@ -45,9 +47,9 @@ return {
             return ""
           end
         end,
-        separator = "|",
+        separator = "╱",
       },
-      { getWordsV2, padding = { left = 1, right = 1 }, separator = "|" },
+      { getWordsV2, padding = { left = 1, right = 1 }, separator = "╱" },
       -- {
       --   function()
       --     if vim.bo.buftype == "" then
@@ -79,7 +81,7 @@ return {
           end
         end,
         padding = { left = 1, right = 1 },
-        separator = "|",
+        separator = "╱",
       },
     }
     opts.sections.lualine_z = {
