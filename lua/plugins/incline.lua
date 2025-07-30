@@ -68,6 +68,9 @@ return {
         end
 
         local icon, color = require("nvim-web-devicons").get_icon_color(filename)
+        if not icon or icon == "" then
+          icon = "󰈔"
+        end
 
         return {
           -- { get_diagnostic_label() },
