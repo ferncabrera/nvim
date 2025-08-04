@@ -25,16 +25,16 @@ return {
         bg = theme.inactive.a.bg
         ifg = fg
         ibg = bg
-      elseif m:match("n") then
+      elseif vim.fn.mode():match("n") then
         fg = theme.normal.a.fg
         bg = theme.normal.a.bg
-      elseif m:match("i") then
+      elseif vim.fn.mode():match("i") then
         fg = theme.insert.a.fg
         bg = theme.insert.a.bg
-      elseif m:match("R") then
+      elseif vim.fn.mode():match("R") then
         fg = theme.replace.a.fg
         bg = theme.replace.a.bg
-      elseif m == "v" or m == "V" or m == "\22" then
+      elseif vim.fn.mode() == "v" or vim.fn.mode() == "V" or vim.fn.mode() == "\22" then
         fg = theme.visual.a.fg
         bg = theme.visual.a.bg
       else
@@ -155,6 +155,11 @@ return {
           guifg = colors.fg,
           guibg = colors.bg,
         }
+      end,
+    })
+    vim.api.nvim_create_autocmd("ModeChanged", {
+      callback = function()
+        require("incline").refresh()
       end,
     })
   end,
