@@ -1,6 +1,6 @@
 return {
   "b0o/incline.nvim",
-  event = "BufReadPre",
+  event = { "BufReadPost", "BufNewFile" },
   priority = 999,
   config = function()
     vim.api.nvim_set_hl(0, "InclineModified", {
@@ -64,6 +64,13 @@ return {
       end
       return colors or get_fallback_colors(props, ft_color)
     end
+
+    vim.api.nvim_create_autocmd("ModeChanged", {
+      callback = function()
+        require("incline").refresh()
+        vim.cmd("redrawstatus") -- or vim.cmd("redraw")
+      end,
+    })
 
     require("incline").setup({
       ignore = {
@@ -149,17 +156,12 @@ return {
           -- { get_diagnostic_label() },
           git_diff_section,
           { " " },
-          { icon, guifg = color },
+          { icon, guifg = colors.fg },
           { " " },
           { filename, " ", { modified_icon, group = "InclineModified" }, " " },
           guifg = colors.fg,
           guibg = colors.bg,
         }
-      end,
-    })
-    vim.api.nvim_create_autocmd("ModeChanged", {
-      callback = function()
-        require("incline").refresh()
       end,
     })
   end,
