@@ -1,6 +1,6 @@
 return {
   "b0o/incline.nvim",
-  event = { "BufReadPost", "BufNewFile" },
+  event = "BufReadPre",
   priority = 999,
   config = function()
     vim.api.nvim_set_hl(0, "InclineModified", {
@@ -9,13 +9,11 @@ return {
     })
 
     local helpers = require("incline.helpers")
-    local devicons = require("nvim-web-devicons")
 
     local function get_lualine_colors(lualine, props, ft_color)
       local fg, bg, ifg, ibg
       local theme_name = lualine.get_config().options.theme
       local theme = require("lualine.themes." .. theme_name)
-      local m = vim.api.nvim_get_mode().mode
 
       ifg = helpers.contrast_color(ft_color)
       ibg = ft_color
@@ -64,13 +62,6 @@ return {
       end
       return colors or get_fallback_colors(props, ft_color)
     end
-
-    vim.api.nvim_create_autocmd("ModeChanged", {
-      callback = function()
-        require("incline").refresh()
-        vim.cmd("redrawstatus") -- or vim.cmd("redraw")
-      end,
-    })
 
     require("incline").setup({
       ignore = {
