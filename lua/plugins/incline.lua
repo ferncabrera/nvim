@@ -75,13 +75,18 @@ return {
           icon = "󰈔"
         end
 
+        local git_diff = get_git_diff()
+        local git_diff_section = #git_diff > 0
+            and { " ", git_diff, guifg = vim.g.kanagawa_fg, guibg = vim.g.kanagawa_bg }
+          or {}
+
         return {
           -- { get_diagnostic_label() },
-          { " ", get_git_diff(), guifg = vim.g.kanagawa_fg, guibg = vim.g.kanagawa_bg },
+          git_diff_section,
           { " " },
           { icon, guifg = color },
           { " " },
-          { filename, " ", { modified_icon, group = "InclineModified" } },
+          { filename, " ", { modified_icon, group = "InclineModified" }, " " },
         }
       end,
     })
