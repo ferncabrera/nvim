@@ -35,6 +35,64 @@ return {
   opts = function(_, opts)
     opts.options.component_separators = { left = "╲", right = "╱" }
     opts.options.section_separators = { left = "", right = "" }
+    opts.sections.lualine_x = {
+      Snacks.profiler.status(),
+        -- stylua: ignore
+        {
+          function() return require("noice").api.status.command.get() end,
+          cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+          color = function() return { fg = Snacks.util.color("Statement") } end,
+        },
+        -- stylua: ignore
+        {
+          function() return require("noice").api.status.mode.get() end,
+          cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+          color = function() return { fg = Snacks.util.color("Constant") } end,
+        },
+        -- stylua: ignore
+        {
+          function() return "  " .. require("dap").status() end,
+          cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
+          color = function() return { fg = Snacks.util.color("Debug") } end,
+        },
+        -- stylua: ignore
+        {
+          require("lazy.status").updates,
+          cond = require("lazy.status").has_updates,
+          color = function() return { fg = Snacks.util.color("Special") } end,
+        },
+      -- {
+      -- "diff",
+      -- symbols = {
+      --   added = icons.git.added,
+      --   modified = icons.git.modified,
+      --   removed = icons.git.removed,
+      -- },
+      -- source = function()
+      --   local gitsigns = vim.b.gitsigns_status_dict
+      --   if gitsigns then
+      --     return {
+      --       added = gitsigns.added,
+      --       modified = gitsigns.changed,
+      --       removed = gitsigns.removed,
+      --     }
+      --   end
+      -- end,
+      -- },
+    }
+
+    table.insert(
+      opts.sections.lualine_x,
+      2,
+      LazyVim.lualine.status(LazyVim.config.icons.kinds.Copilot, function()
+        local clients = package.loaded["copilot"] and LazyVim.lsp.get_clients({ name = "copilot", bufnr = 0 }) or {}
+        if #clients > 0 then
+          local status = require("copilot.api").status.data.status
+          return (status == "InProgress" and "pending") or (status == "Warning" and "error") or "ok"
+        end
+      end)
+    )
+
     opts.sections.lualine_y = {
       { "encoding", padding = { left = 1, right = 0 }, separator = "" },
       {

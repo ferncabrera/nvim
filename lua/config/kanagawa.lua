@@ -32,6 +32,12 @@ kanagawa.setup({
 
   overrides = function(colors)
     local theme = colors.theme
+    local kanagawa_colors = require("kanagawa.colors").setup()
+
+    -- So that I can use these theme colors in other plugins
+    vim.g.kanagawa_bg = kanagawa_colors.theme.ui.bg
+    vim.g.kanagawa_fg = kanagawa_colors.theme.ui.fg
+
     local makeDiagnosticColor = function(color)
       local c = require("kanagawa.lib.color")
       return { fg = color, bg = c(color):blend(theme.ui.bg, 0.95):to_hex() }

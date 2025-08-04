@@ -25,7 +25,10 @@ return {
           InclineNormalNC = { guibg = "#d9a594", guifg = "#f2ecbc" },
         },
       },
-      window = { margin = { vertical = 0, horizontal = 1 } },
+      window = {
+        padding = 0,
+        margin = { horizontal = 0, vertical = 0 },
+      },
       hide = {
         cursorline = true,
       },
@@ -46,7 +49,7 @@ return {
             end
           end
           if #labels > 0 then
-            table.insert(labels, { "┊ " })
+            table.insert(labels, { "" })
           end
           return labels
         end
@@ -74,7 +77,8 @@ return {
 
         return {
           -- { get_diagnostic_label() },
-          -- { get_git_diff() },
+          { " ", get_git_diff(), guifg = vim.g.kanagawa_fg, guibg = vim.g.kanagawa_bg },
+          { " " },
           { icon, guifg = color },
           { " " },
           { filename, " ", { modified_icon, group = "InclineModified" } },
