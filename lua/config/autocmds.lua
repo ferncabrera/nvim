@@ -14,4 +14,10 @@ vim.opt.relativenumber = false
 
 vim.opt.colorcolumn = "120"
 
+vim.api.nvim_create_autocmd("ModeChanged", {
+  pattern = "*:[vV]", -- matches entering visual modes: char, line, block
+  callback = function()
+    require("incline").refresh()
+  end,
+})
 -- vim.cmd("highlight ColorColumn ctermbg=0 guibg=#c8c093")
