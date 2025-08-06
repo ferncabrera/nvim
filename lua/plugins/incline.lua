@@ -36,8 +36,8 @@ return {
         fg = theme.visual.a.fg
         bg = theme.visual.a.bg
       else
-        fg = "#000000"
-        bg = "#ffffff"
+        fg = theme.normal.a.fg
+        bg = theme.normal.a.bg
       end
 
       return { fg = fg, bg = bg, ifg = ifg, ibg = ibg }

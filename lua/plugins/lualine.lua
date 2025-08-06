@@ -53,7 +53,17 @@ return {
       --   },
       -- },
       -- { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-      { LazyVim.lualine.pretty_path() },
+      {
+        LazyVim.lualine.pretty_path({
+          relative = "cwd",
+          modified_hl = "MatchParen",
+          directory_hl = "",
+          filename_hl = "Bold",
+          modified_sign = " ",
+          readonly_icon = " 󰌾 ",
+          length = 3,
+        }),
+      },
     }
 
     opts.sections.lualine_x = {
