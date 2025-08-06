@@ -9,6 +9,8 @@ return {
     })
 
     local helpers = require("incline.helpers")
+    local navic = require("nvim-navic")
+    local devicons = require("nvim-web-devicons")
 
     local function get_lualine_colors(lualine, props, ft_color)
       local fg, bg, ifg, ibg
@@ -98,9 +100,10 @@ return {
 
         local colors = get_colors(props, ft_color)
 
-        local function get_git_diff()
+        function _G.InclineGetGitDiff(buf)
+          buf = buf or vim.api.nvim_get_current_buf()
           local icons = { removed = "", changed = "", added = "" }
-          local signs = vim.b[props.buf].gitsigns_status_dict
+          local signs = vim.b[buf].gitsigns_status_dict
           local labels = {}
           if signs == nil then
             return labels
@@ -119,7 +122,6 @@ return {
         local function get_diagnostic_label()
           local icons = { error = "", warn = "", info = "", hint = "" }
           local label = {}
-
           for severity, icon in pairs(icons) do
             local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
             if n > 0 then
@@ -127,9 +129,13 @@ return {
             end
           end
           if #label > 0 then
-            table.insert(label, { "┊ " })
+            table.insert(label, { "" })
           end
-          return label
+          if #label > 0 then
+            return { " ", label, guifg = vim.g.kanagawa_fg, guibg = vim.g.kanagawa_bg }
+          else
+            return {}
+          end
         end
 
         local icon, color = require("nvim-web-devicons").get_icon_color(filename)
@@ -137,14 +143,25 @@ return {
           icon = "󰈔"
         end
 
-        local git_diff = get_git_diff()
+        -- local git_diff = get_git_diff()
+        local git_diff = _G.InclineGetGitDiff(props.buf)
+
+        local has_git_diff = #git_diff > 0
+        local has_diagnostics = #get_diagnostic_label() > 0
+
         local git_diff_section = #git_diff > 0
             and props.focused
-            and { " ", git_diff, guifg = vim.g.kanagawa_fg, guibg = vim.g.kanagawa_bg }
+            and vim.g.incline_show_git_diff
+            and {
+              vim.g.incline_show_diagnostics and has_diagnostics and "" or " ",
+              git_diff,
+              guifg = vim.g.kanagawa_fg,
+              guibg = vim.g.kanagawa_bg,
+            }
           or {}
 
         return {
-          -- { get_diagnostic_label() },
+          vim.g.incline_show_diagnostics and { get_diagnostic_label() } or {},
           git_diff_section,
           { " " },
           { icon, guifg = colors.fg },
