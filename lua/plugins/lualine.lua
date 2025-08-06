@@ -17,6 +17,10 @@ local function selectionCount()
 end
 
 local function getWordsV2()
+  if not vim.g.lualine_show_count_info then
+    return ""
+  end
+
   local wc = vim.fn.wordcount()
   local selection = selectionCount()
 
@@ -110,8 +114,19 @@ return {
       end)
     )
 
+    -- if not vim.g.trouble_lualine then
+    table.insert(opts.sections.lualine_c, { "navic", color_correction = "dynamic" })
+    -- end
+
     opts.sections.lualine_y = {
-      { "encoding", padding = { left = 1, right = 0 }, separator = "" },
+      {
+        "encoding",
+        padding = { left = 1, right = 0 },
+        separator = "",
+        cond = function()
+          return vim.g.lualine_show_filetype_info
+        end,
+      },
       {
         "filesize",
         padding = { left = 1, right = 1 },
@@ -123,6 +138,9 @@ return {
           end
         end,
         separator = "╱",
+        cond = function()
+          return vim.g.lualine_show_filetype_info
+        end,
       },
       { getWordsV2, padding = { left = 1, right = 1 }, separator = "╱" },
       -- {
@@ -137,6 +155,10 @@ return {
       -- },
       {
         function()
+          if not vim.g.lualine_show_last_modified then
+            return ""
+          end
+
           local buftype = vim.bo.buftype
           if buftype ~= "" then
             return ""

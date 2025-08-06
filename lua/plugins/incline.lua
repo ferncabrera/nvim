@@ -9,8 +9,6 @@ return {
     })
 
     local helpers = require("incline.helpers")
-    local navic = require("nvim-navic")
-    local devicons = require("nvim-web-devicons")
 
     local function get_lualine_colors(lualine, props, ft_color)
       local fg, bg, ifg, ibg
