@@ -28,6 +28,23 @@ local function notify_toggle(name, state)
   end
 end
 
+vim.keymap.set("n", "<leader>ta", function()
+  local any_enabled = vim.g.lualine_show_last_modified
+    or vim.g.lualine_show_count_info
+    or vim.g.lualine_show_filetype_info
+
+  local new_state = not any_enabled
+
+  vim.g.lualine_show_last_modified = new_state
+  vim.g.lualine_show_count_info = new_state
+  vim.g.lualine_show_filetype_info = new_state
+
+  require("lualine").refresh()
+
+  local msg = "Lualine All Info: " .. (new_state and "ON" or "OFF")
+  noice.notify(msg, new_state and "info" or "warn")
+end, { desc = "Toggle all Lualine Info", silent = true })
+
 vim.keymap.set("n", "<leader>tg", function()
   vim.g.incline_show_git_diff = not vim.g.incline_show_git_diff
   require("lualine").refresh()
