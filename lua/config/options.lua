@@ -45,29 +45,29 @@ vim.keymap.set("n", "<leader>ta", function()
   noice.notify(msg, new_state and "info" or "warn")
 end, { desc = "Toggle all Lualine Info", silent = true })
 
+-- vim.keymap.set("n", "<leader>tm", function()
+--   vim.g.lualine_show_last_modified = not vim.g.lualine_show_last_modified
+--   require("lualine").refresh()
+--   notify_toggle("Lualine Last Modified", vim.g.lualine_show_last_modified)
+-- end, { desc = "Toggle lualine_show_last_modified", silent = true })
+
+-- vim.keymap.set("n", "<leader>tl", function()
+--   vim.g.lualine_show_count_info = not vim.g.lualine_show_count_info
+--   require("lualine").refresh()
+--   notify_toggle("Lualine Count Info", vim.g.lualine_show_count_info)
+-- end, { desc = "Toggle lualine_show_count_info", silent = true })
+
+-- vim.keymap.set("n", "<leader>tt", function()
+--   vim.g.lualine_show_filetype_info = not vim.g.lualine_show_filetype_info
+--   require("lualine").refresh()
+--   notify_toggle("Lualine Filetype Info", vim.g.lualine_show_filetype_info)
+-- end, { desc = "Toggle lualine_show_filetype_info", silent = true })
+
 vim.keymap.set("n", "<leader>tg", function()
   vim.g.incline_show_git_diff = not vim.g.incline_show_git_diff
   require("lualine").refresh()
   notify_toggle("Incline Git Diff", vim.g.incline_show_git_diff)
 end, { desc = "Toggle incline_show_git_diff", silent = true })
-
-vim.keymap.set("n", "<leader>tm", function()
-  vim.g.lualine_show_last_modified = not vim.g.lualine_show_last_modified
-  require("lualine").refresh()
-  notify_toggle("Lualine Last Modified", vim.g.lualine_show_last_modified)
-end, { desc = "Toggle lualine_show_last_modified", silent = true })
-
-vim.keymap.set("n", "<leader>tl", function()
-  vim.g.lualine_show_count_info = not vim.g.lualine_show_count_info
-  require("lualine").refresh()
-  notify_toggle("Lualine Count Info", vim.g.lualine_show_count_info)
-end, { desc = "Toggle lualine_show_count_info", silent = true })
-
-vim.keymap.set("n", "<leader>tt", function()
-  vim.g.lualine_show_filetype_info = not vim.g.lualine_show_filetype_info
-  require("lualine").refresh()
-  notify_toggle("Lualine Filetype Info", vim.g.lualine_show_filetype_info)
-end, { desc = "Toggle lualine_show_filetype_info", silent = true })
 
 vim.keymap.set("n", "<leader>ti", function()
   vim.g.incline_show_diagnostics = not vim.g.incline_show_diagnostics

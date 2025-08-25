@@ -202,4 +202,11 @@ return {
       },
     }
   end,
+  vim.keymap.set("n", "<leader>tt", function()
+    if vim.o.laststatus == 0 then
+      vim.o.laststatus = 3
+    else
+      vim.o.laststatus = 0
+    end
+  end, { desc = "Toggle Lualine" }),
 }
