@@ -13,6 +13,18 @@ return {
     }
   end,
   keys = {
+    {
+      "<leader>aa",
+      function()
+        local pickers = require("snacks.picker.core.picker").get()
+        if #pickers > 0 then
+          pickers[#pickers]:close()
+        end
+        return require("CopilotChat").toggle()
+      end,
+      desc = "Toggle (CopilotChat)",
+      mode = { "n", "v" },
+    },
     { "<leader>a?", "<cmd>CopilotChatModels<cr>", desc = "Select Models (CopilotChat)" },
   },
 }
