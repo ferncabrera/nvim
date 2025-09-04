@@ -9,7 +9,7 @@ return {
     return {
       -- model = "gpt-4.1",
       auto_insert_mode = true,
-      question_header = " " .. user .. " ",
+      -- question_header = " " .. user .. " ",
       headers = {
         user = " User (" .. user .. ") ", -- Header to use for user questions
         assistant = " Copilot ", -- Header to use for AI answers
