@@ -21,3 +21,6 @@ vim.api.nvim_create_autocmd("ModeChanged", {
   end,
 })
 -- vim.cmd("highlight ColorColumn ctermbg=0 guibg=#c8c093")
+
+vim.api.nvim_set_hl(0, "CopilotChatHeader", { fg = "#b35b79", bold = true })
+vim.api.nvim_set_hl(0, "CopilotChatSeparator", { fg = "#5e857a" })
