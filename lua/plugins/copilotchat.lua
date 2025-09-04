@@ -21,10 +21,15 @@ return {
     {
       "<leader>aa",
       function()
+        local copilot_chat = require("CopilotChat").chat
         local pickers = require("snacks.picker.core.picker").get()
-        if #pickers > 0 then
+
+        -- If CopilotChat window is NOT visible, close the snacks picker (if any)
+        if not copilot_chat:visible() and #pickers > 0 then
           pickers[#pickers]:close()
         end
+
+        -- Always toggle CopilotChat after handling snacks picker logic
         return require("CopilotChat").toggle()
       end,
       desc = "Toggle (CopilotChat)",
