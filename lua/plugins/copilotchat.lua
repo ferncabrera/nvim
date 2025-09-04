@@ -1,7 +1,7 @@
 return {
   "CopilotC-Nvim/CopilotChat.nvim",
   -- branch = "main", //BROKEN, cannot tab-accept any buffer inputs
-  version = "3.12.2",
+  -- version = "3.12.2",
   cmd = "CopilotChat",
   opts = function()
     local user = vim.env.USER or "User"
