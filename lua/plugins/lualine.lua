@@ -194,6 +194,14 @@ return {
     opts.sections.lualine_z = {
       { "location", separator = "", padding = { left = 0, right = 1 } },
       {
+        function()
+          local wc = vim.fn.wordcount()
+          return "@" .. tostring(wc.cursor_chars or 0)
+        end,
+        separator = "",
+        padding = { left = 0, right = 1 },
+      },
+      {
         "progress",
         padding = { left = 0, right = 1 },
         fmt = function(str)
