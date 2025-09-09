@@ -90,3 +90,27 @@ vim.keymap.set("n", "<leader>tc", function()
 end, { noremap = true, silent = true, desc = "Copy relative path" })
 
 vim.keymap.set("n", "<leader>to", ":e <C-r>+<CR>", { noremap = true, desc = "Go to location in clipboard" })
+
+-- quit + save CopilotChat history under cwd basename
+vim.keymap.set("n", "<leader>qq", function()
+  if package.loaded["CopilotChat"] then
+    local session_name = vim.fn.fnameescape(vim.fn.fnamemodify(vim.fn.getcwd(), ":t"))
+    local ok, err = pcall(function()
+      -- Save with a proper filename
+      vim.cmd("CopilotChatSave " .. session_name)
+    end)
+    if not ok then
+      vim.notify("Failed to save CopilotChat session: " .. tostring(err), vim.log.levels.WARN)
+    end
+  end
+  vim.cmd("qa")
+end, { desc = "Quit All + CopilotChatSave _project_name_" })
+
+-- restore last auto-saved session
+vim.keymap.set("n", "<leader>al", function()
+  local session_name = vim.fn.fnameescape(vim.fn.fnamemodify(vim.fn.getcwd(), ":t"))
+  if not package.loaded["CopilotChat"] then
+    vim.cmd("CopilotChat")
+  end
+  vim.cmd("CopilotChatLoad " .. session_name)
+end, { desc = "CopilotChatLoad _project_name_" })
