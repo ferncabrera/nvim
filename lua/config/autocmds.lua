@@ -24,3 +24,5 @@ vim.api.nvim_create_autocmd("ModeChanged", {
 
 vim.api.nvim_set_hl(0, "CopilotChatHeader", { fg = "#b35b79", bold = true })
 vim.api.nvim_set_hl(0, "CopilotChatSeparator", { fg = "#5e857a" })
+
+-- vim.api.nvim_set_hl(0, "Search", { fg = "#c5c9c5", bg = "#2d4f67", bold = true })
