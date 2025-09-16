@@ -4,12 +4,14 @@ return {
   priority = 999,
   config = function()
     vim.api.nvim_set_hl(0, "InclineModified", {
-      -- bg = colors.palette.sakuraPink,
       fg = "#EEF5FF",
     })
 
     local helpers = require("incline.helpers")
+    local navic = require("nvim-navic") -- add navic
+    local devicons = require("nvim-web-devicons")
 
+    -- your get_colors, fallback colors, and lualine logic remains unchanged...
     local function get_lualine_colors(lualine, props, ft_color)
       local fg, bg, ifg, ibg
       local theme_name = lualine.get_config().options.theme
@@ -74,12 +76,6 @@ return {
           return wintype ~= ""
         end,
       },
-      -- highlight = {
-      --   groups = {
-      --     InclineNormal = { guibg = "#b35b79", guifg = "#f2ecbc" },
-      --     InclineNormalNC = { guibg = "#d9a594", guifg = "#f2ecbc" },
-      --   },
-      -- },
       window = {
         padding = 0,
         margin = { horizontal = 0, vertical = 0 },
@@ -96,8 +92,14 @@ return {
 
         local modified_icon = vim.bo[props.buf].modified and "" or ""
 
+        local icon, ft_color = devicons.get_icon_color(filename)
+        if not icon or icon == "" then
+          icon = "󰈔"
+        end
+
         local colors = get_colors(props, ft_color)
 
+        -- Git diff (unchanged)
         function _G.InclineGetGitDiff(buf)
           buf = buf or vim.api.nvim_get_current_buf()
           local icons = { removed = "", changed = "", added = "" }
@@ -117,6 +119,7 @@ return {
           return labels
         end
 
+        -- Diagnostic info (unchanged)
         local function get_diagnostic_label()
           local icons = { error = "", warn = "", info = "", hint = "" }
           local label = {}
@@ -136,18 +139,12 @@ return {
           end
         end
 
-        local icon, color = require("nvim-web-devicons").get_icon_color(filename)
-        if not icon or icon == "" then
-          icon = "󰈔"
-        end
-
-        -- local git_diff = get_git_diff()
+        -- Git diff section
         local git_diff = _G.InclineGetGitDiff(props.buf)
-
         local has_git_diff = #git_diff > 0
         local has_diagnostics = #get_diagnostic_label() > 0
 
-        local git_diff_section = #git_diff > 0
+        local git_diff_section = has_git_diff
             and props.focused
             and vim.g.incline_show_git_diff
             and {
@@ -158,7 +155,20 @@ return {
             }
           or {}
 
+        -- Navic breadcrumbs
+        local breadcrumbs = {}
+        if props.focused and navic.is_available() then
+          for _, item in ipairs(navic.get_data(props.buf) or {}) do
+            table.insert(breadcrumbs, {
+              { " > ", group = "NavicSeparator" },
+              { item.icon, group = "NavicIcons" .. item.type },
+              { item.name, group = "NavicText" },
+            })
+          end
+        end
+
         return {
+          -- breadcrumbs,
           vim.g.incline_show_diagnostics and { get_diagnostic_label() } or {},
           git_diff_section,
           { " " },
