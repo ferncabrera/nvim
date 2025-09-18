@@ -2,7 +2,6 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
--- local opt = vim.opt
 -- opt.tabstop = 4 -- A TAB character looks like 4 spaces
 -- opt.expandtab = true -- Pressing the TAB key will insert spaces instead of a TAB character
 -- opt.softtabstop = 4 -- Number of spaces inserted instead of a TAB character
@@ -74,3 +73,9 @@ vim.keymap.set("n", "<leader>ti", function()
   vim.cmd("redrawstatus!")
   notify_toggle("Incline Diagnostics", vim.g.incline_show_diagnostics)
 end, { desc = "Toggle incline_show_diagnostics", silent = true })
+
+-- Following main release....
+vim.g.lazyvim_blink_main = true
+
+-- Allow left and right arrow keys to move to the previous and next line.
+vim.opt.whichwrap = "b,s,<,>"

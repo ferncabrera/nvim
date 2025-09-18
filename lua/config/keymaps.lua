@@ -78,15 +78,22 @@ vim.keymap.set("n", "q", "<Nop>", { noremap = true, desc = "Disable q macro" })
 function insertFullPath()
   local filepath = vim.fn.expand("%")
   vim.fn.setreg("+", filepath) -- write to clippoard
+  return filepath
 end
 
-vim.keymap.set("n", "<leader>tf", insertFullPath, { noremap = true, silent = true, desc = "Copy full path" })
+vim.keymap.set("n", "<leader>tf", function()
+  local path = insertFullPath()
+  if path then
+    require("noice").notify("Copied full path: " .. path)
+  else
+    require("noice").notify("Failed to get full path", "error")
+  end
+end, { noremap = true, silent = true, desc = "Copy full path" })
 
-vim.keymap.set("n", "<leader>tc", function()
+vim.keymap.set("n", "<leader>tl", function()
   local path = vim.fn.expand("%:.")
-  -- local line = vim.fn.line(".")
-  -- vim.fn.setreg("+", path .. ":" .. line)
   vim.fn.setreg("+", path)
+  require("noice").notify("Copied relative path: " .. path)
 end, { noremap = true, silent = true, desc = "Copy relative path" })
 
 vim.keymap.set("n", "<leader>to", ":e <C-r>+<CR>", { noremap = true, desc = "Go to location in clipboard" })
