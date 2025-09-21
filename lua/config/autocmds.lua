@@ -25,4 +25,13 @@ vim.api.nvim_create_autocmd("ModeChanged", {
 vim.api.nvim_set_hl(0, "CopilotChatHeader", { fg = "#b35b79", bold = true })
 vim.api.nvim_set_hl(0, "CopilotChatSeparator", { fg = "#5e857a" })
 
+vim.api.nvim_create_autocmd("BufReadPost", {
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    if mark[1] > 1 and mark[1] <= vim.api.nvim_buf_line_count(0) then
+      vim.api.nvim_win_set_cursor(0, mark)
+    end
+  end,
+})
+
 -- vim.api.nvim_set_hl(0, "Search", { fg = "#c5c9c5", bg = "#2d4f67", bold = true })
