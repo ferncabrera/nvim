@@ -16,10 +16,7 @@ return {
         ["<M-h>"] = "actions.select_split",
       },
       win_options = {
-        winbar = function()
-          local path = vim.fn.expand("%"):gsub("oil://", "")
-          return "  " .. vim.fn.fnamemodify(path, ":.")
-        end,
+        winbar = "  %{v:lua.require'oil'.get_winbar()}",
       },
       view_options = {
         show_hidden = true,
