@@ -22,5 +22,13 @@ return {
         show_hidden = true,
       },
     },
+    config = function(_, opts)
+      function _G.require("oil").get_winbar()
+        local path = vim.fn.expand("%"):gsub("oil://", "")
+        return vim.fn.fnamemodify(path, ":.")
+      end
+
+      require("oil").setup(opts)
+    end,
   },
 }
