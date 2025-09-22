@@ -20,6 +20,7 @@ return {
       },
       view_options = {
         show_hidden = true,
+        confirm = true, -- Enable confirmation popup for changes
       },
     },
     config = function(_, opts)
