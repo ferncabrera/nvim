@@ -22,7 +22,6 @@ return {
         ["<C-l>"] = false,
         ["<C-k>"] = false,
         ["<C-j>"] = false,
-        ["<M-h>"] = "actions.select_split",
       },
       -- win_options = {
       --   winbar = "%!v:lua.get_oil_winbar()",
