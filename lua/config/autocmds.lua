@@ -35,3 +35,10 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 -- vim.api.nvim_set_hl(0, "Search", { fg = "#c5c9c5", bg = "#2d4f67", bold = true })
+--
+vim.api.nvim_create_autocmd("BufWinLeave", {
+  pattern = "oil://*",
+  callback = function()
+    require("incline").refresh()
+  end,
+})

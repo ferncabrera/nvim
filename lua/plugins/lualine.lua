@@ -37,6 +37,7 @@ return {
   optional = true,
   event = "VeryLazy",
   opts = function(_, opts)
+    opts.extensions = { "oil" }
     opts.options.component_separators = { left = "╲", right = "╱" }
     opts.options.section_separators = { left = "", right = "" }
 
