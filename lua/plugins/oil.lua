@@ -17,11 +17,14 @@ return {
       default_file_explorer = false,
       columns = { "icon" },
       keymaps = {
+        ["<C-s>"] = false,
         ["<C-h>"] = false,
         ["q"] = { "actions.close", mode = "n" },
         ["<C-l>"] = false,
         ["<C-k>"] = false,
         ["<C-j>"] = false,
+        ["<M-s>"] = { "actions.select", opts = { horizontal = true } },
+        ["<M-v>"] = { "actions.select", opts = { vertical = true } },
       },
       -- win_options = {
       --   winbar = "%!v:lua.get_oil_winbar()",
