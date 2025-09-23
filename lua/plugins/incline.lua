@@ -69,8 +69,8 @@ return {
       ignore = {
         floating_wins = false,
         wintypes = function(winid, wintype)
-          local bufname = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(winid))
-          if bufname:match("oil://") then
+          local buf_ft = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(winid), "filetype")
+          if buf_ft == "oil" then
             return false -- Do not ignore "oil" buffers
           end
           local zen_view = package.loaded["zen-mode.view"]
