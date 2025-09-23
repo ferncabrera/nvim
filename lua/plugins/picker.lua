@@ -3,7 +3,7 @@ return {
   "folke/snacks.nvim",
   opts = {
     picker = {
-      dev = { "~/dev", "~/Code" },
+      -- dev = { "~/dev", "~/Code" },
       projects = {
         "~/Code/open_ims/microservices/ims/client",
         "~/Code/open_ims/microservices/ims/server",
