@@ -42,3 +42,10 @@ vim.api.nvim_create_autocmd("BufWinLeave", {
     require("incline").refresh()
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "dbui",
+  callback = function(ev)
+    vim.keymap.del("n", "H", { buffer = ev.buf })
+  end,
+})
