@@ -20,6 +20,8 @@ return {
         ["<C-s>"] = false,
         ["<C-h>"] = false,
         ["q"] = { "actions.close", mode = "n" },
+        ["-"] = { "actions.parent", mode = "n" },
+        ["<BS>"] = { "actions.parent", mode = "n" },
         ["<C-l>"] = false,
         ["<C-k>"] = false,
         ["<C-j>"] = false,
