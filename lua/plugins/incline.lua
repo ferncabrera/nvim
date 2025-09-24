@@ -67,7 +67,7 @@ return {
 
     require("incline").setup({
       ignore = {
-        floating_wins = false,
+        floating_wins = true,
         wintypes = function(winid, wintype)
           local zen_view = package.loaded["zen-mode.view"]
           if zen_view and zen_view.is_open() then
