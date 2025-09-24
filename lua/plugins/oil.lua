@@ -4,7 +4,17 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     lazy = false,
     keys = {
-      { "-", "<CMD>Oil<CR>", desc = "Open parent directory" },
+      {
+        "-",
+        function()
+          local pickers = require("snacks.picker.core.picker").get()
+          if #pickers > 0 then
+            pickers[#pickers]:close()
+          end
+          vim.cmd("Oil")
+        end,
+        desc = "Open parent directory",
+      },
       {
         "<space>-",
         function()
