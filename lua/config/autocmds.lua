@@ -38,16 +38,25 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 
 local augroup = vim.api.nvim_create_augroup("GitUIInclineRefresh", { clear = true })
 
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = augroup,
+  pattern = "*",
+  callback = function(args)
+    local name = vim.api.nvim_buf_get_name(args.buf)
+    if name:match("gitui") then
+      require("incline").disable()
+    end
+  end,
+})
+
+-- Re-enable Incline after GitUI closes
 vim.api.nvim_create_autocmd("TermClose", {
   group = augroup,
   pattern = "*",
   callback = function(args)
-    -- check if this terminal was running gitui
-    local chan_info = vim.api.nvim_get_chan_info(args.buf)
     local name = vim.api.nvim_buf_get_name(args.buf)
-
     if name:match("gitui") then
-      -- Force Incline to refresh/redraw
+      require("incline").enable()
       require("incline").refresh()
     end
   end,
