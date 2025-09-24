@@ -26,7 +26,29 @@ return {
     opts = {
       default_file_explorer = false,
       columns = { "icon" },
+      cleanup_delay_ms = 2500,
+      delete_to_trash = true,
+      buf_options = {
+        buflisted = true,
+      },
       keymaps = {
+        ["gd"] = {
+          desc = "Discard all changed made to Oil Buffers",
+          callback = function()
+            require("oil").discard_all_changes()
+          end,
+        },
+        ["ga"] = {
+          desc = "Toggle file detail view",
+          callback = function()
+            detail = not detail
+            if detail then
+              require("oil").set_columns({ "icon", "permissions", "size", "mtime" })
+            else
+              require("oil").set_columns({ "icon" })
+            end
+          end,
+        },
         ["<C-s>"] = false,
         ["<C-h>"] = false,
         ["q"] = { "actions.close", mode = "n" },

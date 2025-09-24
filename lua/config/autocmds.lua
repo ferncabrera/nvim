@@ -35,11 +35,21 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 })
 
 -- vim.api.nvim_set_hl(0, "Search", { fg = "#c5c9c5", bg = "#2d4f67", bold = true })
---
-vim.api.nvim_create_autocmd("BufWinLeave", {
-  pattern = "oil://*",
-  callback = function()
-    require("incline").refresh()
+
+local augroup = vim.api.nvim_create_augroup("GitUIInclineRefresh", { clear = true })
+
+vim.api.nvim_create_autocmd("TermClose", {
+  group = augroup,
+  pattern = "*",
+  callback = function(args)
+    -- check if this terminal was running gitui
+    local chan_info = vim.api.nvim_get_chan_info(args.buf)
+    local name = vim.api.nvim_buf_get_name(args.buf)
+
+    if name:match("gitui") then
+      -- Force Incline to refresh/redraw
+      require("incline").refresh()
+    end
   end,
 })
 

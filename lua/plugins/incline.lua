@@ -67,6 +67,7 @@ return {
 
     require("incline").setup({
       ignore = {
+        unlisted_buffers = true,
         floating_wins = true,
         wintypes = function(winid, wintype)
           local zen_view = package.loaded["zen-mode.view"]
@@ -75,13 +76,20 @@ return {
           end
           return wintype ~= ""
         end,
+        buftypes = {
+          "nofile",
+          "quickfix",
+          "help",
+          "terminal",
+          "prompt",
+        },
       },
       window = {
         padding = 0,
         margin = { horizontal = 0, vertical = 0 },
       },
       hide = {
-        cursorline = true,
+        cursorline = false,
       },
       render = function(props)
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
@@ -93,8 +101,15 @@ return {
         local modified_icon = vim.bo[props.buf].modified and "" or ""
 
         local icon, ft_color = devicons.get_icon_color(filename)
-        if not icon or icon == "" then
-          icon = "󰈔"
+        if vim.bo[props.buf].filetype == "oil" then
+          filename = "oil:///"
+          icon = "󰙅"
+          ft_color = "#FFFFFF"
+        else
+          icon, ft_color = devicons.get_icon_color(filename)
+          if not icon or icon == "" then
+            icon = "󰈔"
+          end
         end
 
         local colors = get_colors(props, ft_color)
