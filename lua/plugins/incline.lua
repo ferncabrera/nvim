@@ -102,7 +102,7 @@ return {
 
         local icon, ft_color = devicons.get_icon_color(filename)
         if vim.bo[props.buf].filetype == "oil" then
-          filename = "oil:///"
+          filename = "Oil:///"
           icon = "󰙅"
           ft_color = "#FFFFFF"
         else
