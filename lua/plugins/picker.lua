@@ -2,6 +2,10 @@
 return {
   "folke/snacks.nvim",
   opts = {
+    explorer = {
+      enabled = true,
+      replace_netrw = false, -- Replace netrw with the snacks explorer
+    },
     picker = {
       -- dev = { "~/dev", "~/Code" },
       projects = {
@@ -41,4 +45,10 @@ return {
       },
     },
   },
+  -- keys = {
+  --   { "<leader>fe", false },
+  --   { "<leader>fE", false },
+  --   { "<leader>E", false },
+  --   { "<leader>e", false },
+  -- },
 }

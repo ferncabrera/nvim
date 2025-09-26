@@ -5,7 +5,7 @@ return {
     lazy = false,
     keys = {
       {
-        "-",
+        "<leader>-",
         function()
           local pickers = require("snacks.picker.core.picker").get()
           if #pickers > 0 then
@@ -14,13 +14,6 @@ return {
           vim.cmd("Oil")
         end,
         desc = "Open parent directory",
-      },
-      {
-        "<space>-",
-        function()
-          require("oil").toggle_float()
-        end,
-        desc = "Open parent directory (float)",
       },
     },
     opts = {
@@ -54,6 +47,9 @@ return {
         ["q"] = { "actions.close", mode = "n" },
         ["-"] = { "actions.parent", mode = "n" },
         ["<BS>"] = { "actions.parent", mode = "n" },
+        ["~"] = false,
+        ["`"] = false,
+        ["<C-\\>"] = { "actions.cd", opts = { scope = "global" }, mode = "n" },
         ["<C-l>"] = false,
         ["<C-k>"] = false,
         ["<C-j>"] = false,

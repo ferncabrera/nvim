@@ -8,7 +8,6 @@
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
 -- Set highlight for matching brackets/parentheses/quotes
-vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
 
 vim.opt.relativenumber = false
 
@@ -62,9 +61,40 @@ vim.api.nvim_create_autocmd("TermClose", {
   end,
 })
 
+local yazi_group = vim.api.nvim_create_augroup("YaziInclineRefresh", { clear = true })
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = yazi_group,
+  pattern = "*",
+  callback = function(args)
+    local name = vim.api.nvim_buf_get_name(args.buf)
+    if name:match("yazi") then
+      local pickers = require("snacks.picker.core.picker").get()
+      if #pickers > 0 then
+        pickers[#pickers]:close()
+      end
+      require("incline").disable()
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("TermClose", {
+  group = yazi_group,
+  pattern = "*",
+  callback = function(args)
+    local name = vim.api.nvim_buf_get_name(args.buf)
+    if name:match("yazi") then
+      require("incline").enable()
+      require("incline").refresh()
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "dbui",
   callback = function(ev)
     vim.keymap.del("n", "H", { buffer = ev.buf })
   end,
 })
+
+vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
