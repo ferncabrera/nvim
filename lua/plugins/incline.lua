@@ -86,10 +86,11 @@ return {
       },
       window = {
         padding = 0,
+        width = "fit",
         margin = { horizontal = 0, vertical = 0 },
       },
       hide = {
-        cursorline = false,
+        cursorline = true,
       },
       render = function(props)
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
@@ -148,7 +149,7 @@ return {
             table.insert(label, { "" })
           end
           if #label > 0 then
-            return { " ", label, guifg = vim.g.kanagawa_fg, guibg = vim.g.kanagawa_bg }
+            return { " ", label }
           else
             return {}
           end
@@ -165,33 +166,62 @@ return {
             and {
               vim.g.incline_show_diagnostics and has_diagnostics and "" or " ",
               git_diff,
-              guifg = vim.g.kanagawa_fg,
-              guibg = vim.g.kanagawa_bg,
             }
           or {}
+
+        local function get_hl_fg(group)
+          local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group })
+          if ok and hl and hl.fg then
+            return string.format("#%06x", hl.fg)
+          end
+          return nil
+        end
 
         -- Navic breadcrumbs
         local breadcrumbs = {}
         if props.focused and navic.is_available() then
           for _, item in ipairs(navic.get_data(props.buf) or {}) do
             table.insert(breadcrumbs, {
-              { " > ", group = "NavicSeparator" },
-              { item.icon, group = "NavicIcons" .. item.type },
-              { item.name, group = "NavicText" },
+              { " ", guifg = get_hl_fg("NavicSeparator") },
+              { item.icon, guifg = get_hl_fg("NavicIcons" .. item.type) },
+              { item.name, guifg = get_hl_fg("NavicText") },
             })
           end
         end
 
+        local breadcrumbs_section = {}
+        local show_breadcrumbs_space = false
+        if #breadcrumbs > 0 and vim.g.incline_show_navic then
+          local show_diag = vim.g.incline_show_diagnostics and props.focused and #get_diagnostic_label() > 0
+          local show_git = vim.g.incline_show_git_diff and props.focused and #git_diff > 0
+          show_breadcrumbs_space = not (show_diag or show_git)
+          if not (vim.g.incline_show_diagnostics or vim.g.incline_show_git_diff) then
+            show_breadcrumbs_space = true
+          end
+          if show_breadcrumbs_space then
+            breadcrumbs_section = { breadcrumbs, { " " } }
+          else
+            breadcrumbs_section = { breadcrumbs }
+          end
+        end
+
         return {
-          -- breadcrumbs,
-          vim.g.incline_show_diagnostics and { get_diagnostic_label() } or {},
+          guifg = vim.g.kanagawa_fg,
+          guibg = vim.g.kanagawa_bg,
+          breadcrumbs_section,
+          vim.g.incline_show_diagnostics and props.focused and { get_diagnostic_label() } or {},
           git_diff_section,
-          { " " },
-          { icon, guifg = colors.fg },
-          { " " },
-          { filename, " ", { modified_icon, group = "InclineModified" }, " " },
-          guifg = colors.fg,
-          guibg = colors.bg,
+          { " ", guifg = colors.fg, guibg = colors.bg },
+          { icon, guifg = colors.fg, guibg = colors.bg },
+          { " ", guifg = colors.fg, guibg = colors.bg },
+          {
+            filename,
+            " ",
+            { modified_icon, group = "InclineModified" },
+            " ",
+            guifg = colors.fg,
+            guibg = colors.bg,
+          },
         }
       end,
     })

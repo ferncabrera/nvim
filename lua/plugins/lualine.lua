@@ -214,8 +214,10 @@ return {
   vim.keymap.set("n", "<leader>tt", function()
     if vim.o.laststatus == 0 then
       vim.o.laststatus = 3
+      vim.g.incline_show_navic = false
     else
       vim.o.laststatus = 0
+      vim.g.incline_show_navic = true
     end
   end, { desc = "Toggle Lualine" }),
 }

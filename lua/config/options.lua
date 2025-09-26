@@ -11,6 +11,7 @@ vim.g.snacks_animate = false
 
 vim.g.incline_show_git_diff = true
 vim.g.incline_show_diagnostics = true
+vim.g.incline_show_navic = false
 vim.g.lualine_show_last_modified = false
 vim.g.lualine_show_count_info = false
 vim.g.lualine_show_filetype_info = false
@@ -73,6 +74,12 @@ vim.keymap.set("n", "<leader>ti", function()
   vim.cmd("redrawstatus!")
   notify_toggle("Incline Diagnostics", vim.g.incline_show_diagnostics)
 end, { desc = "Toggle incline_show_diagnostics", silent = true })
+
+vim.keymap.set("n", "<leader>tm", function()
+  vim.g.incline_show_navic = not vim.g.incline_show_navic
+  vim.cmd("redrawstatus!")
+  notify_toggle("Incline Navic", vim.g.incline_show_navic)
+end, { desc = "Toggle incline_show_navic", silent = true })
 
 -- Following main release....
 vim.g.lazyvim_blink_main = true
