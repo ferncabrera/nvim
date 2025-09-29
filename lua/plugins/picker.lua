@@ -45,10 +45,10 @@ return {
       },
     },
   },
-  -- keys = {
-  --   { "<leader>fe", false },
-  --   { "<leader>fE", false },
-  --   { "<leader>E", false },
-  --   { "<leader>e", false },
-  -- },
+  keys = {
+    -- { "<leader>fe", false },
+    -- { "<leader>fE", false },
+    { "<leader>E", false },
+    { "<leader>e", false },
+  },
 }

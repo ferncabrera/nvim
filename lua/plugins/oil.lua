@@ -5,7 +5,7 @@ return {
     lazy = false,
     keys = {
       {
-        "<leader>-",
+        "-",
         function()
           local pickers = require("snacks.picker.core.picker").get()
           if #pickers > 0 then
