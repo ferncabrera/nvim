@@ -7,17 +7,6 @@ return {
   },
   keys = {
     -- 👇 in this section, choose your own keymappings!
-    show_help = "<f1>",
-    open_file_in_vertical_split = "<c-v>",
-    open_file_in_horizontal_split = "<c-x>",
-    open_file_in_tab = "<c-t>",
-    grep_in_directory = "<c-s>",
-    replace_in_directory = "<c-g>",
-    cycle_open_buffers = "<tab>",
-    copy_relative_path_to_selected_files = "<c-y>",
-    send_to_quickfix_list = "<c-q>",
-    change_working_directory = "<c-\\>",
-    open_and_pick_window = "<c-o>",
     {
       "<leader>-",
       mode = { "n", "v" },
@@ -26,6 +15,7 @@ return {
     },
     {
       "<leader>E",
+      mode = { "n", "v" },
       "<cmd>Yazi cwd<cr>",
       desc = "Open yazi in nvim's working directory",
     },
@@ -37,6 +27,7 @@ return {
     },
     {
       "<leader>sy",
+      mode = { "n", "v" },
       function()
         if vim.g.yazi_has_session then
           vim.cmd("Yazi toggle")
@@ -59,6 +50,16 @@ return {
     open_for_directories = true,
     keymaps = {
       show_help = "<f1>",
+      open_file_in_vertical_split = "<c-v>",
+      open_file_in_horizontal_split = "<c-x>",
+      open_file_in_tab = "<c-t>",
+      grep_in_directory = "<c-s>",
+      replace_in_directory = "<c-g>",
+      cycle_open_buffers = "<tab>",
+      copy_relative_path_to_selected_files = "<c-y>",
+      send_to_quickfix_list = "<c-q>",
+      change_working_directory = "<c-\\>",
+      open_and_pick_window = "<c-o>",
     },
     change_neovim_cwd_on_close = false,
     integrations = {
