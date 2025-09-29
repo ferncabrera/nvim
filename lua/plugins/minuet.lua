@@ -1,6 +1,7 @@
 return {
   "milanglacier/minuet-ai.nvim",
   dependencies = { "nvim-lua/plenary.nvim" },
+  enabled = false,
   opts = {
     provider = "openai_fim_compatible",
     n_completions = 1, -- recommend for local model for resource saving
