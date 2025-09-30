@@ -6,14 +6,15 @@ return {
       --   "milanglacier/minuet-ai.nvim",
       --   version = "*", -- use the latest stable version
       -- },
+      "niuiic/blink-cmp-rg",
+      "bydlw98/blink-cmp-env",
       { "marcoSven/blink-cmp-yanky" },
       "moyiz/blink-emoji.nvim",
       "mgalliou/blink-cmp-tmux",
-      {
-        "mikavilpas/blink-ripgrep.nvim",
-        version = "*", -- use the latest stable version
-      },
-      -- 👆🏻👆🏻 add the dependency here
+      -- {
+      --   "mikavilpas/blink-ripgrep.nvim",
+      --   version = "*", -- use the latest stable version
+      -- },
     },
     optional = true,
     opts = {
@@ -71,16 +72,31 @@ return {
         },
       },
       sources = {
-        default = { "ripgrep", "emoji", "tmux", "yank" },
+        default = { "env", "ripgrep", "tmux", "yank", "emoji", inherit_defaults = true },
         per_filetype = {
-          sql = { "dadbod", "copilot" },
+          sql = { "dadbod", "copilot", inherit_defaults = true },
         },
         providers = {
+          env = {
+            name = "Env",
+            module = "blink-cmp-env",
+            opts = {
+              item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
+              show_braces = false,
+              show_documentation_window = true,
+            },
+          },
           dadbod = {
-
             name = "Dadbod",
             score_offset = 100, -- Tune by preference
             module = "vim_dadbod_completion.blink",
+            enabled = function()
+              -- Only enable if DB connection info is available
+              local ok, db = pcall(function()
+                return require("vim_dadbod_completion.db").get_db()
+              end)
+              return ok and db ~= nil and db ~= ""
+            end,
           },
           yank = {
             name = "yank",
@@ -106,7 +122,7 @@ return {
             },
             transform_items = function(ctx, items)
               for _, item in ipairs(items) do
-                item.kind_icon = ""
+                item.kind_icon = " "
                 item.kind_name = "tmux"
               end
               return items
@@ -133,6 +149,65 @@ return {
             -- end,
           },
           ripgrep = {
+            module = "blink-cmp-rg",
+            name = "Ripgrep",
+            transform_items = function(ctx, items)
+              for _, item in ipairs(items) do
+                item.kind_icon = " "
+                item.kind_name = "Ripgrep"
+              end
+              return items
+            end,
+            opts = {
+              -- `min_keyword_length` only determines whether to show completion items in the menu,
+              -- not whether to trigger a search. And we only has one chance to search.
+              prefix_min_len = 3,
+              get_command = function(context, prefix)
+                return {
+                  "rg",
+                  "--no-config",
+                  "--json",
+                  "--word-regexp",
+                  "--ignore-case",
+                  "-g",
+                  "Dockerfile*",
+                  "-g",
+                  "docker-compose*",
+                  "-g",
+                  "*env*",
+                  "-g",
+                  "*conf*",
+                  "--",
+                  prefix .. "[\\w_-]+",
+                  vim.fs.root(0, ".git") or vim.fn.getcwd(),
+                }
+              end,
+              get_prefix = function(context)
+                return context.line:sub(1, context.cursor[2]):match("[%w_-]+$") or ""
+              end,
+            },
+          },
+          --     minuet = {
+          --       name = "minuet",
+          --       module = "minuet.blink",
+          --       async = true,
+          --       -- Should match minuet.config.request_timeout * 1000,
+          --       -- since minuet.config.request_timeout is in seconds
+          --       timeout_ms = 3000,
+          --       score_offset = 99, -- Gives minuet higher priority among suggestions
+          --       enabled = function()
+          --         return vim.fn.system("pgrep ollama") ~= ""
+          --       end,
+          --       kind = "Minuet", -- 👈 Add an icon/label here
+          --       transform_items = function(ctx, items)
+          --         for _, item in ipairs(items) do
+          --           item.kind_icon = "🦙" -- pick any icon (example: nf-oct-milestone)
+          --           item.kind_name = "Minuet"
+          --         end
+          --         return items
+          --       end,
+          --     },
+          ripgrep_2 = {
             module = "blink-ripgrep",
             name = "Ripgrep",
             opts = {
@@ -148,42 +223,6 @@ return {
           },
         },
       },
-      -- sources = {
-      --   default = { "lsp", "path", "snippets", "buffer", "copilot" },
-      --   per_filetype = {
-      --     sql = { "snippets", "dadbod", "buffer" },
-      --   },
-      --   providers = {
-      --     dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
-      --     minuet = {
-      --       name = "minuet",
-      --       module = "minuet.blink",
-      --       async = true,
-      --       -- Should match minuet.config.request_timeout * 1000,
-      --       -- since minuet.config.request_timeout is in seconds
-      --       timeout_ms = 3000,
-      --       score_offset = 99, -- Gives minuet higher priority among suggestions
-      --       enabled = function()
-      --         return vim.fn.system("pgrep ollama") ~= ""
-      --       end,
-      --       kind = "Minuet", -- 👈 Add an icon/label here
-      --       transform_items = function(ctx, items)
-      --         for _, item in ipairs(items) do
-      --           item.kind_icon = "🦙" -- pick any icon (example: nf-oct-milestone)
-      --           item.kind_name = "Minuet"
-      --         end
-      --         return items
-      --       end,
-      --     },
-      --     copilot = {
-      --       name = "copilot",
-      --       module = "blink-cmp-copilot",
-      --       kind = "Copilot",
-      --       score_offset = 100,
-      --       async = true,
-      --     },
-      --   },
-      -- },
       completion = {
         -- trigger = {
         --   show_in_snippet = false,
