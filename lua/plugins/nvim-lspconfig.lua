@@ -1,19 +1,13 @@
 return {
   "neovim/nvim-lspconfig",
   opts = {
-    servers = {
-      postgres_lsp = {
-        cmd = { "postgrestools", "lsp-proxy" },
-        filetypes = { "sql" },
-        root_dir = require("lspconfig.util").root_pattern("postgrestools.jsonc"),
-      },
-    },
-    setup = {
-      postgres_lsp = function(_, opts)
-        require("lspconfig").postgres_lsp.setup(opts)
-        return true
-      end,
-    },
+    --   servers = {
+    --     postgres_lsp = {
+    --       -- cmd = { "postgrestools", "lsp-proxy" },
+    --       -- filetypes = { "sql" },
+    --       -- root_dir = require("lspconfig.util").root_pattern("postgrestools.jsonc"),
+    --     },
+    --   },
     inlay_hints = { enabled = false },
     diagnostics = {
       virtual_text = false, -- disable virtual text diagnostics
