@@ -6,6 +6,7 @@ return {
       --   "milanglacier/minuet-ai.nvim",
       --   version = "*", -- use the latest stable version
       -- },
+      "kristijanhusak/vim-dadbod-completion",
       "niuiic/blink-cmp-rg",
       "bydlw98/blink-cmp-env",
       { "marcoSven/blink-cmp-yanky" },
@@ -75,6 +76,7 @@ return {
         default = { "env", "ripgrep", "tmux", "yank", "emoji", inherit_defaults = true },
         per_filetype = {
           sql = { "dadbod", "copilot", inherit_defaults = true },
+          -- typescript = { "dadbod", "env", "ripgrep", "tmux", "yank", "emoji", inherit_defaults = true },
         },
         providers = {
           env = {
@@ -90,13 +92,7 @@ return {
             name = "Dadbod",
             score_offset = 100, -- Tune by preference
             module = "vim_dadbod_completion.blink",
-            enabled = function()
-              -- Only enable if DB connection info is available
-              local ok, db = pcall(function()
-                return require("vim_dadbod_completion.db").get_db()
-              end)
-              return ok and db ~= nil and db ~= ""
-            end,
+            enabled = true,
           },
           yank = {
             name = "yank",
