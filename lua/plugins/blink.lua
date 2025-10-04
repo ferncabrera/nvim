@@ -92,7 +92,7 @@ return {
             name = "Dadbod",
             score_offset = 100, -- Tune by preference
             module = "vim_dadbod_completion.blink",
-            enabled = true,
+            enabled = false,
           },
           yank = {
             name = "yank",
@@ -239,6 +239,13 @@ return {
               { "source_name", gap = 1 },
             },
             components = {
+              label_description = {
+                width = { max = 30 },
+                text = function(ctx)
+                  return ctx.label_description
+                end,
+                highlight = "BlinkCmpLabel",
+              },
               source_name = {
                 width = { max = 30 },
                 text = function(ctx)
