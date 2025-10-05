@@ -57,12 +57,13 @@ return {
       if not ft_color then
         ft_color = "#000000"
       end
-      local status, lualine = pcall(require, "lualine")
-      local colors
-      if status then
-        colors = get_lualine_colors(lualine, props, ft_color)
-      end
-      return colors or get_fallback_colors(props, ft_color)
+      -- local status, lualine = pcall(require, "lualine")
+      -- local colors
+      -- if status then
+      --   colors = get_lualine_colors(lualine, props, ft_color)
+      -- end
+      -- return colors or get_fallback_colors(props, ft_color)
+      return get_fallback_colors(props, ft_color)
     end
 
     require("incline").setup({
@@ -205,23 +206,39 @@ return {
           end
         end
 
+        local search_section = {}
+        local search_active = false
+        if props.focused then
+          local count = vim.fn.searchcount({ recompute = 1, maxcount = -1 })
+          local contents = vim.fn.getreg("/")
+          if vim.v.hlsearch == 1 and count.total > 0 then
+            search_active = true
+            search_section = {
+              { " ", group = "dkoStatusKey" },
+              { (" %s "):format(contents), group = "IncSearch" },
+              { (" %d/%d "):format(count.current, count.total), group = "dkoStatusValue" },
+            }
+          end
+        end
+
         return {
           guifg = vim.g.kanagawa_fg,
           guibg = vim.g.kanagawa_bg,
           breadcrumbs_section,
           vim.g.incline_show_diagnostics and props.focused and { get_diagnostic_label() } or {},
           git_diff_section,
-          { " ", guifg = colors.fg, guibg = colors.bg },
-          { icon, guifg = colors.fg, guibg = colors.bg },
-          { " ", guifg = colors.fg, guibg = colors.bg },
-          {
+          (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
+          (not search_active) and { icon, guifg = colors.fg, guibg = colors.bg } or {},
+          (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
+          (not search_active) and {
             filename,
             " ",
             { modified_icon, group = "InclineModified" },
             " ",
             guifg = colors.fg,
             guibg = colors.bg,
-          },
+          } or {},
+          search_section,
         }
       end,
     })

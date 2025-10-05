@@ -9,6 +9,8 @@
 
 -- Set highlight for matching brackets/parentheses/quotes
 
+vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
+
 vim.opt.relativenumber = false
 
 vim.opt.colorcolumn = "120"
@@ -97,4 +99,17 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
+-- StatusLine highlight for LazyVim (without lualine)
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("CustomStatuslineColors", { clear = true }),
+  callback = function()
+    if vim.opt.termguicolors:get() then
+      vim.api.nvim_set_hl(0, "StatusLine", { bg = "#f2ecbc", fg = "#727169", bold = false })
+    else
+      vim.api.nvim_set_hl(0, "StatusLine", { ctermbg = 235, ctermfg = 252, bold = false })
+    end
+  end,
+})
+
+-- Apply immediately on startup (in case colorscheme loads before this)
+vim.cmd("doautocmd ColorScheme")

@@ -71,7 +71,7 @@ return {
           enabled = false,
 
           -- Always show messages on all lines for multiline diagnostics
-          always_show = false,
+          always_show = true,
         },
 
         -- Display all diagnostic messages on the cursor line

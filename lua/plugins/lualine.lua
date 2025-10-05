@@ -35,13 +35,14 @@ end
 return {
   "nvim-lualine/lualine.nvim",
   optional = true,
+  enabled = false,
   event = "VeryLazy",
   opts = function(_, opts)
     opts.extensions = { "oil" }
+    -- opts.options.globalstatus = false
     opts.options.component_separators = { left = "╲", right = "╱" }
     opts.options.section_separators = { left = "", right = "" }
 
-    local icons = LazyVim.config.icons
     opts.sections.lualine_c = {
       LazyVim.lualine.root_dir(),
       -- {
@@ -213,11 +214,13 @@ return {
   end,
   vim.keymap.set("n", "<leader>tt", function()
     if vim.o.laststatus == 0 then
-      vim.o.laststatus = 2
-      vim.g.incline_show_navic = false
+      vim.o.laststatus = 3
+      -- require("lualine").hide({ unhide = true })
+      -- vim.g.incline_show_navic = false
     else
       vim.o.laststatus = 0
-      vim.g.incline_show_navic = true
+      -- require("lualine").hide()
+      -- vim.g.incline_show_navic = true
     end
   end, { desc = "Toggle Lualine" }),
 }

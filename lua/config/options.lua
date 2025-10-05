@@ -88,3 +88,7 @@ vim.g.lazyvim_blink_main = true
 vim.opt.whichwrap = "b,s,<,>"
 
 vim.lsp.enable("postgres_lsp")
+
+vim.opt.laststatus = 0
+vim.opt.ls = 0
+vim.opt.statusline = "%F"
