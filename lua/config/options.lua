@@ -89,6 +89,6 @@ vim.opt.whichwrap = "b,s,<,>"
 
 vim.lsp.enable("postgres_lsp")
 
-vim.opt.laststatus = 0
-vim.opt.ls = 0
+vim.opt.laststatus = 3
+vim.opt.ls = 3
 vim.opt.statusline = "%F"
