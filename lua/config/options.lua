@@ -84,9 +84,6 @@ end, { desc = "Toggle incline_show_navic", silent = true })
 -- Following main release....
 vim.g.lazyvim_blink_main = true
 
--- Allow left and right arrow keys to move to the previous and next line.
-vim.opt.whichwrap = "b,s,<,>"
-
 vim.lsp.enable("postgres_lsp")
 
 vim.opt.laststatus = 3
