@@ -26,7 +26,7 @@ return {
       desc = "Open yazi at the current file",
     },
     {
-      "<leader>sy",
+      "<leader>se",
       mode = { "n", "v" },
       function()
         if vim.g.yazi_has_session then
