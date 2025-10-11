@@ -47,9 +47,9 @@ return {
 
     local function get_fallback_colors(props, ft_color)
       if not props.focused then
-        return { fg = "#f2ecbc", bg = "#d9a594", ifg = "#f2ecbc", ibg = "#d9a594" }
+        return { fg = "#f2ecbc", bg = "#938056", ifg = "#f2ecbc", ibg = "#938056" }
       else
-        return { fg = "#f2ecbc", bg = "#b35b79", ifg = "#f2ecbc", ibg = "#b35b79" }
+        return { fg = "#f2ecbc", bg = "#d9a594", ifg = "#f2ecbc", ibg = "#d9a594" }
       end
     end
 
