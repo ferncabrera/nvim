@@ -47,9 +47,25 @@ return {
 
     local function get_fallback_colors(props, ft_color)
       if not props.focused then
-        return { fg = "#f2ecbc", bg = "#938056", ifg = "#f2ecbc", ibg = "#938056" }
+        if MODE == "dark" then
+          if THEME == "wave" then
+            return { fg = "#dcd7ba", bg = "#2a2a37", ifg = "#dcd7ba", ibg = "#2a2a37" }
+          else
+            return { fg = "#f2ecbc", bg = "#393836", ifg = "#f2ecbc", ibg = "#393836" }
+          end
+        else
+          return { fg = "#f2ecbc", bg = "#938056", ifg = "#f2ecbc", ibg = "#938056" }
+        end
       else
-        return { fg = "#f2ecbc", bg = "#d9a594", ifg = "#f2ecbc", ibg = "#d9a594" }
+        if MODE == "dark" then
+          if THEME == "wave" then
+            return { fg = "#dcd7ba", bg = "#54546D", ifg = "#dcd7ba", ibg = "#54546D" }
+          else
+            return { fg = "#f2ecbc", bg = "#625e5a", ifg = "#f2ecbc", ibg = "#625e5a" }
+          end
+        else
+          return { fg = "#f2ecbc", bg = "#d9a594", ifg = "#f2ecbc", ibg = "#d9a594" }
+        end
       end
     end
 
@@ -100,7 +116,8 @@ return {
           filename = ""
         end
 
-        local modified_icon = vim.bo[props.buf].modified and "" or ""
+        local modified_icon = vim.bo[props.buf].modified and "⚪" or ""
+        local modified_icon_2 = vim.bo[props.buf].modified and "⚪ " or ""
 
         local icon, ft_color = devicons.get_icon_color(filename)
         if vim.bo[props.buf].filetype == "oil" then
@@ -215,7 +232,7 @@ return {
             search_active = true
             search_section = {
               { " ", group = "dkoStatusKey" },
-              { (" %s "):format(contents), group = "IncSearch" },
+              { (" %s "):format(contents) .. modified_icon_2, group = "IncSearch" },
               { (" %d/%d "):format(count.current, count.total), group = "dkoStatusValue" },
             }
           end

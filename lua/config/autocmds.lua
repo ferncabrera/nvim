@@ -9,8 +9,6 @@
 
 -- Set highlight for matching brackets/parentheses/quotes
 
-vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
-
 vim.opt.relativenumber = false
 
 vim.opt.colorcolumn = "120"
@@ -34,8 +32,6 @@ vim.api.nvim_create_autocmd("BufReadPost", {
     end
   end,
 })
-
--- vim.api.nvim_set_hl(0, "Search", { fg = "#c5c9c5", bg = "#2d4f67", bold = true })
 
 local augroup = vim.api.nvim_create_augroup("GitUIInclineRefresh", { clear = true })
 
@@ -104,7 +100,15 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("CustomStatuslineColors", { clear = true }),
   callback = function()
     if vim.opt.termguicolors:get() then
-      vim.api.nvim_set_hl(0, "StatusLine", { bg = "#f2ecbc", fg = "#727169", bold = false })
+      if MODE == "dark" then
+        if THEME == "wave" then
+          vim.api.nvim_set_hl(0, "StatusLine", { bg = "#2a2a37", fg = "#DCD7BA", bold = false })
+        else
+          vim.api.nvim_set_hl(0, "StatusLine", { bg = "#393836", fg = "#f2ecbc", bold = false })
+        end
+      else
+        vim.api.nvim_set_hl(0, "StatusLine", { bg = "#f2ecbc", fg = "#727169", bold = false })
+      end
     else
       vim.api.nvim_set_hl(0, "StatusLine", { ctermbg = 235, ctermfg = 252, bold = false })
     end
@@ -113,3 +117,5 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 -- Apply immediately on startup (in case colorscheme loads before this)
 vim.cmd("doautocmd ColorScheme")
+
+vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })

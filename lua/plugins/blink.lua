@@ -203,20 +203,20 @@ return {
           --         return items
           --       end,
           --     },
-          ripgrep_2 = {
-            module = "blink-ripgrep",
-            name = "Ripgrep",
-            opts = {
-              backend = {
-                use = "gitgrep-or-ripgrep",
-                ripgrep = {
-                  ignore_paths = {
-                    -- "/Users/fcabrera/Code/open_ims/common/grafana/dashboards/*",
-                  },
-                },
-              },
-            },
-          },
+          -- ripgrep_2 = {
+          --   module = "blink-ripgrep",
+          --   name = "Ripgrep",
+          --   opts = {
+          --     backend = {
+          --       use = "gitgrep-or-ripgrep",
+          --       ripgrep = {
+          --         ignore_paths = {
+          --           -- "/Users/fcabrera/Code/open_ims/common/grafana/dashboards/*",
+          --         },
+          --       },
+          --     },
+          --   },
+          -- },
         },
       },
       completion = {
