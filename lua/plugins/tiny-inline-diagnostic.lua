@@ -9,7 +9,7 @@ return {
       -- Available options:
       -- "modern", "classic", "minimal", "powerline",
       -- "ghost", "simple", "nonerdfont", "amongus"
-      preset = "classic",
+      preset = "ghost",
 
       transparent_bg = true, -- Set the background of the diagnostic to transparent
       transparent_cursorline = true, -- Set the background of the cursorline to transparent (only one the first diagnostic)
