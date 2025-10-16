@@ -86,6 +86,9 @@ vim.g.lazyvim_blink_main = true
 
 vim.lsp.enable("postgres_lsp")
 
-vim.opt.laststatus = 3
-vim.opt.ls = 3
-vim.opt.statusline = "%F"
+-- vim.opt.laststatus = 3
+-- vim.opt.ls = 3
+-- vim.opt.statusline = "%F"
+
+vim.cmd([[ autocmd RecordingEnter * set cmdheight=1 ]])
+vim.cmd([[ autocmd RecordingLeave * set cmdheight=0 ]])
