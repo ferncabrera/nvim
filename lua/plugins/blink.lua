@@ -75,7 +75,8 @@ return {
       sources = {
         default = { "env", "ripgrep", "tmux", "yank", "emoji", inherit_defaults = true },
         per_filetype = {
-          sql = { "dadbod", "copilot", inherit_defaults = true },
+          -- sql = { "dadbod", "copilot", inherit_defaults = true },
+          sql = { "copilot", inherit_defaults = true },
           -- typescript = { "dadbod", "env", "ripgrep", "tmux", "yank", "emoji", inherit_defaults = true },
         },
         providers = {
@@ -92,7 +93,7 @@ return {
             name = "Dadbod",
             score_offset = 100, -- Tune by preference
             module = "vim_dadbod_completion.blink",
-            enabled = false,
+            enabled = true,
           },
           yank = {
             name = "yank",
