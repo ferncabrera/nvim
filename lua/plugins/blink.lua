@@ -315,11 +315,11 @@ return {
             },
           },
           border = "none",
-          -- winblend = vim.o.pumblend,
+          winblend = vim.o.pumblend,
         },
         documentation = {
           window = {
-            border = "none",
+            border = vim.o.winborder,
           },
         },
       },
