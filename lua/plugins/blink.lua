@@ -21,56 +21,89 @@ return {
     opts = {
       keymap = {
         preset = "super-tab",
-        ["<A-1>"] = {
+        ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+        ["<C-e>"] = { "hide", "fallback" },
+
+        ["<Tab>"] = {
           function(cmp)
-            cmp.accept({ index = 1 })
+            if cmp.snippet_active() then
+              return cmp.accept()
+            else
+              return cmp.select_and_accept()
+            end
           end,
+          "snippet_forward",
+          "fallback",
         },
-        ["<A-2>"] = {
-          function(cmp)
-            cmp.accept({ index = 2 })
-          end,
-        },
-        ["<A-3>"] = {
-          function(cmp)
-            cmp.accept({ index = 3 })
-          end,
-        },
-        ["<A-4>"] = {
-          function(cmp)
-            cmp.accept({ index = 4 })
-          end,
-        },
-        ["<A-5>"] = {
-          function(cmp)
-            cmp.accept({ index = 5 })
-          end,
-        },
-        ["<A-6>"] = {
-          function(cmp)
-            cmp.accept({ index = 6 })
-          end,
-        },
-        ["<A-7>"] = {
-          function(cmp)
-            cmp.accept({ index = 7 })
-          end,
-        },
-        ["<A-8>"] = {
-          function(cmp)
-            cmp.accept({ index = 8 })
-          end,
-        },
-        ["<A-9>"] = {
-          function(cmp)
-            cmp.accept({ index = 9 })
-          end,
-        },
-        ["<A-0>"] = {
-          function(cmp)
-            cmp.accept({ index = 10 })
-          end,
-        },
+        ["<S-Tab>"] = { "select_prev", "fallback" },
+
+        ["<Up>"] = { "select_prev", "fallback" },
+        ["<Down>"] = { "select_next", "fallback" },
+        -- ["<C-d>"] = {
+        --   function(cmp)
+        --     cmp.select_next({ count = 5 })
+        --   end,
+        --   "fallback",
+        -- },
+        ["<C-k>"] = { "select_prev", "fallback" },
+        ["<C-j>"] = { "select_next", "fallback" },
+        ["<C-p>"] = { "select_prev", "fallback_to_mappings" },
+        ["<C-n>"] = { "select_next", "fallback_to_mappings" },
+
+        ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+        ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+
+        ["<A-k>"] = { "show_signature", "hide_signature", "fallback" },
+        -- ["<A-1>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 1 })
+        --   end,
+        -- },
+        -- ["<A-2>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 2 })
+        --   end,
+        -- },
+        -- ["<A-3>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 3 })
+        --   end,
+        -- },
+        -- ["<A-4>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 4 })
+        --   end,
+        -- },
+        -- ["<A-5>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 5 })
+        --   end,
+        -- },
+        -- ["<A-6>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 6 })
+        --   end,
+        -- },
+        -- ["<A-7>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 7 })
+        --   end,
+        -- },
+        -- ["<A-8>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 8 })
+        --   end,
+        -- },
+        -- ["<A-9>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 9 })
+        --   end,
+        -- },
+        -- ["<A-0>"] = {
+        --   function(cmp)
+        --     cmp.accept({ index = 10 })
+        --   end,
+        -- },
       },
       sources = {
         default = { "env", "ripgrep", "tmux", "yank", "emoji", inherit_defaults = true },
@@ -232,9 +265,28 @@ return {
           },
         },
         menu = {
+          direction_priority = function()
+            local ctx = require("blink.cmp").get_context()
+            local item = require("blink.cmp").get_selected_item()
+            if ctx == nil or item == nil then
+              return { "s", "n" }
+            end
+
+            local item_text = item.textEdit ~= nil and item.textEdit.newText or item.insertText or item.label
+            local is_multi_line = item_text:find("\n") ~= nil
+
+            -- after showing the menu upwards, we want to maintain that direction
+            -- until we re-open the menu, so store the context id in a global variable
+            if is_multi_line or vim.g.blink_cmp_upwards_ctx_id == ctx.id then
+              vim.g.blink_cmp_upwards_ctx_id = ctx.id
+              return { "n", "s" }
+            end
+            return { "s", "n" }
+          end,
           draw = {
+            treesitter = { "lsp" },
             columns = {
-              { "item_idx" },
+              -- { "item_idx" },
               { "kind_icon" },
               { "label", "label_description", gap = 1 },
               { "source_name", gap = 1 },
@@ -262,12 +314,12 @@ return {
               },
             },
           },
-          border = "rounded",
+          border = "none",
           -- winblend = vim.o.pumblend,
         },
         documentation = {
           window = {
-            border = "rounded",
+            border = "none",
           },
         },
       },
