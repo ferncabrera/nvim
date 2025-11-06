@@ -17,6 +17,7 @@ return {
         augend.semver.alias.semver,
         augend.constant.new({ elements = { "let", "const" } }),
         augend.constant.new({ elements = { "yes", "no" } }),
+        augend.constant.new({ elements = { "<", ">" } }),
       },
     })
   end,

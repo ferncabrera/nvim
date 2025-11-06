@@ -7,43 +7,42 @@ return {
       fg = "#EEF5FF",
     })
 
-    local helpers = require("incline.helpers")
+    -- local helpers = require("incline.helpers")
     local navic = require("nvim-navic") -- add navic
     local devicons = require("nvim-web-devicons")
 
-    -- your get_colors, fallback colors, and lualine logic remains unchanged...
-    local function get_lualine_colors(lualine, props, ft_color)
-      local fg, bg, ifg, ibg
-      local theme_name = lualine.get_config().options.theme
-      local theme = require("lualine.themes." .. theme_name)
-
-      ifg = helpers.contrast_color(ft_color)
-      ibg = ft_color
-
-      if not props.focused then
-        fg = theme.inactive.a.fg
-        bg = theme.inactive.a.bg
-        ifg = fg
-        ibg = bg
-      elseif vim.fn.mode():match("n") then
-        fg = theme.normal.a.fg
-        bg = theme.normal.a.bg
-      elseif vim.fn.mode():match("i") then
-        fg = theme.insert.a.fg
-        bg = theme.insert.a.bg
-      elseif vim.fn.mode():match("R") then
-        fg = theme.replace.a.fg
-        bg = theme.replace.a.bg
-      elseif vim.fn.mode() == "v" or vim.fn.mode() == "V" or vim.fn.mode() == "\22" then
-        fg = theme.visual.a.fg
-        bg = theme.visual.a.bg
-      else
-        fg = theme.normal.a.fg
-        bg = theme.normal.a.bg
-      end
-
-      return { fg = fg, bg = bg, ifg = ifg, ibg = ibg }
-    end
+    -- local function get_lualine_colors(lualine, props, ft_color)
+    --   local fg, bg, ifg, ibg
+    --   local theme_name = lualine.get_config().options.theme
+    --   local theme = require("lualine.themes." .. theme_name)
+    --
+    --   ifg = helpers.contrast_color(ft_color)
+    --   ibg = ft_color
+    --
+    --   if not props.focused then
+    --     fg = theme.inactive.a.fg
+    --     bg = theme.inactive.a.bg
+    --     ifg = fg
+    --     ibg = bg
+    --   elseif vim.fn.mode():match("n") then
+    --     fg = theme.normal.a.fg
+    --     bg = theme.normal.a.bg
+    --   elseif vim.fn.mode():match("i") then
+    --     fg = theme.insert.a.fg
+    --     bg = theme.insert.a.bg
+    --   elseif vim.fn.mode():match("R") then
+    --     fg = theme.replace.a.fg
+    --     bg = theme.replace.a.bg
+    --   elseif vim.fn.mode() == "v" or vim.fn.mode() == "V" or vim.fn.mode() == "\22" then
+    --     fg = theme.visual.a.fg
+    --     bg = theme.visual.a.bg
+    --   else
+    --     fg = theme.normal.a.fg
+    --     bg = theme.normal.a.bg
+    --   end
+    --
+    --   return { fg = fg, bg = bg, ifg = ifg, ibg = ibg }
+    -- end
 
     local function get_fallback_colors(props, ft_color)
       if not props.focused then
@@ -225,13 +224,23 @@ return {
 
         local search_section = {}
         local search_active = false
+        local search_section_icon
         if props.focused then
           local count = vim.fn.searchcount({ recompute = 1, maxcount = -1 })
           local contents = vim.fn.getreg("/")
+          if
+            (#breadcrumbs < 1 or not vim.g.incline_show_navic)
+            and (not vim.g.incline_show_diagnostics or #get_diagnostic_label() < 1)
+            and (not vim.g.incline_show_git_diff or #git_diff < 0)
+          then
+            search_section_icon = { "  ", group = "dkoStatusKey" }
+          else
+            search_section_icon = { " ", group = "dkoStatusKey" }
+          end
           if vim.v.hlsearch == 1 and count.total > 0 then
             search_active = true
             search_section = {
-              { " ", group = "dkoStatusKey" },
+              search_section_icon,
               { (" %s "):format(contents) .. modified_icon_2, group = "IncSearch" },
               { (" %d/%d "):format(count.current, count.total), group = "dkoStatusValue" },
             }

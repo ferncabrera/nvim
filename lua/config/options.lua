@@ -12,9 +12,9 @@ vim.g.snacks_animate = false
 vim.g.incline_show_git_diff = true
 vim.g.incline_show_diagnostics = true
 vim.g.incline_show_navic = false
-vim.g.lualine_show_last_modified = false
-vim.g.lualine_show_count_info = false
-vim.g.lualine_show_filetype_info = false
+-- vim.g.lualine_show_last_modified = false
+-- vim.g.lualine_show_count_info = false
+-- vim.g.lualine_show_filetype_info = false
 
 local noice = require("noice")
 
@@ -28,22 +28,22 @@ local function notify_toggle(name, state)
   end
 end
 
-vim.keymap.set("n", "<leader>ta", function()
-  local any_enabled = vim.g.lualine_show_last_modified
-    or vim.g.lualine_show_count_info
-    or vim.g.lualine_show_filetype_info
-
-  local new_state = not any_enabled
-
-  vim.g.lualine_show_last_modified = new_state
-  vim.g.lualine_show_count_info = new_state
-  vim.g.lualine_show_filetype_info = new_state
-
-  require("lualine").refresh()
-
-  local msg = "Lualine All Info: " .. (new_state and "ON" or "OFF")
-  noice.notify(msg, new_state and "info" or "warn")
-end, { desc = "Toggle all Lualine Info", silent = true })
+-- vim.keymap.set("n", "<leader>ta", function()
+--   local any_enabled = vim.g.lualine_show_last_modified
+--     or vim.g.lualine_show_count_info
+--     or vim.g.lualine_show_filetype_info
+--
+--   local new_state = not any_enabled
+--
+--   vim.g.lualine_show_last_modified = new_state
+--   vim.g.lualine_show_count_info = new_state
+--   vim.g.lualine_show_filetype_info = new_state
+--
+--   require("lualine").refresh()
+--
+--   local msg = "Lualine All Info: " .. (new_state and "ON" or "OFF")
+--   noice.notify(msg, new_state and "info" or "warn")
+-- end, { desc = "Toggle all Lualine Info", silent = true })
 
 -- vim.keymap.set("n", "<leader>tm", function()
 --   vim.g.lualine_show_last_modified = not vim.g.lualine_show_last_modified
@@ -65,7 +65,7 @@ end, { desc = "Toggle all Lualine Info", silent = true })
 
 vim.keymap.set("n", "<leader>tg", function()
   vim.g.incline_show_git_diff = not vim.g.incline_show_git_diff
-  require("lualine").refresh()
+  -- require("lualine").refresh()
   notify_toggle("Incline Git Diff", vim.g.incline_show_git_diff)
 end, { desc = "Toggle incline_show_git_diff", silent = true })
 
