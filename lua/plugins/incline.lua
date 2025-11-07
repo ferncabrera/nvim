@@ -44,7 +44,7 @@ return {
     --   return { fg = fg, bg = bg, ifg = ifg, ibg = ibg }
     -- end
 
-    local function get_fallback_colors(props, ft_color)
+    local function get_fallback_colors(props)
       if not props.focused then
         if MODE == "dark" then
           if THEME == "wave" then
@@ -78,7 +78,7 @@ return {
       --   colors = get_lualine_colors(lualine, props, ft_color)
       -- end
       -- return colors or get_fallback_colors(props, ft_color)
-      return get_fallback_colors(props, ft_color)
+      return get_fallback_colors(props)
     end
 
     require("incline").setup({
@@ -141,9 +141,9 @@ return {
           if signs == nil then
             return labels
           end
-          for name, icon in pairs(icons) do
+          for name, icon_git in pairs(icons) do
             if tonumber(signs[name]) and signs[name] > 0 then
-              table.insert(labels, { icon .. signs[name] .. " ", group = "Diff" .. name })
+              table.insert(labels, { icon_git .. signs[name] .. " ", group = "Diff" .. name })
             end
           end
           if #labels > 0 then
@@ -156,10 +156,10 @@ return {
         local function get_diagnostic_label()
           local icons = { error = "", warn = "", info = "", hint = "" }
           local label = {}
-          for severity, icon in pairs(icons) do
+          for severity, icon_diag in pairs(icons) do
             local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
             if n > 0 then
-              table.insert(label, { icon .. n .. " ", group = "DiagnosticSign" .. severity })
+              table.insert(label, { icon_diag .. n .. " ", group = "DiagnosticSign" .. severity })
             end
           end
           if #label > 0 then
