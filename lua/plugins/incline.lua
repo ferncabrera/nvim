@@ -231,7 +231,7 @@ return {
           if
             (#breadcrumbs < 1 or not vim.g.incline_show_navic)
             and (not vim.g.incline_show_diagnostics or #get_diagnostic_label() < 1)
-            and (not vim.g.incline_show_git_diff or #git_diff < 0)
+            and (not vim.g.incline_show_git_diff or #git_diff < 1)
           then
             search_section_icon = { "  ", group = "dkoStatusKey" }
           else
