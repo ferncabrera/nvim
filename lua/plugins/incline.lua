@@ -116,7 +116,6 @@ return {
         end
 
         local modified_icon = vim.bo[props.buf].modified and "⚪" or ""
-        local modified_icon_2 = vim.bo[props.buf].modified and "⚪ " or ""
 
         local icon, ft_color = devicons.get_icon_color(filename)
         if vim.bo[props.buf].filetype == "oil" then
@@ -241,12 +240,13 @@ return {
             search_active = true
             search_section = {
               search_section_icon,
-              { (" \\%s\\"):format(contents) .. modified_icon_2, group = "IncSearch" },
+              { (" \\%s\\"):format(contents), group = "IncSearch" },
               {
                 (" %d/%d "):format(count.current, count.total),
                 -- group = "dkoStatusValue"
                 group = "IncSearch",
               },
+              { modified_icon .. " ", group = "IncSearch" },
             }
           end
         end
