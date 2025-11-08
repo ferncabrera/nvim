@@ -240,7 +240,7 @@ return {
             search_active = true
             search_section = {
               search_section_icon,
-              { (" \\%s\\"):format(contents), group = "IncSearch" },
+              { (" \\<%s>\\"):format(contents), group = "IncSearch" },
               {
                 (" %d/%d "):format(count.current, count.total),
                 -- group = "dkoStatusValue"
