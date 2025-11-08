@@ -7,28 +7,28 @@ return {
       replace_netrw = false, -- Replace netrw with the snacks explorer
     },
     picker = {
-      layout = {
-        reverse = true,
-        layout = {
-          box = "horizontal",
-          backdrop = false,
-          width = 0.8,
-          height = 0.9,
-          border = "none",
-          {
-            box = "vertical",
-            { win = "list", title = " Results ", title_pos = "center", border = true },
-            { win = "input", height = 1, border = true, title = "{title} {live} {flags}", title_pos = "center" },
-          },
-          {
-            win = "preview",
-            title = "{preview:Preview}",
-            width = 0.45,
-            border = true,
-            title_pos = "center",
-          },
-        },
-      },
+      -- layout = {
+      --   reverse = true,
+      --   layout = {
+      --     box = "horizontal",
+      --     backdrop = false,
+      --     width = 0.8,
+      --     height = 0.9,
+      --     border = "none",
+      --     {
+      --       box = "vertical",
+      --       { win = "list", title = " Results ", title_pos = "center", border = true },
+      --       { win = "input", height = 1, border = true, title = "{title} {live} {flags}", title_pos = "center" },
+      --     },
+      --     {
+      --       win = "preview",
+      --       title = "{preview:Preview}",
+      --       width = 0.45,
+      --       border = true,
+      --       title_pos = "center",
+      --     },
+      --   },
+      -- },
 
       -- dev = { "~/dev", "~/Code" },
       projects = {

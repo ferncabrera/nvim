@@ -13,7 +13,7 @@ return {
       -- question_header = " " .. user .. " ",
       separator = "━━",
       headers = {
-        user = " User (" .. user .. ") ",
+        user = "󱍋 User (" .. user .. ") ",
         assistant = " Better User ",
         tool = " Tool ",
       },

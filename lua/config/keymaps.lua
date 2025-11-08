@@ -140,3 +140,16 @@ vim.keymap.set("n", "<leader>al", function()
   -- If window already visible, proceed without extra prompt (user can see it)
   chat.load(session_name)
 end, { desc = "CopilotChatLoad _project_name_" })
+
+vim.keymap.set("n", "<leader>cD", function()
+  if vim.g.db == nil then
+    vim.g.db = "postgresql://postgres:admin@localhost:32001/open-ims-dev"
+    vim.notify(
+      "DB connection string set (postgresql://postgres:admin@localhost:32001/open-ims-dev)",
+      vim.log.levels.INFO
+    )
+  else
+    vim.g.db = nil
+    vim.notify("DB connection string unset", vim.log.levels.INFO)
+  end
+end, { desc = "Toggle DB connection string" })

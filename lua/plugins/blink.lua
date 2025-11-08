@@ -108,9 +108,7 @@ return {
       sources = {
         default = { "env", "ripgrep", "tmux", "yank", "emoji", inherit_defaults = true },
         per_filetype = {
-          -- sql = { "dadbod", "copilot", inherit_defaults = true },
-          sql = { "copilot", inherit_defaults = true },
-          -- typescript = { "dadbod", "env", "ripgrep", "tmux", "yank", "emoji", inherit_defaults = true },
+          sql = { "dadbod", inherit_defaults = true },
         },
         providers = {
           env = {
@@ -332,6 +330,10 @@ return {
       signature = {
         enabled = true,
         window = { winblend = vim.o.pumblend },
+      },
+      cmdline = {
+        keymap = { preset = "inherit" },
+        completion = { menu = { auto_show = true } },
       },
     },
   },
