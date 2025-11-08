@@ -8,6 +8,7 @@ return {
       -- },
       "kristijanhusak/vim-dadbod-completion",
       "niuiic/blink-cmp-rg",
+      "xieyonn/blink-cmp-dat-word",
       "bydlw98/blink-cmp-env",
       { "marcoSven/blink-cmp-yanky" },
       "moyiz/blink-emoji.nvim",
@@ -106,11 +107,21 @@ return {
         -- },
       },
       sources = {
-        default = { "env", "ripgrep", "tmux", "yank", "emoji", inherit_defaults = true },
+        default = { "env", "ripgrep", "tmux", "yank", "datword", "emoji", inherit_defaults = true },
         per_filetype = {
           sql = { "dadbod", inherit_defaults = true },
         },
         providers = {
+          datword = {
+            name = "Dictionary",
+            module = "blink-cmp-dat-word",
+            opts = {
+              paths = {
+                -- "path_to_your_words.txt", -- add your owned word files before dictionary.
+                "/usr/share/dict/words", -- This file is included by default on Linux/macOS.
+              },
+            },
+          },
           env = {
             name = "Env",
             module = "blink-cmp-env",
@@ -179,7 +190,7 @@ return {
           ripgrep = {
             module = "blink-cmp-rg",
             name = "Ripgrep",
-            transform_items = function(ctx, items)
+            transform_items = function(_, items)
               for _, item in ipairs(items) do
                 item.kind_icon = " "
                 item.kind_name = "Ripgrep"
@@ -193,14 +204,14 @@ return {
               get_command = function(context, prefix)
                 return {
                   "rg",
-                  "--no-config",
+                  "--no-ignore",
                   "--json",
                   "--word-regexp",
                   "--ignore-case",
                   "--max-filesize",
-                  "16k",
+                  "16K",
                   "-g",
-                  "*ockerfile*",
+                  "*ockerfile",
                   "-g",
                   "*compose*",
                   "-g",
