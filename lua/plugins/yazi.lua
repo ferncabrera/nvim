@@ -14,19 +14,25 @@ return {
       desc = "Open yazi at the current file",
     },
     {
-      "<leader>E",
+      "<leader>_",
       mode = { "n", "v" },
       "<cmd>Yazi cwd<cr>",
       desc = "Open yazi in nvim's working directory",
     },
     {
-      "<leader>e",
+      "<leader>eE",
+      mode = { "n", "v" },
+      "<cmd>Yazi cwd<cr>",
+      desc = "Open yazi in nvim's working directory",
+    },
+    {
+      "<leader>ee",
       mode = { "n", "v" },
       "<cmd>Yazi<cr>",
       desc = "Open yazi at the current file",
     },
     {
-      "<leader>se",
+      "<leader>er",
       mode = { "n", "v" },
       function()
         if vim.g.yazi_has_session then

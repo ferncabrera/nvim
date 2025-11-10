@@ -9,10 +9,11 @@ return {
       "kristijanhusak/vim-dadbod-completion",
       "niuiic/blink-cmp-rg",
       "xieyonn/blink-cmp-dat-word",
-      "bydlw98/blink-cmp-env",
+      -- "bydlw98/blink-cmp-env",
       { "marcoSven/blink-cmp-yanky" },
       "moyiz/blink-emoji.nvim",
       "mgalliou/blink-cmp-tmux",
+      "ph1losof/ecolog.nvim",
       -- {
       --   "mikavilpas/blink-ripgrep.nvim",
       --   version = "*", -- use the latest stable version
@@ -107,11 +108,25 @@ return {
         -- },
       },
       sources = {
-        default = { "env", "ripgrep", "tmux", "yank", "datword", "emoji", inherit_defaults = true },
+        default = {
+          "ecolog",
+          -- "env",
+          "ripgrep",
+          "tmux",
+          "yank",
+          "datword",
+          "emoji",
+          inherit_defaults = true,
+        },
         per_filetype = {
           sql = { "dadbod", inherit_defaults = true },
         },
         providers = {
+          ecolog = {
+            score_offset = 99, -- Tune by preference
+            name = "ecolog",
+            module = "ecolog.integrations.cmp.blink_cmp",
+          },
           datword = {
             name = "Dictionary",
             module = "blink-cmp-dat-word",
@@ -122,15 +137,16 @@ return {
               },
             },
           },
-          env = {
-            name = "Env",
-            module = "blink-cmp-env",
-            opts = {
-              item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
-              show_braces = false,
-              show_documentation_window = true,
-            },
-          },
+          -- env = {
+          --   name = "Env",
+          --   module = "blink-cmp-env",
+          --   score_offset = 99, -- Tune by preference
+          --   opts = {
+          --     item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
+          --     show_braces = false,
+          --     show_documentation_window = true,
+          --   },
+          -- },
           dadbod = {
             name = "Dadbod",
             score_offset = 100, -- Tune by preference
@@ -204,7 +220,6 @@ return {
               get_command = function(context, prefix)
                 return {
                   "rg",
-                  "--no-ignore",
                   "--json",
                   "--word-regexp",
                   "--ignore-case",
@@ -220,6 +235,14 @@ return {
                   "*[Rr][Ee][Aa][Dd][Mm][Ee]*",
                   "-g",
                   "*env*",
+                  "-g",
+                  "*-tags.json",
+                  "-g",
+                  ".gitignore",
+                  "-g",
+                  "[Mm]akefile",
+                  "-g",
+                  "*.sh",
                   "-g",
                   "*conf*",
                   "--",
@@ -334,7 +357,7 @@ return {
         },
         documentation = {
           window = {
-            border = vim.o.winborder,
+            border = "none",
           },
         },
       },

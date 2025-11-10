@@ -2,6 +2,7 @@ return {
   "kazhala/close-buffers.nvim",
   event = "VeryLazy",
   keys = {
+    { "<leader>t", "", desc = "+custom/primagen", mode = { "n", "v" } },
     {
       "<leader>th",
       function()

@@ -102,7 +102,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     if vim.opt.termguicolors:get() then
       if MODE == "dark" then
         if THEME == "wave" then
-          vim.api.nvim_set_hl(0, "StatusLine", { bg = "#2a2a37", fg = "#DCD7BA", bold = false })
+          vim.api.nvim_set_hl(0, "StatusLine", { bg = "#1e1f28", fg = "#DCD7BA", bold = false })
         else
           vim.api.nvim_set_hl(0, "StatusLine", { bg = "#393836", fg = "#f2ecbc", bold = false })
         end

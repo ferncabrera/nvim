@@ -88,8 +88,24 @@ vim.lsp.enable("postgres_lsp")
 
 vim.opt.laststatus = 3
 vim.opt.ls = 3
-vim.opt.statusline = "%F"
+vim.opt.statusline = " %F  %=🌲 %{%v:lua.require'ecolog'.get_status()%} "
 vim.opt.winborder = "single"
 
-vim.cmd([[ autocmd RecordingEnter * set cmdheight=1 ]])
-vim.cmd([[ autocmd RecordingLeave * set cmdheight=0 ]])
+if MODE == "dark" then
+  if THEME == "wave" then
+    vim.cmd([[
+      autocmd RecordingEnter * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#dca561", fg = "#727169", bold = false })
+      autocmd RecordingLeave * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#1e1f28", fg = "#DCD7BA", bold = false })
+    ]])
+  else
+    vim.cmd([[
+      autocmd RecordingEnter * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#c4b28a", fg = "#1e1f28", bold = false })
+      autocmd RecordingLeave * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#393836", fg = "#f2ecbc", bold = false })
+    ]])
+  end
+else
+  vim.cmd([[
+    autocmd RecordingEnter * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#5a7785", fg = "#f2ecbc", bold = false })
+    autocmd RecordingLeave * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#f2ecbc", fg = "#727169", bold = false })
+  ]])
+end
