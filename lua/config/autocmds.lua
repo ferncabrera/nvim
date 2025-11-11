@@ -115,7 +115,12 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   end,
 })
 
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "*",
+  callback = function()
+    vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
+  end,
+})
+
 -- Apply immediately on startup (in case colorscheme loads before this)
 vim.cmd("doautocmd ColorScheme")
-
-vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
