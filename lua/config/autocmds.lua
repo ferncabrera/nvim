@@ -9,10 +9,6 @@
 
 -- Set highlight for matching brackets/parentheses/quotes
 
-vim.opt.relativenumber = false
-
-vim.opt.colorcolumn = "120"
-
 vim.api.nvim_create_autocmd("ModeChanged", {
   pattern = "*:[vV]", -- matches entering visual modes: char, line, block
   callback = function()
@@ -20,9 +16,6 @@ vim.api.nvim_create_autocmd("ModeChanged", {
   end,
 })
 -- vim.cmd("highlight ColorColumn ctermbg=0 guibg=#c8c093")
-
-vim.api.nvim_set_hl(0, "CopilotChatHeader", { fg = "#b35b79", bold = true })
-vim.api.nvim_set_hl(0, "CopilotChatSeparator", { fg = "#5e857a" })
 
 vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
@@ -119,8 +112,29 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   pattern = "*",
   callback = function()
     vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
+    vim.api.nvim_set_hl(0, "CopilotChatHeader", { fg = "#b35b79", bold = true })
+    vim.api.nvim_set_hl(0, "CopilotChatSeparator", { fg = "#5e857a" })
   end,
 })
+
+if MODE == "dark" then
+  if THEME == "wave" then
+    vim.cmd([[
+      autocmd RecordingEnter * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#dca561", fg = "#727169", bold = false })
+      autocmd RecordingLeave * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#1e1f28", fg = "#DCD7BA", bold = false })
+    ]])
+  else
+    vim.cmd([[
+      autocmd RecordingEnter * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#c4b28a", fg = "#1e1f28", bold = false })
+      autocmd RecordingLeave * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#393836", fg = "#f2ecbc", bold = false })
+    ]])
+  end
+else
+  vim.cmd([[
+    autocmd RecordingEnter * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#5a7785", fg = "#f2ecbc", bold = false })
+    autocmd RecordingLeave * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#f2ecbc", fg = "#727169", bold = false })
+  ]])
+end
 
 -- Apply immediately on startup (in case colorscheme loads before this)
 vim.cmd("doautocmd ColorScheme")

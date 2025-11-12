@@ -55,27 +55,35 @@ return {
       blink_cmp = true,
       snacks = true,
       statusline = {
-        hidden_mode = false, -- Hide when no env file is loaded
-        icons = {
-          enabled = true, -- Enable icons in statusline
-          env = "🌲", -- Icon for environment file
-          shelter = "🛡️", -- Icon for shelter mode
-        },
-        format = {
-          env_file = function(name)
-            return name -- Format environment file name
-          end,
-          vars_count = function(count)
-            return string.format("%d vars", count) -- Format variables count
-          end,
-        },
+        hidden_mode = true,
+        icons = { enabled = true, env = "E", shelter = "S" },
         highlights = {
-          enabled = true, -- Enable custom highlights
-          env_file = "Directory", -- Highlight group for file name
-          vars_count = "Number", -- Highlight group for vars count
-          icons = "Special",
+          env_file = "Directory",
+          vars_count = "Number",
         },
       },
+      -- statusline = {
+      --   hidden_mode = false, -- Hide when no env file is loaded
+      --   icons = {
+      --     enabled = true, -- Enable icons in statusline
+      --     env = "🌲", -- Icon for environment file
+      --     shelter = "🛡️", -- Icon for shelter mode
+      --   },
+      --   format = {
+      --     env_file = function(name)
+      --       return name -- Format environment file name
+      --     end,
+      --     vars_count = function(count)
+      --       return string.format("%d vars", count) -- Format variables count
+      --     end,
+      --   },
+      --   highlights = {
+      --     enabled = true, -- Enable custom highlights
+      --     env_file = "Directory", -- Highlight group for file name
+      --     vars_count = "Number", -- Highlight group for vars count
+      --     icons = "Special",
+      --   },
+      -- },
     },
     shelter = {
       configuration = {
@@ -120,6 +128,7 @@ return {
       "common/config/dev/.secrets.env",
       "common/config/prod/.env",
       "common/config/prod/.secrets.env",
+      ".env",
     },
     path = vim.fn.getcwd(),
   },
