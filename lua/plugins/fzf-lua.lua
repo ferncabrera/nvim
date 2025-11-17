@@ -19,6 +19,9 @@ return {
       -- give it a try.
       include_current_session = true,
     },
+    winopts = {
+      border = "single",
+    },
     previewers = {
       builtin = {
         -- fzf-lua is very fast, but it really struggled to preview a couple files

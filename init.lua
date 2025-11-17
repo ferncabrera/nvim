@@ -18,6 +18,7 @@ MODE = detect_dark_mode() and "dark" or "light"
 THEME = "wave"
 
 vim.env.FZF_DEFAULT_OPTS = ""
+-- vim.env.BAT_THEME = ""
 
 -- if vim.env.AUTO_NVIM_RESTORE == "1" then
 --   vim.schedule(function()
