@@ -17,7 +17,7 @@ return {
       },
     },
     opts = {
-      default_file_explorer = false,
+      default_file_explorer = true,
       columns = { "icon" },
       cleanup_delay_ms = 2500,
       delete_to_trash = true,

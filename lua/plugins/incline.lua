@@ -227,22 +227,14 @@ return {
         if props.focused then
           local count = vim.fn.searchcount({ recompute = 1, maxcount = -1 })
           local contents = vim.fn.getreg("/")
-          -- if
-          --   (#breadcrumbs < 1 or not vim.g.incline_show_navic)
-          --   and (not vim.g.incline_show_diagnostics or #get_diagnostic_label() < 1)
-          --   and (not vim.g.incline_show_git_diff or #git_diff < 1)
-          -- then
           search_section_icon = { " 󱎸", group = "IncSearch" }
-          -- else
-          --   search_section_icon = { " 󰱼 ", group = "IncSearch" }
-          -- end
           if vim.v.hlsearch == 1 and count.total > 0 then
             search_active = true
             search_section = {
               search_section_icon,
               { (" \\<%s>\\"):format(contents), group = "IncSearch" },
               {
-                (" %d/%d "):format(count.current, count.total),
+                (" [%d/%d] "):format(count.current, count.total),
                 -- group = "dkoStatusValue"
                 group = "IncSearch",
               },

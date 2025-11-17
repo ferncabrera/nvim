@@ -81,6 +81,13 @@ return {
     },
   },
   keys = {
+    {
+      "<leader>n",
+      function()
+        vim.cmd("Noice fzf")
+      end,
+      desc = "Notification History",
+    },
     { "<leader>fe", false },
     { "<leader>fE", false },
     { "<leader>E", false },

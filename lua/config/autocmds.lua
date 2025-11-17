@@ -136,5 +136,13 @@ else
   ]])
 end
 
+vim.cmd([[
+  highlight OilGitAdded guifg=#6f894e
+  highlight OilGitModified guifg=#7fb4ca  
+  highlight OilGitRenamed guifg=#4d699b
+  highlight OilGitUntracked guifg=#98bb2a
+  highlight OilGitIgnored guifg=#737c73
+]])
+
 -- Apply immediately on startup (in case colorscheme loads before this)
 vim.cmd("doautocmd ColorScheme")

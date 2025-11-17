@@ -2,6 +2,7 @@ return {
   "mikavilpas/yazi.nvim",
   version = "*", -- use the latest stable version
   event = "VeryLazy",
+  enabled = false,
   dependencies = {
     { "nvim-lua/plenary.nvim", lazy = true },
   },
@@ -48,7 +49,7 @@ return {
   opts = {
     hooks = {
       yazi_opened = function(preselected_path, yazi_buffer_id, config)
-        vim.g.yazi_has_session = true
+        vim.g.yazi_has_session = false
       end,
       yazi_closed_successfully = function(chosen_file, config, state) end,
     },

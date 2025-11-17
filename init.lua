@@ -17,6 +17,8 @@ end
 MODE = detect_dark_mode() and "dark" or "light"
 THEME = "wave"
 
+vim.env.FZF_DEFAULT_OPTS = ""
+
 -- if vim.env.AUTO_NVIM_RESTORE == "1" then
 --   vim.schedule(function()
 --     require("persistence").load()
