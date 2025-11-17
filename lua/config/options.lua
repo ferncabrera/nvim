@@ -2,9 +2,9 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
-vim.opt.tabstop = 4 -- A TAB character looks like 4 spaces
-vim.opt.softtabstop = 4 -- Number of spaces inserted instead of a TAB character
-vim.opt.shiftwidth = 4 -- Number of spaces inserted when indenting
+-- vim.opt.tabstop = 4 -- A TAB character looks like 4 spaces
+-- vim.opt.softtabstop = 4 -- Number of spaces inserted instead of a TAB character
+-- vim.opt.shiftwidth = 4 -- Number of spaces inserted when indenting
 vim.opt.smartindent = true -- Auto-indent new lines
 vim.opt.breakindent = true -- Maintain indentation on wrapped lines
 
