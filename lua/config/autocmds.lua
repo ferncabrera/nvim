@@ -136,13 +136,45 @@ else
   ]])
 end
 
-vim.cmd([[
-  highlight OilGitAdded guifg=#6f894e
-  highlight OilGitModified guifg=#7fb4ca  
-  highlight OilGitRenamed guifg=#4d699b
-  highlight OilGitUntracked guifg=#98bb2a
-  highlight OilGitIgnored guifg=#737c73
-]])
+-- Oil-git highlight group color mapping
+local git_colors = {
+  Added = "#6f894e",
+  Modified = "#7fb4ca",
+  Renamed = "#4d699b",
+  Untracked = "#98bb2a",
+  Ignored = "#737c73",
+}
+
+-- Map old color names to new oil-git highlight groups
+local mappings = {
+  -- Added
+  OilGitStatusIndexAdded = git_colors.Added,
+  OilGitStatusWorkingTreeAdded = git_colors.Added,
+  -- Modified
+  OilGitStatusIndexModified = git_colors.Modified,
+  OilGitStatusWorkingTreeModified = git_colors.Modified,
+  -- Renamed
+  OilGitStatusIndexRenamed = git_colors.Renamed,
+  OilGitStatusWorkingTreeRenamed = git_colors.Renamed,
+  -- Untracked
+  OilGitStatusIndexUntracked = git_colors.Untracked,
+  OilGitStatusWorkingTreeUntracked = git_colors.Untracked,
+  -- Ignored
+  OilGitStatusIndexIgnored = git_colors.Ignored,
+  OilGitStatusWorkingTreeIgnored = git_colors.Ignored,
+}
+
+for hl_group, color in pairs(mappings) do
+  vim.api.nvim_set_hl(0, hl_group, { fg = color })
+end
+
+-- vim.cmd([[
+--   highlight OilGitAdded guifg=#6f894e
+--   highlight OilGitModified guifg=#7fb4ca
+--   highlight OilGitRenamed guifg=#4d699b
+--   highlight OilGitUntracked guifg=#98bb2a
+--   highlight OilGitIgnored guifg=#737c73
+-- ]])
 
 -- Apply immediately on startup (in case colorscheme loads before this)
 vim.cmd("doautocmd ColorScheme")
