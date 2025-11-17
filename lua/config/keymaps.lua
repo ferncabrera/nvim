@@ -6,6 +6,10 @@ local discipline = require("fern.discipline")
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+-- Visual mode mapping: <C-/> triggers gc
+vim.keymap.set("x", "<C-/>", "gc", { remap = true, silent = true })
+vim.keymap.set("n", "<C-/>", "gcc", { remap = true, silent = true })
+
 vim.keymap.set("n", "<leader>ww", ":w<CR>", { desc = "Save" })
 
 -- Take lines and move them (VSCode opt/alt functionality)
@@ -227,3 +231,5 @@ vim.keymap.set("n", "<leader>tm", function()
   vim.cmd("redrawstatus!")
   notify_toggle("Incline Navic", vim.g.incline_show_navic)
 end, { desc = "Toggle incline_show_navic", silent = true })
+
+-- vim.keymap.set("n", "<C-c>", "<cmd>qa<CR>", { desc = "Quit All" })
