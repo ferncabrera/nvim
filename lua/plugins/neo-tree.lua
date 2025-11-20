@@ -1,6 +1,7 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
   cmd = "Neotree",
+  lazy = false,
   keys = {
     {
       "<leader>fe",
@@ -84,8 +85,15 @@ return {
           end,
           desc = "Open with System Application",
         },
-        ["<C-p>"] = { "toggle_preview", config = { use_float = false } },
-        ["P"] = { "", config = { use_float = false } },
+        ["<C-p>"] = {
+          "toggle_preview",
+          config = {
+            use_float = false,
+            use_snacks_image = true,
+            use_image_nvim = true,
+          },
+        },
+        ["P"] = false,
       },
     },
     default_component_configs = {
