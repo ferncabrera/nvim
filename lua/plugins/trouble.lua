@@ -20,22 +20,22 @@ return {
     opts = {
       -- Place any other Trouble configuration options here.
     },
-    keys = {
-      -- Mapping for Trouble's quickfix view: now on <leader>xq
-      {
-        "<leader>xq",
-        function()
-          require("trouble").toggle("quickfix")
-        end,
-        desc = "Quickfix List (Trouble)",
-      },
-      -- Mapping for toggling the regular quickfix list on <leader>xQ.
-      -- This mapping will close it if already open.
-      {
-        "<leader>xQ",
-        toggle_quickfix,
-        desc = "Quickfix List",
-      },
-    },
+    -- keys = {
+    --   -- Mapping for Trouble's quickfix view: now on <leader>xq
+    --   {
+    --     "<leader>xq",
+    --     function()
+    --       require("trouble").toggle("quickfix")
+    --     end,
+    --     desc = "Quickfix List (Trouble)",
+    --   },
+    --   -- Mapping for toggling the regular quickfix list on <leader>xQ.
+    --   -- This mapping will close it if already open.
+    --   {
+    --     "<leader>xQ",
+    --     toggle_quickfix,
+    --     desc = "Quickfix List",
+    --   },
+    -- },
   },
 }

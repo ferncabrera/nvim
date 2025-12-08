@@ -10,7 +10,8 @@ vim.opt.breakindent = true -- Maintain indentation on wrapped lines
 
 -- Following main release....
 vim.g.lazyvim_blink_main = true
-vim.g.lazyvim_picker = "fzf"
+-- vim.g.lazyvim_picker = "fzf"
+vim.g.lazyvim_picker = "snacks"
 
 vim.lsp.enable("postgres_lsp")
 

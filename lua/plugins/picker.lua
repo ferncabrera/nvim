@@ -2,6 +2,21 @@
 return {
   "folke/snacks.nvim",
   opts = {
+    styles = {
+      zen = {
+        keys = { q = "close" },
+        width = 180,
+      },
+    },
+    zen = {
+      toggles = {
+        dim = false,
+        git_signs = true,
+        mini_diff_signs = false,
+        diagnostics = true,
+        inlay_hints = false,
+      },
+    },
     explorer = {
       enabled = false,
       replace_netrw = false, -- Replace netrw with the snacks explorer
@@ -14,6 +29,11 @@ return {
             -- to close the picker on ESC instead of going to normal mode,
             -- add the following keymap to your config
             -- ["<Esc>"] = { "close", mode = { "n", "i" } },
+            ["<c-t>"] = {
+              "trouble_open",
+              mode = { "n", "i" },
+            },
+            ["<a-a>"] = { "select_all", mode = { "n", "i" } },
             ["K"] = "preview_scroll_up",
             ["J"] = "preview_scroll_down",
           },
@@ -81,13 +101,13 @@ return {
     },
   },
   keys = {
-    {
-      "<leader>n",
-      function()
-        vim.cmd("Noice fzf")
-      end,
-      desc = "Notification History",
-    },
+    -- {
+    --   "<leader>n",
+    --   function()
+    --     vim.cmd("Noice fzf")
+    --   end,
+    --   desc = "Notification History",
+    -- },
     { "<leader>fe", false },
     { "<leader>fE", false },
     { "<leader>E", false },
