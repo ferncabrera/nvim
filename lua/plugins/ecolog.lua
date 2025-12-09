@@ -3,7 +3,7 @@ return {
   branch = "beta",
   lazy = false,
   keys = {
-    { "<leader>e", "", desc = "+yazi/ecolog", mode = { "n", "v" } },
+    { "<leader>e", "", desc = "+ecolog", mode = { "n", "v" } },
     { "<leader>el", "<Cmd>EcologShelterLinePeek<cr>", desc = "Ecolog Peek line" },
     { "<leader>ey", "<Cmd>EcologCopy<cr>", desc = "Ecolog Copy value under cursor" },
     { "<leader>ei", "<Cmd>EcologInterpolationToggle<cr>", desc = "Ecolog Toggle interpolation" },
