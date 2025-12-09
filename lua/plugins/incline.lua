@@ -255,6 +255,8 @@ return {
           (not search_active) and {
             filename,
             " ",
+            { string.format("%d", props.buf), guifg = colors.fg, guibg = colors.bg },
+            " ",
             { modified_icon, group = "InclineModified" },
             " ",
             guifg = colors.fg,
