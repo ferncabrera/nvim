@@ -83,12 +83,12 @@ return {
 
     require("incline").setup({
       ignore = {
-        unlisted_buffers = true,
-        floating_wins = true,
+        -- unlisted_buffers = true,
+        floating_wins = false,
         wintypes = function(winid, wintype)
-          local zen_view = package.loaded["zen-mode.view"]
-          if zen_view and zen_view.is_open() then
-            return winid ~= zen_view.win
+          local zen = package.loaded["snacks"].zen
+          if zen.win and not zen.win.closed then
+            return winid ~= zen.win.win
           end
           return wintype ~= ""
         end,
