@@ -115,7 +115,7 @@ return {
           filename = ""
         end
 
-        local modified_icon = vim.bo[props.buf].modified and "⚪" or ""
+        local modified_icon = vim.bo[props.buf].modified and "⚪ " or ""
 
         local icon, ft_color = devicons.get_icon_color(filename)
         if vim.bo[props.buf].filetype == "oil" then
@@ -238,7 +238,7 @@ return {
                 -- group = "dkoStatusValue"
                 group = "IncSearch",
               },
-              { modified_icon .. " ", group = "IncSearch" },
+              { modified_icon, group = "IncSearch" },
             }
           end
         end
@@ -258,7 +258,6 @@ return {
             { string.format("%d", props.buf), guifg = colors.fg, guibg = colors.bg },
             " ",
             { modified_icon, group = "InclineModified" },
-            " ",
             guifg = colors.fg,
             guibg = colors.bg,
           } or {},
