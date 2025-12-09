@@ -222,5 +222,5 @@ return {
       -- require("lualine").hide()
       -- vim.g.incline_show_navic = true
     end
-  end, { desc = "Toggle Lualine" }),
+  end, { desc = "Toggle Statusline" }),
 }

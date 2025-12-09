@@ -66,7 +66,7 @@ vim.keymap.set("i", "jj", "<Esc>", { noremap = false })
 vim.keymap.set("i", "jk", "<Esc>", { noremap = false })
 
 -- C root
-vim.keymap.set("n", "<leader>tr", "<cmd>LazyRoot<CR>", { desc = "LazyRoot" })
+vim.keymap.set("n", "<leader>t.", "<cmd>LazyRoot<CR>", { desc = "LazyRoot" })
 
 -- Better resizing
 vim.keymap.set("n", "<leader>w>", "<cmd>vertical resize +20<CR>", { desc = "Increase window width (20)" })
@@ -79,22 +79,28 @@ vim.keymap.set("n", "<leader>w-", "<cmd>resize -10<CR>", { desc = "Decrease wind
 vim.keymap.set("n", "Q", "q", { noremap = true, desc = "Record macro" })
 vim.keymap.set("n", "q", "<Nop>", { noremap = true, desc = "Disable q macro" })
 
+vim.keymap.set("n", "<leader>tc", function()
+  local name = vim.fn.expand("%:t")
+  vim.fn.setreg("+", name)
+  require("noice").notify("Copied file name: " .. name, "info")
+end, { noremap = true, silent = true, desc = "Copy file name" })
+
 function insertFullPath()
   local filepath = vim.fn.expand("%")
   vim.fn.setreg("+", filepath) -- write to clippoard
   return filepath
 end
 
-vim.keymap.set("n", "<leader>tf", function()
+vim.keymap.set("n", "<leader>tr", function()
   local path = insertFullPath()
   if path then
-    require("noice").notify("Copied full path: " .. path)
+    require("noice").notify("Copied full path: " .. path, "info")
   else
     require("noice").notify("Failed to get full path", "error")
   end
 end, { noremap = true, silent = true, desc = "Copy full path" })
 
-vim.keymap.set("n", "<leader>tl", function()
+vim.keymap.set("n", "<leader>tp", function()
   local path = vim.fn.expand("%:.")
   vim.fn.setreg("+", path)
   require("noice").notify("Copied relative path: " .. path)
