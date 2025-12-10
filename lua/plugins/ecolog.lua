@@ -10,6 +10,7 @@ return {
     { "<leader>eh", "<Cmd>EcologShellToggle<cr>", desc = "Ecolog Toggle shell variables" },
     { "<leader>ge", "<cmd>EcologGoto<cr>", desc = "Ecolog Go to env file" },
     { "<leader>ec", "<cmd>EcologSnacks<cr>", desc = "Ecolog Open a picker" },
+    { "<leader>se", "<cmd>EcologSnacks<cr>", desc = "Ecolog Open a picker" },
     { "<leader>eS", "<cmd>EcologSelect<cr>", desc = "Ecolog Switch env file" },
     { "<leader>es", "<cmd>EcologShelterToggle<cr>", desc = "Ecolog Shelter toggle" },
   },
