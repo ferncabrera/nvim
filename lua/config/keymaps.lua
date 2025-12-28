@@ -7,8 +7,8 @@ local discipline = require("fern.discipline")
 -- Add any additional keymaps here
 
 -- Visual mode mapping: <C-/> triggers gc
-vim.keymap.set("x", "<C-/>", "gc", { remap = true, silent = true })
-vim.keymap.set("n", "<C-/>", "gcc", { remap = true, silent = true })
+-- vim.keymap.set("x", "<C-/>", "gc", { remap = true, silent = true })
+-- vim.keymap.set("n", "<C-/>", "gcc", { remap = true, silent = true })
 
 vim.keymap.set("n", "<leader>ww", ":w<CR>", { desc = "Save" })
 
@@ -153,9 +153,9 @@ end, { desc = "CopilotChatLoad _project_name_" })
 
 vim.keymap.set("n", "<leader>cD", function()
   if vim.g.db == nil then
-    vim.g.db = "postgresql://postgres:admin@localhost:32001/open-ims-dev"
+    vim.g.db = "postgresql://admin_user:admin123@localhost:32001/open-ims-dev"
     vim.notify(
-      "DB connection string set (postgresql://postgres:admin@localhost:32001/open-ims-dev)",
+      "DB connection string set (postgresql://admin_user:admin123@localhost:32001/open-ims-dev)",
       vim.log.levels.INFO
     )
   else

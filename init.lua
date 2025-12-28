@@ -26,4 +26,5 @@ vim.env.FZF_DEFAULT_OPTS = "--bind ctrl-d:page-down,ctrl-u:page-up"
 --   end)
 -- end
 -- bootstrap lazy.nvim, LazyVim and your plugins
+
 require("config.lazy")

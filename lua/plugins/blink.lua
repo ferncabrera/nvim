@@ -122,86 +122,16 @@ return {
           sql = { "dadbod", inherit_defaults = true },
         },
         providers = {
-          ecolog = {
-            score_offset = 99, -- Tune by preference
-            name = "ecolog",
-            module = "ecolog.integrations.cmp.blink_cmp",
-          },
-          datword = {
-            name = "Dictionary",
-            module = "blink-cmp-dat-word",
-            opts = {
-              paths = {
-                -- "path_to_your_words.txt", -- add your owned word files before dictionary.
-                "/usr/share/dict/words", -- This file is included by default on Linux/macOS.
-              },
-            },
-          },
-          -- env = {
-          --   name = "Env",
-          --   module = "blink-cmp-env",
-          --   score_offset = 99, -- Tune by preference
-          --   opts = {
-          --     item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
-          --     show_braces = false,
-          --     show_documentation_window = true,
-          --   },
-          -- },
           dadbod = {
             name = "Dadbod",
             score_offset = 100, -- Tune by preference
             module = "vim_dadbod_completion.blink",
             enabled = true,
           },
-          yank = {
-            name = "yank",
-            module = "blink-yanky",
-            opts = {
-              minLength = 5,
-              onlyCurrentFiletype = true,
-              trigger_characters = { '"' },
-              kind_icon = "󰅍",
-            },
-          },
-          tmux = {
-            module = "blink-cmp-tmux",
-            name = "tmux",
-            -- default options
-            opts = {
-              all_panes = false,
-              capture_history = false,
-              -- only suggest completions from `tmux` if the `trigger_chars` are
-              -- used
-              -- triggered_only = false,
-              -- trigger_chars = { "." },
-            },
-            transform_items = function(ctx, items)
-              for _, item in ipairs(items) do
-                item.kind_icon = " "
-                item.kind_name = "tmux"
-              end
-              return items
-            end,
-          },
-          emoji = {
-            module = "blink-emoji",
-            name = "Emoji",
-            score_offset = 30, -- Tune by preference
-            opts = {
-              insert = true, -- Insert emoji (default) or complete its name
-              ---@type string|table|fun():table
-              trigger = function()
-                return { ":" }
-              end,
-            },
-            -- should_show_items = function()
-            --   return vim.tbl_contains(
-            --     -- Enable emoji completion only for git commits and markdown.
-            --     -- By default, enabled for all file-types.
-            --     { "gitcommit", "markdown" },
-            --     vim.o.filetype
-            --   )
-            -- end,
+          ecolog = {
+            score_offset = 99, -- Tune by preference
+            name = "ecolog",
+            module = "ecolog.integrations.cmp.blink_cmp",
           },
           ripgrep = {
             module = "blink-cmp-rg",
@@ -254,6 +184,79 @@ return {
                 return context.line:sub(1, context.cursor[2]):match("[%w_-]+$") or ""
               end,
             },
+          },
+          -- env = {
+          --   name = "Env",
+          --   module = "blink-cmp-env",
+          --   score_offset = 99, -- Tune by preference
+          --   opts = {
+          --     item_kind = require("blink.cmp.types").CompletionItemKind.Variable,
+          --     show_braces = false,
+          --     show_documentation_window = true,
+          --   },
+          -- },
+          tmux = {
+            module = "blink-cmp-tmux",
+            name = "tmux",
+            -- default options
+            score_offset = -50, -- Lower priority than LSP
+            opts = {
+              all_panes = false,
+              capture_history = false,
+              -- only suggest completions from `tmux` if the `trigger_chars` are
+              -- used
+              -- triggered_only = false,
+              -- trigger_chars = { "." },
+            },
+            transform_items = function(ctx, items)
+              for _, item in ipairs(items) do
+                item.kind_icon = " "
+                item.kind_name = "tmux"
+              end
+              return items
+            end,
+          },
+          yank = {
+            name = "yank",
+            module = "blink-yanky",
+            score_offset = -75, -- Lower priority than LSP
+            opts = {
+              minLength = 5,
+              onlyCurrentFiletype = true,
+              trigger_characters = { '"' },
+              kind_icon = "󰅍",
+            },
+          },
+          datword = {
+            name = "Dictionary",
+            module = "blink-cmp-dat-word",
+            score_offset = -100, -- Lower priority than LSP
+            opts = {
+              paths = {
+                -- "path_to_your_words.txt", -- add your owned word files before dictionary.
+                "/usr/share/dict/words", -- This file is included by default on Linux/macOS.
+              },
+            },
+          },
+          emoji = {
+            module = "blink-emoji",
+            name = "Emoji",
+            score_offset = 30, -- Tune by preference
+            opts = {
+              insert = true, -- Insert emoji (default) or complete its name
+              ---@type string|table|fun():table
+              trigger = function()
+                return { ":" }
+              end,
+            },
+            -- should_show_items = function()
+            --   return vim.tbl_contains(
+            --     -- Enable emoji completion only for git commits and markdown.
+            --     -- By default, enabled for all file-types.
+            --     { "gitcommit", "markdown" },
+            --     vim.o.filetype
+            --   )
+            -- end,
           },
           --     minuet = {
           --       name = "minuet",

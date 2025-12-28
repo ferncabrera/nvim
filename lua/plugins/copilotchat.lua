@@ -8,7 +8,7 @@ return {
     local copilot = require("CopilotChat")
     user = user:sub(1, 1):upper() .. user:sub(2)
     return {
-      -- model = "deepseek-coder-v2:latest",
+      model = "claude-opus-4.5",
       auto_insert_mode = true,
       -- question_header = " " .. user .. " ",
       separator = "━━",
