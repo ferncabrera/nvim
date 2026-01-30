@@ -15,9 +15,21 @@ vim.g.lazyvim_picker = "snacks"
 
 vim.lsp.enable("postgres_lsp")
 
+function _G.Ecolog_statusline()
+  local ok, ecolog = pcall(require, "ecolog")
+  if not ok then
+    return "noenv"
+  end
+  local ok_status, status = pcall(ecolog.get_status)
+  if not ok_status or not status or status == "" then
+    return "noenv"
+  end
+  return status
+end
+
 vim.opt.laststatus = 3
 vim.opt.ls = 3
-vim.opt.statusline = " %F  %=🌲 %{%v:lua.require'ecolog'.get_status()%} "
+vim.opt.statusline = " %F  %= %{%v:lua.Ecolog_statusline()%} "
 vim.opt.winborder = "single"
 
 vim.opt.relativenumber = false
