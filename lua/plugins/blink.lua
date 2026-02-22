@@ -136,6 +136,7 @@ return {
           ripgrep = {
             module = "blink-cmp-rg",
             name = "Ripgrep",
+            score_offset = -10, -- Tune by preference
             transform_items = function(_, items)
               for _, item in ipairs(items) do
                 item.kind_icon = " "

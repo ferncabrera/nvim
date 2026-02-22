@@ -1,6 +1,6 @@
 return {
   "ph1losof/ecolog.nvim",
-  branch = "beta",
+  branch = "v1",
   lazy = false,
   keys = {
     { "<leader>e", "", desc = "+ecolog", mode = { "n", "v" } },
