@@ -8,7 +8,7 @@ return {
     { "<leader>ey", "<Cmd>EcologCopy<cr>", desc = "Ecolog Copy value under cursor" },
     { "<leader>ei", "<Cmd>EcologInterpolationToggle<cr>", desc = "Ecolog Toggle interpolation" },
     { "<leader>eh", "<Cmd>EcologShellToggle<cr>", desc = "Ecolog Toggle shell variables" },
-    { "<leader>ge", "<cmd>EcologGoto<cr>", desc = "Ecolog Go to env file" },
+    { "<leader>eg", "<cmd>EcologGoto<cr>", desc = "Ecolog Go to env file" },
     { "<leader>ec", "<cmd>EcologSnacks<cr>", desc = "Ecolog Open a picker" },
     { "<leader>se", "<cmd>EcologSnacks<cr>", desc = "Ecolog Open a picker" },
     { "<leader>eS", "<cmd>EcologSelect<cr>", desc = "Ecolog Switch env file" },
