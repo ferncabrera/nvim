@@ -249,6 +249,7 @@ return {
           breadcrumbs_section,
           vim.g.incline_show_diagnostics and props.focused and { get_diagnostic_label() } or {},
           git_diff_section,
+          { "", guifg = colors.bg, guibg = colors.fg },
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { icon, guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
