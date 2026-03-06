@@ -4,9 +4,9 @@ local function setupCustomHighlightGroup()
   vim.api.nvim_command("hi clear FlashLabel")
 
   -- vim.api.nvim_command("hi FlashMatch guibg=#938AA9 guifg=#EEF5FF") -- Emerald background
-  vim.api.nvim_command("hi FlashLabel guibg=#ff007c guifg=#EEF5FF")
-  vim.api.nvim_command("hi FlashCurrent guibg=#009fff guifg=#EEF5FF")
-  vim.api.nvim_command("hi FlashPromptIcon guifg=#ff007c")
+  vim.api.nvim_command("hi FlashLabel guibg=#b35b79 guifg=#f2ecbc")
+  vim.api.nvim_command("hi FlashCurrent guibg=#e98a00 guifg=#f2ecbc")
+  vim.api.nvim_command("hi FlashPromptIcon guifg=#b35b79")
 end
 
 return {
