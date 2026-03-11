@@ -257,8 +257,8 @@ return {
           breadcrumbs_section,
           vim.g.incline_show_diagnostics and props.focused and { get_diagnostic_label() } or {},
           git_diff_section,
-          (not search_active) and { "", guifg = colors.bg, guibg = colors.fg }
-            or { "", guibg = colors.fg, guifg = get_hl_bg("IncSearch") },
+          (not search_active) and { "", guifg = colors.bg, guibg = vim.g.kanagawa_bg }
+            or { "", guibg = vim.g.kanagawa_bg, guifg = get_hl_bg("IncSearch") },
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { icon, guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},

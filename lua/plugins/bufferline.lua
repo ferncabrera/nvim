@@ -7,10 +7,20 @@ return {
   -- },
   opts = {
     options = {
+      hover = {
+        enabled = false,
+        delay = 200,
+        reveal = { "close" },
+      },
+      diagnostics = "nvim_lsp",
       mode = "tabs",
-      separator_style = "slope",
+      separator_style = { "", "" },
       show_buffer_close_icons = false,
       show_close_icon = false,
+      indicator = {
+        icon = "",
+        style = "icon",
+      },
     },
   },
 }
