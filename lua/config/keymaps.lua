@@ -91,7 +91,7 @@ function insertFullPath()
   return filepath
 end
 
-vim.keymap.set("n", "<leader>tr", function()
+vim.keymap.set("n", "<leader>tf", function()
   local path = insertFullPath()
   if path then
     require("noice").notify("Copied full path: " .. path, "info")
@@ -151,7 +151,7 @@ vim.keymap.set("n", "<leader>al", function()
   chat.load(session_name)
 end, { desc = "CopilotChatLoad _project_name_" })
 
-vim.keymap.set("n", "<leader>cD", function()
+vim.keymap.set("n", "<leader>tD", function()
   if vim.g.db == nil then
     vim.g.db = "postgresql://admin_user:admin123@localhost:32001/open-ims-dev"
     vim.notify(

@@ -9,7 +9,7 @@ return {
     user = user:sub(1, 1):upper() .. user:sub(2)
     return {
       model = "claude-opus-4.5",
-      auto_insert_mode = true,
+      auto_insert_mode = false,
       -- question_header = " " .. user .. " ",
       separator = "━━",
       headers = {
