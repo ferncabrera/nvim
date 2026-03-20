@@ -6,14 +6,21 @@ return {
     {
       "<leader>D",
       function()
-        local pickers = require("snacks.picker.core.picker").get()
+        local neotree_win = nil
+        for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+          local buf = vim.api.nvim_win_get_buf(win)
+          if vim.bo[buf].filetype == "neo-tree" then
+            neotree_win = win
+            break
+          end
+        end
 
         -- Check if DBUI window is visible
         local dbui_win = vim.fn.bufwinnr("dbui") ~= -1
 
-        -- If DBUI window is NOT visible, close the snacks picker (if any)
-        if not dbui_win and #pickers > 0 then
-          pickers[#pickers]:close()
+        -- If DBUI window is NOT visible, close the neotree picker (if any)
+        if not dbui_win and neotree_win then
+          vim.cmd("Neotree close")
         end
 
         -- Always toggle DBUI after handling snacks picker logic

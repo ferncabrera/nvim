@@ -7,9 +7,16 @@ return {
       {
         "-",
         function()
-          local pickers = require("snacks.picker.core.picker").get()
-          if #pickers > 0 then
-            pickers[#pickers]:close()
+          local neotree_win = nil
+          for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+            local buf = vim.api.nvim_win_get_buf(win)
+            if vim.bo[buf].filetype == "neo-tree" then
+              neotree_win = win
+              break
+            end
+          end
+          if neotree_win then
+            vim.cmd("Neotree close")
           end
           vim.cmd("Oil")
         end,

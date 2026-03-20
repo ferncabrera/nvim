@@ -52,34 +52,34 @@ vim.api.nvim_create_autocmd("TermClose", {
   end,
 })
 
-local yazi_group = vim.api.nvim_create_augroup("YaziInclineRefresh", { clear = true })
-
-vim.api.nvim_create_autocmd("TermOpen", {
-  group = yazi_group,
-  pattern = "*",
-  callback = function(args)
-    local name = vim.api.nvim_buf_get_name(args.buf)
-    if name:match("yazi") then
-      local pickers = require("snacks.picker.core.picker").get()
-      if #pickers > 0 then
-        pickers[#pickers]:close()
-      end
-      require("incline").disable()
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd("TermClose", {
-  group = yazi_group,
-  pattern = "*",
-  callback = function(args)
-    local name = vim.api.nvim_buf_get_name(args.buf)
-    if name:match("yazi") then
-      require("incline").enable()
-      require("incline").refresh()
-    end
-  end,
-})
+-- local yazi_group = vim.api.nvim_create_augroup("YaziInclineRefresh", { clear = true })
+--
+-- vim.api.nvim_create_autocmd("TermOpen", {
+--   group = yazi_group,
+--   pattern = "*",
+--   callback = function(args)
+--     local name = vim.api.nvim_buf_get_name(args.buf)
+--     if name:match("yazi") then
+--       local pickers = require("snacks.picker.core.picker").get()
+--       if #pickers > 0 then
+--         pickers[#pickers]:close()
+--       end
+--       require("incline").disable()
+--     end
+--   end,
+-- })
+--
+-- vim.api.nvim_create_autocmd("TermClose", {
+--   group = yazi_group,
+--   pattern = "*",
+--   callback = function(args)
+--     local name = vim.api.nvim_buf_get_name(args.buf)
+--     if name:match("yazi") then
+--       require("incline").enable()
+--       require("incline").refresh()
+--     end
+--   end,
+-- })
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "dbui",

@@ -29,7 +29,7 @@ function _G.Statusline_path()
     return ""
   end
 
-  return vim.fn.fnamemodify(path, ":h") .. "/"
+  return " " .. vim.fn.fnamemodify(path, ":h") .. "/"
 end
 
 function _G.Ecolog_statusline()
