@@ -48,16 +48,19 @@ end
 vim.api.nvim_create_autocmd("ColorScheme", {
   callback = function()
     local fg = vim.g.kanagawa_fg or "#c8c093"
+    local bg = vim.g.kanagawa_bg
     local fg_dim = "#a6a69c"
-    vim.api.nvim_set_hl(0, "StatusLinePath", { fg = fg, bold = true })
-    vim.api.nvim_set_hl(0, "StatusLineEnv", { fg = fg_dim, italic = true })
+    vim.api.nvim_set_hl(0, "StatusLinePath", { fg = fg, bg = bg, bold = true })
+    vim.api.nvim_set_hl(0, "StatusLineBG", { bg = bg })
+    vim.api.nvim_set_hl(0, "StatusLine", { fg = fg, bg = bg })
+    vim.api.nvim_set_hl(0, "StatusLineEnv", { fg = fg_dim, bg = bg, italic = true })
   end,
 })
 
 vim.opt.laststatus = 3
 vim.opt.ls = 3
 vim.opt.statusline =
-  " %#StatusLinePath#%{%v:lua.Statusline_path()%}%#StatusLine#  %= %#StatusLineEnv#%{%v:lua.Ecolog_statusline()%} "
+  "%#StatusLineBG# %#StatusLinePath#%{%v:lua.Statusline_path()%}%#StatusLine#%#StatusLineBG# %= %#StatusLineEnv#%{%v:lua.Ecolog_statusline()%} "
 vim.opt.winborder = "single"
 
 vim.opt.relativenumber = false

@@ -1,11 +1,7 @@
 -- lua/config/kanagawa.lua
 local kanagawa = require("kanagawa")
 
-local theme = "dragon"
-
-if THEME == "wave" then
-  theme = THEME
-end
+local theme = THEME
 
 kanagawa.setup({
   -- explicitly choose the wave theme
@@ -14,7 +10,7 @@ kanagawa.setup({
   -- map `vim.o.background` to your preferred variants:
   background = {
     dark = theme, -- when background=dark → use wave
-    light = "lotus", -- if you ever switch to background=light
+    light = theme, -- if you ever switch to background=light
   },
 
   -- your other customizations:
