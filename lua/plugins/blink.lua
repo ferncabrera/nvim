@@ -1,6 +1,7 @@
 return {
   {
     "saghen/blink.cmp",
+    branch = "v1",
     dependencies = {
       -- {
       --   "milanglacier/minuet-ai.nvim",
