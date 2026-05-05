@@ -15,7 +15,7 @@ local function detect_dark_mode()
 end
 
 MODE = detect_dark_mode() and "dark" or "light"
-THEME = (MODE == "light") and "lotus" or "dragon"
+THEME = (MODE == "light") and "lotus" or "wave"
 
 vim.env.FZF_DEFAULT_OPTS = "--bind ctrl-d:page-down,ctrl-u:page-up"
 -- vim.env.BAT_THEME = ""

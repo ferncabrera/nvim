@@ -104,6 +104,10 @@ return {
         padding = 0,
         width = "fit",
         margin = { horizontal = 0, vertical = 0 },
+        placement = {
+          horizontal = "right", -- 'left', 'right', or 'center'
+          vertical = "top", -- 'top' or 'bottom'
+        },
       },
       hide = {
         cursorline = true,
