@@ -4,7 +4,7 @@ return {
   keys = {
     { "<leader>t", "", desc = "+custom/primagen", mode = { "n", "v" } },
     {
-      "<leader>th",
+      "<leader>bh",
       function()
         local closed = require("close_buffers").delete({ type = "hidden" })
         vim.notify("Closed hidden buffers.", vim.log.levels.INFO)
@@ -12,7 +12,7 @@ return {
       desc = "Close Hidden Buffers",
     },
     {
-      "<leader>tn",
+      "<leader>bn",
       function()
         local closed = require("close_buffers").delete({ type = "nameless" })
         vim.notify("Closed nameless buffers.", vim.log.levels.INFO)

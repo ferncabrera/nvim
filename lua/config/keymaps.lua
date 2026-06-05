@@ -98,13 +98,13 @@ vim.keymap.set("n", "<leader>tf", function()
   else
     require("noice").notify("Failed to get full path", "error")
   end
-end, { noremap = true, silent = true, desc = "Copy full path" })
+end, { noremap = true, silent = true, desc = "Copy full file path" })
 
 vim.keymap.set("n", "<leader>tp", function()
   local path = vim.fn.expand("%:.")
   vim.fn.setreg("+", path)
   require("noice").notify("Copied relative path: " .. path)
-end, { noremap = true, silent = true, desc = "Copy relative path" })
+end, { noremap = true, silent = true, desc = "Copy relative file path" })
 
 vim.keymap.set("n", "<leader>to", ":e <C-r>+<CR>", { noremap = true, desc = "Go to location in clipboard" })
 
@@ -124,32 +124,32 @@ vim.keymap.set("n", "<leader>qq", function()
 end, { desc = "Quit All & CopilotChatSave _project_name_" })
 
 -- restore last auto-saved session
-vim.keymap.set("n", "<leader>al", function()
-  local session_name = vim.fn.fnameescape(vim.fn.fnamemodify(vim.fn.getcwd(), ":t"))
-
-  if not package.loaded["CopilotChat"] then
-    vim.cmd("CopilotChat")
-    vim.cmd("CopilotChatLoad " .. session_name)
-    return
-  end
-
-  local ok, chat = pcall(require, "CopilotChat")
-
-  -- Plugin loaded. If window not visible, show it so user can inspect current history.
-  if chat.chat and not chat.chat:visible() then
-    chat.open()
-    local choice = vim.fn.confirm(
-      ("Restore CopilotChat session '%s'? This will replace current chat history."):format(session_name),
-      "&Yes\n&No",
-      2
-    )
-    if choice ~= 1 then
-      return
-    end
-  end
-  -- If window already visible, proceed without extra prompt (user can see it)
-  chat.load(session_name)
-end, { desc = "CopilotChatLoad _project_name_" })
+-- vim.keymap.set("n", "<leader>al", function()
+--   local session_name = vim.fn.fnameescape(vim.fn.fnamemodify(vim.fn.getcwd(), ":t"))
+--
+--   if not package.loaded["CopilotChat"] then
+--     vim.cmd("CopilotChat")
+--     vim.cmd("CopilotChatLoad " .. session_name)
+--     return
+--   end
+--
+--   local ok, chat = pcall(require, "CopilotChat")
+--
+--   -- Plugin loaded. If window not visible, show it so user can inspect current history.
+--   if chat.chat and not chat.chat:visible() then
+--     chat.open()
+--     local choice = vim.fn.confirm(
+--       ("Restore CopilotChat session '%s'? This will replace current chat history."):format(session_name),
+--       "&Yes\n&No",
+--       2
+--     )
+--     if choice ~= 1 then
+--       return
+--     end
+--   end
+--   -- If window already visible, proceed without extra prompt (user can see it)
+--   chat.load(session_name)
+-- end, { desc = "CopilotChatLoad _project_name_" })
 
 vim.keymap.set("n", "<leader>tD", function()
   if vim.g.db == nil then
