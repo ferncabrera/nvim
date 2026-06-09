@@ -136,45 +136,54 @@ else
   ]])
 end
 
--- Oil-git highlight group color mapping
-local git_colors = {
-  Added = "#6f894e",
-  Modified = "#7fb4ca",
-  Renamed = "#4d699b",
-  Untracked = "#98bb2a",
-  Ignored = "#737c73",
-}
+local ns = vim.api.nvim_create_namespace("oil_highlight_entry")
+vim.api.nvim_create_autocmd("User", {
+  pattern = "OilEnter",
+  callback = function(args)
+    local bufnr = args.data.buf
+    vim.schedule(function()
+      if not vim.api.nvim_buf_is_valid(bufnr) then
+        return
+      end
+      local winid = vim.fn.bufwinid(bufnr)
+      if winid == -1 then
+        return
+      end
 
--- Map old color names to new oil-git highlight groups
-local mappings = {
-  -- Added
-  OilGitStatusIndexAdded = git_colors.Added,
-  OilGitStatusWorkingTreeAdded = git_colors.Added,
-  -- Modified
-  OilGitStatusIndexModified = git_colors.Modified,
-  OilGitStatusWorkingTreeModified = git_colors.Modified,
-  -- Renamed
-  OilGitStatusIndexRenamed = git_colors.Renamed,
-  OilGitStatusWorkingTreeRenamed = git_colors.Renamed,
-  -- Untracked
-  OilGitStatusIndexUntracked = git_colors.Untracked,
-  OilGitStatusWorkingTreeUntracked = git_colors.Untracked,
-  -- Ignored
-  OilGitStatusIndexIgnored = git_colors.Ignored,
-  OilGitStatusWorkingTreeIgnored = git_colors.Ignored,
-}
+      vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
 
-for hl_group, color in pairs(mappings) do
-  vim.api.nvim_set_hl(0, hl_group, { fg = color })
-end
+      local ok, oil = pcall(require, "oil")
+      if not ok then
+        return
+      end
 
--- vim.cmd([[
---   highlight OilGitAdded guifg=#6f894e
---   highlight OilGitModified guifg=#7fb4ca
---   highlight OilGitRenamed guifg=#4d699b
---   highlight OilGitUntracked guifg=#98bb2a
---   highlight OilGitIgnored guifg=#737c73
--- ]])
+      local entry
+      vim.api.nvim_win_call(winid, function()
+        entry = oil.get_cursor_entry()
+      end)
+      if not entry then
+        return
+      end
+
+      local lnum = vim.api.nvim_win_get_cursor(winid)[1] - 1
+      local line = vim.api.nvim_buf_get_lines(bufnr, lnum, lnum + 1, false)[1]
+      if not line then
+        return
+      end
+
+      local col = string.find(line, entry.name, 1, true)
+      if col then
+        vim.api.nvim_buf_set_extmark(bufnr, ns, lnum, col - 1, {
+          end_col = col - 1 + #entry.name,
+          hl_group = "Visual",
+        })
+        vim.defer_fn(function()
+          pcall(vim.api.nvim_buf_clear_namespace, bufnr, ns, 0, -1)
+        end, 1500)
+      end
+    end)
+  end,
+})
 
 -- Apply immediately on startup (in case colorscheme loads before this)
 vim.cmd("doautocmd ColorScheme")
