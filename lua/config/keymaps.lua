@@ -6,9 +6,13 @@ local discipline = require("fern.discipline")
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- Visual mode mapping: <C-/> triggers gc
--- vim.keymap.set("x", "<C-/>", "gc", { remap = true, silent = true })
--- vim.keymap.set("n", "<C-/>", "gcc", { remap = true, silent = true })
+-- Comment toggle with <C-/> (and <C-_>, which is what many terminal emulators
+-- actually send for Ctrl+/). This overrides the LazyVim default that opens a
+-- terminal on <C-/>. gcc/gc come from the mini.comment extra.
+vim.keymap.set("n", "<C-/>", "gcc", { remap = true, silent = true, desc = "Toggle comment" })
+vim.keymap.set("x", "<C-/>", "gc", { remap = true, silent = true, desc = "Toggle comment" })
+vim.keymap.set("n", "<C-_>", "gcc", { remap = true, silent = true, desc = "Toggle comment" })
+vim.keymap.set("x", "<C-_>", "gc", { remap = true, silent = true, desc = "Toggle comment" })
 
 vim.keymap.set("n", "<leader>ww", ":w<CR>", { desc = "Save" })
 
@@ -56,10 +60,7 @@ vim.keymap.set(
   [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]],
   { desc = "primeagen string swap (prompt)" }
 )
-vim.keymap.set("n", "<leader>tx", "<cmd>!chmod +x %<CR>", { silent = true })
-
--- Just in case
-vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "<leader>tx", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable (chmod +x)" })
 
 -- Exit easy!!!!!
 vim.keymap.set("i", "jj", "<Esc>", { noremap = false })
@@ -237,5 +238,15 @@ vim.keymap.set("n", "<leader>tm", function()
   vim.cmd("redrawstatus!")
   notify_toggle("Incline Navic", vim.g.incline_show_navic)
 end, { desc = "Toggle incline_show_navic", silent = true })
+
+-- Toggle the (custom) statusline. Relocated here from the disabled lualine spec
+-- so it no longer relies on a side effect inside a plugin table.
+vim.keymap.set("n", "<leader>tt", function()
+  if vim.o.laststatus == 0 then
+    vim.o.laststatus = 3
+  else
+    vim.o.laststatus = 0
+  end
+end, { desc = "Toggle Statusline" })
 
 -- vim.keymap.set("n", "<C-c>", "<cmd>qa<CR>", { desc = "Quit All" })
