@@ -60,10 +60,7 @@ vim.keymap.set(
   [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]],
   { desc = "primeagen string swap (prompt)" }
 )
-vim.keymap.set("n", "<leader>tx", "<cmd>!chmod +x %<CR>", { silent = true })
-
--- Just in case
-vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "<leader>tx", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable (chmod +x)" })
 
 -- Exit easy!!!!!
 vim.keymap.set("i", "jj", "<Esc>", { noremap = false })
@@ -241,5 +238,15 @@ vim.keymap.set("n", "<leader>tm", function()
   vim.cmd("redrawstatus!")
   notify_toggle("Incline Navic", vim.g.incline_show_navic)
 end, { desc = "Toggle incline_show_navic", silent = true })
+
+-- Toggle the (custom) statusline. Relocated here from the disabled lualine spec
+-- so it no longer relies on a side effect inside a plugin table.
+vim.keymap.set("n", "<leader>tt", function()
+  if vim.o.laststatus == 0 then
+    vim.o.laststatus = 3
+  else
+    vim.o.laststatus = 0
+  end
+end, { desc = "Toggle Statusline" })
 
 -- vim.keymap.set("n", "<C-c>", "<cmd>qa<CR>", { desc = "Quit All" })

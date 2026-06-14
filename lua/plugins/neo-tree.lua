@@ -19,8 +19,11 @@ return {
       desc = "Explorer NeoTree (cwd)",
       remap = true,
     },
-    -- { "<leader>e", "<leader>fe", desc = "Explorer NeoTree (Root Dir)", remap = true },
-    -- { "<leader>E", "<leader>fE", desc = "Explorer NeoTree (cwd)", remap = true },
+    -- Disable LazyVim's default <leader>e / <leader>E explorer bindings so the
+    -- ecolog plugin can own <leader>e as its which-key group. The explorer
+    -- lives on <leader>fe / <leader>fE instead.
+    { "<leader>e", false },
+    { "<leader>E", false },
     {
       "<leader>ge",
       function()
