@@ -6,9 +6,13 @@ local discipline = require("fern.discipline")
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- Visual mode mapping: <C-/> triggers gc
--- vim.keymap.set("x", "<C-/>", "gc", { remap = true, silent = true })
--- vim.keymap.set("n", "<C-/>", "gcc", { remap = true, silent = true })
+-- Comment toggle with <C-/> (and <C-_>, which is what many terminal emulators
+-- actually send for Ctrl+/). This overrides the LazyVim default that opens a
+-- terminal on <C-/>. gcc/gc come from the mini.comment extra.
+vim.keymap.set("n", "<C-/>", "gcc", { remap = true, silent = true, desc = "Toggle comment" })
+vim.keymap.set("x", "<C-/>", "gc", { remap = true, silent = true, desc = "Toggle comment" })
+vim.keymap.set("n", "<C-_>", "gcc", { remap = true, silent = true, desc = "Toggle comment" })
+vim.keymap.set("x", "<C-_>", "gc", { remap = true, silent = true, desc = "Toggle comment" })
 
 vim.keymap.set("n", "<leader>ww", ":w<CR>", { desc = "Save" })
 
