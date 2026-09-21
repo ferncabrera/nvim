@@ -58,9 +58,9 @@ return {
       else
         if MODE == "dark" then
           if THEME == "wave" then
-            return { fg = "#dcd7ba", bg = "#d27e99", ifg = "#dcd7ba", ibg = "#d27e99" }
+            return { fg = "#dcd7ba", bg = "#e46876", ifg = "#dcd7ba", ibg = "#e46876" }
           else
-            return { fg = "#f2ecbc", bg = "#625e5a", ifg = "#f2ecbc", ibg = "#625e5a" }
+            return { fg = "#f2ecbc", bg = "#c4746e", ifg = "#f2ecbc", ibg = "#c4746e" }
           end
         else
           return { fg = "#f2ecbc", bg = "#b35b79", ifg = "#f2ecbc", ibg = "#b35b79" }
