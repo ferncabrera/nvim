@@ -88,6 +88,24 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- nvim 0.12 on-type formatting (textDocument/onTypeFormatting): vtsls triggers on `;`, `}` and newline,
+-- rust-analyzer on `=`, `.`, `>`, `{`. Whitespace/semicolons snap into place while typing; prettier on
+-- save stays the source of truth. lua_ls is left out (EmmyLuaCodeStyle disagrees with stylua).
+-- `:lua vim.lsp.on_type_formatting.enable(false)` turns it off; `:checkhealth vim.lsp` shows attachment.
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("fern_lsp_012", { clear = true }),
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if not client then
+      return
+    end
+    local on_type = { vtsls = true, ["rust-analyzer"] = true }
+    if on_type[client.name] and client:supports_method("textDocument/onTypeFormatting", ev.buf) then
+      vim.lsp.on_type_formatting.enable(true, { client_id = client.id })
+    end
+  end,
+})
+
 -- grug-far: toggle hidden/ignored files from inside the search buffer
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "grug-far",

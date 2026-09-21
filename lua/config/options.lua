@@ -8,11 +8,8 @@
 vim.opt.smartindent = true -- Auto-indent new lines
 vim.opt.breakindent = true -- Maintain indentation on wrapped lines
 
--- Following main release....
-vim.g.lazyvim_blink_main = true
 -- vim.g.lazyvim_picker = "fzf"
 vim.g.lazyvim_picker = "snacks"
-vim.g.copilot_no_tab_map = true
 
 function _G.Statusline_path()
   local bt = vim.bo.buftype

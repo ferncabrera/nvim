@@ -253,3 +253,22 @@ vim.keymap.set("n", "<leader>tt", function()
 end, { desc = "Toggle Statusline" })
 
 -- vim.keymap.set("n", "<C-c>", "<cmd>qa<CR>", { desc = "Quit All" })
+
+-- Semantic tokens per buffer/client (vtsls/gopls/rust-analyzer compute + decode them after every edit;
+-- treesitter already provides nearly everything kanagawa uses). Toggle to measure on big TS files.
+Snacks.toggle({
+  name = "Semantic Tokens",
+  get = function()
+    for _, c in ipairs(vim.lsp.get_clients({ bufnr = 0, method = "textDocument/semanticTokens/full" })) do
+      if vim.lsp.semantic_tokens.is_enabled({ bufnr = 0, client_id = c.id }) then
+        return true
+      end
+    end
+    return false
+  end,
+  set = function(state)
+    for _, c in ipairs(vim.lsp.get_clients({ bufnr = 0, method = "textDocument/semanticTokens/full" })) do
+      vim.lsp.semantic_tokens.enable(state, { bufnr = 0, client_id = c.id })
+    end
+  end,
+}):map("<leader>uH")
