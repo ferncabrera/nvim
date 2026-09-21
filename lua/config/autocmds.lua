@@ -7,15 +7,7 @@
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
--- Set highlight for matching brackets/parentheses/quotes
-
-vim.api.nvim_create_autocmd("ModeChanged", {
-  pattern = "*:[vV]", -- matches entering visual modes: char, line, block
-  callback = function()
-    require("incline").refresh()
-  end,
-})
--- vim.cmd("highlight ColorColumn ctermbg=0 guibg=#c8c093")
+-- (incline subscribes to ModeChanged itself; the manual refresh here was redundant)
 
 vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
@@ -122,55 +114,42 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- StatusLine highlight for LazyVim (without lualine)
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("CustomStatuslineColors", { clear = true }),
-  callback = function()
-    if vim.opt.termguicolors:get() then
-      if MODE == "dark" then
-        if THEME == "wave" then
-          vim.api.nvim_set_hl(0, "StatusLine", { bg = "#1e1f28", fg = "#DCD7BA", bold = false })
-        else
-          vim.api.nvim_set_hl(0, "StatusLine", { bg = "#393836", fg = "#f2ecbc", bold = false })
-        end
-      else
-        vim.api.nvim_set_hl(0, "StatusLine", { bg = "#f2ecbc", fg = "#727169", bold = false })
-      end
-    else
-      vim.api.nvim_set_hl(0, "StatusLine", { ctermbg = 235, ctermfg = 252, bold = false })
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-  pattern = "*",
-  callback = function()
-    vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
-    -- flash.nvim labels (previously set once via :hi in the flash spec and lost on colorscheme reload)
-    vim.api.nvim_set_hl(0, "FlashLabel", { fg = "#f2ecbc", bg = "#b35b79" })
-    vim.api.nvim_set_hl(0, "FlashCurrent", { fg = "#f2ecbc", bg = "#e98a00" })
-    vim.api.nvim_set_hl(0, "FlashPromptIcon", { fg = "#b35b79" })
-  end,
-})
-
-if MODE == "dark" then
-  if THEME == "wave" then
-    vim.cmd([[
-      autocmd RecordingEnter * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#dca561", fg = "#727169", bold = false })
-      autocmd RecordingLeave * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#1e1f28", fg = "#DCD7BA", bold = false })
-    ]])
-  else
-    vim.cmd([[
-      autocmd RecordingEnter * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#c4b28a", fg = "#1e1f28", bold = false })
-      autocmd RecordingLeave * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#393836", fg = "#f2ecbc", bold = false })
-    ]])
+-- The only owner of the custom highlight groups, driven by kanagawa's palette so light/dark switches
+-- (<leader>ub, OSC 11) recolour everything. Previously three ColorScheme handlers fought over StatusLine*
+-- with hex values hardcoded per MODE/THEME.
+local function custom_hl()
+  if vim.g.colors_name ~= "kanagawa" then
+    return
   end
-else
-  vim.cmd([[
-    autocmd RecordingEnter * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#5a7785", fg = "#f2ecbc", bold = false })
-    autocmd RecordingLeave * lua vim.api.nvim_set_hl(0, "StatusLine", { bg = "#f2ecbc", fg = "#727169", bold = false })
-  ]])
+  local ok, colors = pcall(function()
+    return require("kanagawa.colors").setup()
+  end)
+  if not ok then
+    return
+  end
+  local t = colors.theme
+  local k = require("kanagawa")
+  vim.g.kanagawa_bg, vim.g.kanagawa_fg = t.ui.bg, t.ui.fg
+  vim.g.kanagawa_variant = k._CURRENT_THEME or k.config.background[vim.o.background] -- "dragon" | "lotus", for incline
+  vim.api.nvim_set_hl(0, "StatusLine", { fg = t.ui.fg, bg = t.ui.bg })
+  vim.api.nvim_set_hl(0, "StatusLineBG", { bg = t.ui.bg })
+  vim.api.nvim_set_hl(0, "StatusLinePath", { fg = t.ui.fg, bg = t.ui.bg, bold = true })
+  vim.api.nvim_set_hl(0, "StatusLineEnv", { fg = t.ui.fg_dim, bg = t.ui.bg, italic = true })
+  vim.api.nvim_set_hl(0, "StatusLineRec", { fg = t.ui.bg, bg = t.diag.warning, bold = true })
+  vim.api.nvim_set_hl(0, "InclineModified", { fg = "#EEF5FF" })
+  vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
+  -- flash.nvim labels (previously set once via :hi in the flash spec and lost on colorscheme reload)
+  vim.api.nvim_set_hl(0, "FlashLabel", { fg = "#f2ecbc", bg = "#b35b79" })
+  vim.api.nvim_set_hl(0, "FlashCurrent", { fg = "#f2ecbc", bg = "#e98a00" })
+  vim.api.nvim_set_hl(0, "FlashPromptIcon", { fg = "#b35b79" })
 end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("fern_hl", { clear = true }),
+  pattern = "kanagawa",
+  callback = custom_hl,
+})
+custom_hl() -- autocmds.lua loads at VeryLazy, after the colorscheme already ran
 
 local ns = vim.api.nvim_create_namespace("oil_highlight_entry")
 vim.api.nvim_create_autocmd("User", {
@@ -220,6 +199,3 @@ vim.api.nvim_create_autocmd("User", {
     end)
   end,
 })
-
--- Apply immediately on startup (in case colorscheme loads before this)
-vim.cmd("doautocmd ColorScheme")

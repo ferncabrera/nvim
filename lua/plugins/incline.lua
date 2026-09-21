@@ -1,89 +1,84 @@
+-- Per-window floating "statusline" (top-right): diagnostics, git diff, breadcrumbs, filename, search count.
+-- Rendered on every CursorMoved(I) for every window, so everything below is computed at most once per render.
+
+-- kanagawa variant -> pill colours. `vim.g.kanagawa_variant` is set by the ColorScheme handler in
+-- lua/config/autocmds.lua ("wave" | "dragon" | "lotus"), so light/dark switches follow 'background'.
+local variant_colors = {
+  wave = { fg = "#dcd7ba", focused = "#e46876", unfocused = "#2a2a37" },
+  dragon = { fg = "#f2ecbc", focused = "#c4746e", unfocused = "#393836" },
+  lotus = { fg = "#f2ecbc", focused = "#b35b79", unfocused = "#938056" },
+}
+
+local function get_colors(props)
+  local v = variant_colors[vim.g.kanagawa_variant] or variant_colors.dragon
+  return { fg = v.fg, bg = props.focused and v.focused or v.unfocused }
+end
+
+-- highlight lookups are cached per colorscheme instead of 3 nvim_get_hl calls per breadcrumb per render
+local hl_cache = {}
+local function hl_attr(group, attr)
+  local key = group .. "." .. attr
+  if hl_cache[key] == nil then
+    local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group, link = false })
+    hl_cache[key] = (ok and hl and hl[attr]) and string.format("#%06x", hl[attr]) or false
+  end
+  return hl_cache[key] or nil
+end
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("incline_hl_cache", { clear = true }),
+  callback = function()
+    hl_cache = {}
+  end,
+})
+
+local sev = vim.diagnostic.severity
+local diag_icons = {
+  { sev.ERROR, "", "DiagnosticSignError" },
+  { sev.WARN, "", "DiagnosticSignWarn" },
+  { sev.INFO, "", "DiagnosticSignInfo" },
+  { sev.HINT, "", "DiagnosticSignHint" },
+}
+local function diag_label(buf)
+  local counts, out = vim.diagnostic.count(buf), {} -- one call instead of four list copies
+  for _, d in ipairs(diag_icons) do
+    if counts[d[1]] then
+      out[#out + 1] = { d[2] .. counts[d[1]] .. " ", group = d[3] }
+    end
+  end
+  if #out > 0 then
+    out[#out + 1] = { "" }
+    return { " ", out }
+  end
+  return out
+end
+
+local git_icons = { removed = "", changed = "", added = "" }
+local function git_diff(buf)
+  local signs = vim.b[buf].gitsigns_status_dict
+  local labels = {}
+  if signs == nil then
+    return labels
+  end
+  for name, icon in pairs(git_icons) do
+    if tonumber(signs[name]) and signs[name] > 0 then
+      table.insert(labels, { icon .. signs[name] .. " ", group = "Diff" .. name })
+    end
+  end
+  if #labels > 0 then
+    table.insert(labels, { "" })
+  end
+  return labels
+end
+
 return {
   "b0o/incline.nvim",
   event = "BufReadPre",
-  priority = 999,
   config = function()
-    vim.api.nvim_set_hl(0, "InclineModified", {
-      fg = "#EEF5FF",
-    })
-
-    -- local helpers = require("incline.helpers")
-    local navic = require("nvim-navic") -- add navic
+    local navic = require("nvim-navic")
     local devicons = require("nvim-web-devicons")
-
-    -- local function get_lualine_colors(lualine, props, ft_color)
-    --   local fg, bg, ifg, ibg
-    --   local theme_name = lualine.get_config().options.theme
-    --   local theme = require("lualine.themes." .. theme_name)
-    --
-    --   ifg = helpers.contrast_color(ft_color)
-    --   ibg = ft_color
-    --
-    --   if not props.focused then
-    --     fg = theme.inactive.a.fg
-    --     bg = theme.inactive.a.bg
-    --     ifg = fg
-    --     ibg = bg
-    --   elseif vim.fn.mode():match("n") then
-    --     fg = theme.normal.a.fg
-    --     bg = theme.normal.a.bg
-    --   elseif vim.fn.mode():match("i") then
-    --     fg = theme.insert.a.fg
-    --     bg = theme.insert.a.bg
-    --   elseif vim.fn.mode():match("R") then
-    --     fg = theme.replace.a.fg
-    --     bg = theme.replace.a.bg
-    --   elseif vim.fn.mode() == "v" or vim.fn.mode() == "V" or vim.fn.mode() == "\22" then
-    --     fg = theme.visual.a.fg
-    --     bg = theme.visual.a.bg
-    --   else
-    --     fg = theme.normal.a.fg
-    --     bg = theme.normal.a.bg
-    --   end
-    --
-    --   return { fg = fg, bg = bg, ifg = ifg, ibg = ibg }
-    -- end
-
-    local function get_fallback_colors(props)
-      if not props.focused then
-        if MODE == "dark" then
-          if THEME == "wave" then
-            return { fg = "#dcd7ba", bg = "#2a2a37", ifg = "#dcd7ba", ibg = "#2a2a37" }
-          else
-            return { fg = "#f2ecbc", bg = "#393836", ifg = "#f2ecbc", ibg = "#393836" }
-          end
-        else
-          return { fg = "#f2ecbc", bg = "#938056", ifg = "#f2ecbc", ibg = "#938056" }
-        end
-      else
-        if MODE == "dark" then
-          if THEME == "wave" then
-            return { fg = "#dcd7ba", bg = "#e46876", ifg = "#dcd7ba", ibg = "#e46876" }
-          else
-            return { fg = "#f2ecbc", bg = "#c4746e", ifg = "#f2ecbc", ibg = "#c4746e" }
-          end
-        else
-          return { fg = "#f2ecbc", bg = "#b35b79", ifg = "#f2ecbc", ibg = "#b35b79" }
-        end
-      end
-    end
-
-    local function get_colors(props, ft_color)
-      if not ft_color then
-        ft_color = "#000000"
-      end
-      -- local status, lualine = pcall(require, "lualine")
-      -- local colors
-      -- if status then
-      --   colors = get_lualine_colors(lualine, props, ft_color)
-      -- end
-      -- return colors or get_fallback_colors(props, ft_color)
-      return get_fallback_colors(props)
-    end
 
     require("incline").setup({
       ignore = {
-        -- unlisted_buffers = true,
         floating_wins = false,
         wintypes = function(winid, wintype)
           local zen = package.loaded["snacks"].zen
@@ -114,142 +109,57 @@ return {
       },
       render = function(props)
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-
-        if filename == "" then
-          filename = ""
-        end
-
         local modified_icon = vim.bo[props.buf].modified and "⚪ " or ""
 
-        local icon, ft_color = devicons.get_icon_color(filename)
+        local icon
         if vim.bo[props.buf].filetype == "oil" then
           filename = "Oil:///"
           icon = "󰙅"
-          ft_color = "#FFFFFF"
         else
-          icon, ft_color = devicons.get_icon_color(filename)
+          icon = (devicons.get_icon_color(filename))
           if not icon or icon == "" then
             icon = "󰈔"
           end
         end
 
-        local colors = get_colors(props, ft_color)
+        local colors = get_colors(props)
 
-        -- Git diff (unchanged)
-        function _G.InclineGetGitDiff(buf)
-          buf = buf or vim.api.nvim_get_current_buf()
-          local icons = { removed = "", changed = "", added = "" }
-          local signs = vim.b[buf].gitsigns_status_dict
-          local labels = {}
-          if signs == nil then
-            return labels
-          end
-          for name, icon_git in pairs(icons) do
-            if tonumber(signs[name]) and signs[name] > 0 then
-              table.insert(labels, { icon_git .. signs[name] .. " ", group = "Diff" .. name })
-            end
-          end
-          if #labels > 0 then
-            table.insert(labels, { "" })
-          end
-          return labels
-        end
+        -- compute each section once and reuse it
+        local diag = (vim.g.incline_show_diagnostics and props.focused) and diag_label(props.buf) or {}
+        local gd = (vim.g.incline_show_git_diff and props.focused) and git_diff(props.buf) or {}
+        local has_diag, has_git = #diag > 0, #gd > 0
 
-        -- Diagnostic info (unchanged)
-        local function get_diagnostic_label()
-          local icons = { error = "", warn = "", info = "", hint = "" }
-          local label = {}
-          for severity, icon_diag in pairs(icons) do
-            local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
-            if n > 0 then
-              table.insert(label, { icon_diag .. n .. " ", group = "DiagnosticSign" .. severity })
-            end
-          end
-          if #label > 0 then
-            table.insert(label, { "" })
-          end
-          if #label > 0 then
-            return { " ", label }
-          else
-            return {}
-          end
-        end
+        local git_diff_section = has_git and { has_diag and "" or " ", gd } or {}
 
-        -- Git diff section
-        local git_diff = _G.InclineGetGitDiff(props.buf)
-        local has_git_diff = #git_diff > 0
-        local has_diagnostics = #get_diagnostic_label() > 0
-
-        local git_diff_section = has_git_diff
-            and props.focused
-            and vim.g.incline_show_git_diff
-            and {
-              vim.g.incline_show_diagnostics and has_diagnostics and "" or " ",
-              git_diff,
-            }
-          or {}
-
-        local function get_hl_fg(group)
-          local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group })
-          if ok and hl and hl.fg then
-            return string.format("#%06x", hl.fg)
-          end
-          return nil
-        end
-
-        local function get_hl_bg(group)
-          local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group })
-          if ok and hl and hl.bg then
-            return string.format("#%06x", hl.bg)
-          end
-          return nil
-        end
-
-        -- Navic breadcrumbs
-        local breadcrumbs = {}
-        if props.focused and navic.is_available() then
+        -- Navic breadcrumbs: only computed while shown (<leader>tm)
+        local breadcrumbs_section = {}
+        if vim.g.incline_show_navic and props.focused and navic.is_available(props.buf) then
+          local breadcrumbs = {}
           for _, item in ipairs(navic.get_data(props.buf) or {}) do
             table.insert(breadcrumbs, {
-              { " ", guifg = get_hl_fg("NavicSeparator") },
-              { item.icon, guifg = get_hl_fg("NavicIcons" .. item.type) },
-              { item.name, guifg = get_hl_fg("NavicText") },
+              { " ", guifg = hl_attr("NavicSeparator", "fg") },
+              { item.icon, guifg = hl_attr("NavicIcons" .. item.type, "fg") },
+              { item.name, guifg = hl_attr("NavicText", "fg") },
             })
           end
-        end
-
-        local breadcrumbs_section = {}
-        local show_breadcrumbs_space = false
-        if #breadcrumbs > 0 and vim.g.incline_show_navic then
-          local show_diag = vim.g.incline_show_diagnostics and props.focused and #get_diagnostic_label() > 0
-          local show_git = vim.g.incline_show_git_diff and props.focused and #git_diff > 0
-          show_breadcrumbs_space = not (show_diag or show_git)
-          if not (vim.g.incline_show_diagnostics or vim.g.incline_show_git_diff) then
-            show_breadcrumbs_space = true
-          end
-          if show_breadcrumbs_space then
-            breadcrumbs_section = { breadcrumbs, { " " } }
-          else
-            breadcrumbs_section = { breadcrumbs }
+          if #breadcrumbs > 0 then
+            local show_space = not (has_diag or has_git)
+            breadcrumbs_section = show_space and { breadcrumbs, { " " } } or { breadcrumbs }
           end
         end
 
-        local search_section = {}
-        local search_active = false
-        local search_section_icon
-        if props.focused then
-          local count = vim.fn.searchcount({ recompute = 1, maxcount = -1 })
-          local contents = vim.fn.getreg("/")
-          search_section_icon = { " 󱎸", group = "IncSearch" }
-          if vim.v.hlsearch == 1 and count.total > 0 then
+        -- Search count: check hlsearch first (searchcount used to run on every render even with it off),
+        -- and keep Neovim's own limits ('maxsearchcount', 20 ms timeout) so big buffers do not stall.
+        local search_section, search_active = {}, false
+        if props.focused and vim.v.hlsearch == 1 then
+          local ok, count = pcall(vim.fn.searchcount, { recompute = 1, maxcount = vim.o.maxsearchcount, timeout = 20 })
+          if ok and count.total and count.total > 0 then
+            local total = count.total > vim.o.maxsearchcount and (">" .. vim.o.maxsearchcount) or tostring(count.total)
             search_active = true
             search_section = {
-              search_section_icon,
-              { (" \\<%s>\\"):format(contents), group = "IncSearch" },
-              {
-                (" [%d/%d] "):format(count.current, count.total),
-                -- group = "dkoStatusValue"
-                group = "IncSearch",
-              },
+              { " 󱎸", group = "IncSearch" },
+              { (" \\<%s>\\"):format(vim.fn.getreg("/")), group = "IncSearch" },
+              { (" [%d/%s] "):format(count.current, total), group = "IncSearch" },
               { modified_icon, group = "IncSearch" },
             }
           end
@@ -259,10 +169,10 @@ return {
           guifg = vim.g.kanagawa_fg,
           guibg = vim.g.kanagawa_bg,
           breadcrumbs_section,
-          vim.g.incline_show_diagnostics and props.focused and { get_diagnostic_label() } or {},
+          has_diag and { diag } or {},
           git_diff_section,
-          (not search_active) and { "", guifg = colors.bg, guibg = vim.g.kanagawa_bg }
-            or { "", guibg = vim.g.kanagawa_bg, guifg = get_hl_bg("IncSearch") },
+          (not search_active) and { "", guifg = colors.bg, guibg = vim.g.kanagawa_bg }
+            or { "", guibg = vim.g.kanagawa_bg, guifg = hl_attr("IncSearch", "bg") },
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { icon, guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},

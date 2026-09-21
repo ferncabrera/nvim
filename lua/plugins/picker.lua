@@ -1,4 +1,4 @@
--- Show all files for explorer, but ignore specific folders for all other file searches
+-- snacks: picker/zen/dashboard overrides (the explorer is neo-tree via vim.g.lazyvim_explorer)
 return {
   "folke/snacks.nvim",
   opts = {
@@ -17,11 +17,8 @@ return {
         inlay_hints = false,
       },
     },
-    explorer = {
-      enabled = false,
-      replace_netrw = false, -- Replace netrw with the snacks explorer
-    },
     picker = {
+      formatters = { file = { filename_first = true, truncate = "left" } }, -- basename left, dimmed dir right
       win = {
         -- input window
         input = {
@@ -74,6 +71,7 @@ return {
       -- worktrees and gitignored Playwright .auth/*.json session state.
       sources = {
         files = {
+          matcher = { frecency = true, sort_empty = true }, -- recently/frequently opened files first
           hidden = true,
           ignored = true, -- deliberate: gitignored files stay findable; <a-i> toggles it per picker
           exclude = {
@@ -91,11 +89,6 @@ return {
         },
         grep = { hidden = true, ignored = false },
         grep_word = { hidden = true, ignored = false },
-        explorer = {
-          ignored = false,
-          hidden = true,
-          exclude = {},
-        },
       },
     },
   },
@@ -110,9 +103,5 @@ return {
     { "<leader>fF", LazyVim.pick("files"), desc = "Find Files (Root Dir)" },
     { "<leader><space>", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
     { "<leader>ff", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
-    { "<leader>fe", false },
-    { "<leader>fE", false },
-    { "<leader>E", false },
-    { "<leader>e", false },
   },
 }

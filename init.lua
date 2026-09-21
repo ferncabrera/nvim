@@ -26,8 +26,6 @@ local function detect_dark_mode()
 end
 
 vim.o.background = detect_dark_mode() and "dark" or "light"
-MODE = vim.o.background
-THEME = (MODE == "light") and "lotus" or "dragon"
 
 -- if vim.env.AUTO_NVIM_RESTORE == "1" then
 --   vim.schedule(function()

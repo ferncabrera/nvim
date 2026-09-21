@@ -7,5 +7,9 @@ return {
     delay = function(ctx)
       return ctx.plugin and 0 or 1000
     end,
+    win = { border = vim.o.winborder }, -- match native floats / snacks ("single") instead of helix's rounded
+    spec = {
+      { "<leader>t", group = "custom/primagen", mode = { "n", "v" } },
+    },
   },
 }

@@ -33,6 +33,8 @@ return {
       })
 
       opts.presets.lsp_doc_border = true
+      opts.views = opts.views or {}
+      opts.views.hover = { border = { style = vim.o.winborder } } -- "single", like native floats and snacks
     end,
   },
 }

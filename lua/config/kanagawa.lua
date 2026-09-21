@@ -1,16 +1,12 @@
 -- lua/config/kanagawa.lua
 local kanagawa = require("kanagawa")
 
-local theme = THEME
-
 kanagawa.setup({
-  -- explicitly choose the wave theme
-  theme = "lotus",
-
-  -- map `vim.o.background` to your preferred variants:
+  -- 'background' is the single switch: set at startup from the macOS appearance (init.lua), by
+  -- <leader>ub, or by the terminal's OSC 11 theme-change notifications (0.11+ TUI).
   background = {
-    dark = theme, -- when background=dark → use wave
-    light = theme, -- if you ever switch to background=light
+    dark = "dragon",
+    light = "lotus",
   },
 
   -- your other customizations:
@@ -34,11 +30,8 @@ kanagawa.setup({
 
   overrides = function(colors)
     local theme = colors.theme
-    local kanagawa_colors = require("kanagawa.colors").setup()
-
-    -- So that I can use these theme colors in other plugins
-    vim.g.kanagawa_bg = kanagawa_colors.theme.ui.bg
-    vim.g.kanagawa_fg = kanagawa_colors.theme.ui.fg
+    -- vim.g.kanagawa_bg/fg/variant (used by incline + the statusline) are set by the ColorScheme
+    -- handler in lua/config/autocmds.lua, so they also follow light/dark switches
 
     local makeDiagnosticColor = function(color)
       local c = require("kanagawa.lib.color")

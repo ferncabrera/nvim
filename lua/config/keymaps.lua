@@ -14,18 +14,18 @@ vim.keymap.set("x", "<C-/>", "gc", { remap = true, silent = true, desc = "Toggle
 vim.keymap.set("n", "<C-_>", "gcc", { remap = true, silent = true, desc = "Toggle comment" })
 vim.keymap.set("x", "<C-_>", "gc", { remap = true, silent = true, desc = "Toggle comment" })
 
-vim.keymap.set("n", "<leader>ww", ":w<CR>", { desc = "Save" })
+vim.keymap.set("n", "<leader>ww", "<cmd>w<cr>", { desc = "Save" })
 
 -- Take lines and move them (VSCode opt/alt functionality)
 -- vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 -- vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
--- For concating(???) strings to the same line but preserving mouse position
-vim.keymap.set("n", "J", "mzJ`z")
+-- Join lines but keep the cursor where it was
+vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines (keep cursor)" })
 
 -- For jumping up and down the page
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Half page down (centered)" })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Half page up (centered)" })
 
 -- For diffing all open windows
 vim.keymap.set("n", "<leader>td", function()
@@ -80,49 +80,25 @@ vim.keymap.set("n", "<leader>w-", "<cmd>resize -10<CR>", { desc = "Decrease wind
 vim.keymap.set("n", "Q", "q", { noremap = true, desc = "Record macro" })
 vim.keymap.set("n", "q", "<Nop>", { noremap = true, desc = "Disable q macro" })
 
-vim.keymap.set("n", "<leader>tc", function()
-  local name = vim.fn.expand("%:t")
-  vim.fn.setreg("+", name)
-  require("noice").notify("Copied file name: " .. name, "info")
-end, { noremap = true, silent = true, desc = "Copy file name" })
-
-function insertFullPath()
-  local filepath = vim.fn.expand("%")
-  vim.fn.setreg("+", filepath) -- write to clippoard
-  return filepath
-end
-
-vim.keymap.set("n", "<leader>tf", function()
-  local path = insertFullPath()
-  if path then
-    require("noice").notify("Copied full path: " .. path, "info")
-  else
-    require("noice").notify("Failed to get full path", "error")
+-- Copy the file name / full path / cwd-relative path of the current buffer to the clipboard.
+-- (<leader>tf used expand("%"), which is only a full path when the file was opened by an absolute name.)
+local function yank_path(mod, label)
+  return function()
+    local p = vim.fn.expand("%" .. mod)
+    if p == "" then
+      return vim.notify("No file in buffer", vim.log.levels.WARN)
+    end
+    vim.fn.setreg("+", p)
+    vim.notify("Copied " .. label .. ": " .. p)
   end
-end, { noremap = true, silent = true, desc = "Copy full file path" })
-
-vim.keymap.set("n", "<leader>tp", function()
-  local path = vim.fn.expand("%:.")
-  vim.fn.setreg("+", path)
-  require("noice").notify("Copied relative path: " .. path)
-end, { noremap = true, silent = true, desc = "Copy relative file path" })
+end
+vim.keymap.set("n", "<leader>tc", yank_path(":t", "file name"), { desc = "Copy file name" })
+vim.keymap.set("n", "<leader>tf", yank_path(":p", "full path"), { desc = "Copy full path" })
+vim.keymap.set("n", "<leader>tp", yank_path(":.", "relative path"), { desc = "Copy relative path" })
 
 vim.keymap.set("n", "<leader>to", ":e <C-r>+<CR>", { noremap = true, desc = "Go to location in clipboard" })
 
--- quit + save CopilotChat history under cwd basename
-vim.keymap.set("n", "<leader>qq", function()
-  if package.loaded["CopilotChat"] then
-    local session_name = vim.fn.fnameescape(vim.fn.fnamemodify(vim.fn.getcwd(), ":t"))
-    local ok, err = pcall(function()
-      -- Save with a proper filename
-      vim.cmd("CopilotChatSave " .. session_name)
-    end)
-    if not ok then
-      vim.notify("Failed to save CopilotChat session: " .. tostring(err), vim.log.levels.WARN)
-    end
-  end
-  vim.cmd("qa")
-end, { desc = "Quit All & CopilotChatSave _project_name_" })
+-- <leader>qq: LazyVim's default Quit All (the CopilotChat save branch here could never run: copilotchat.lua returns {})
 
 -- restore last auto-saved session
 -- vim.keymap.set("n", "<leader>al", function()

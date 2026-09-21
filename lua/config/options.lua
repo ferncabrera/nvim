@@ -5,11 +5,13 @@
 -- vim.opt.tabstop = 4 -- A TAB character looks like 4 spaces
 -- vim.opt.softtabstop = 4 -- Number of spaces inserted instead of a TAB character
 -- vim.opt.shiftwidth = 4 -- Number of spaces inserted when indenting
-vim.opt.smartindent = true -- Auto-indent new lines
 vim.opt.breakindent = true -- Maintain indentation on wrapped lines
 
 -- vim.g.lazyvim_picker = "fzf"
 vim.g.lazyvim_picker = "snacks"
+-- imports LazyVim's neo-tree extra and skips the snacks explorer (and its <leader>e/E/fe/fE keys),
+-- instead of disabling the auto-imported extra and hand-copying the neo-tree spec
+vim.g.lazyvim_explorer = "neo-tree"
 
 function _G.Statusline_path()
   local bt = vim.bo.buftype
@@ -24,39 +26,32 @@ function _G.Statusline_path()
     return ""
   end
 
-  return " " .. vim.fn.fnamemodify(path, ":h") .. "/"
+  return " " .. vim.fn.fnamemodify(path, ":h") .. "/"
 end
 
+-- Macro recording indicator. 0.12 redraws the statusline when recording starts/stops, so no autocmd is
+-- needed; the previous RecordingEnter handlers recoloured `StatusLine`, which this statusline never paints.
+function _G.Statusline_rec()
+  local r = vim.fn.reg_recording()
+  return r ~= "" and ("%#StatusLineRec# 󰑊 @" .. r .. " %#StatusLineBG#") or ""
+end
+
+-- ecolog's statusline integration (E/S icons, shelter state, var count, configured in ecolog.lua);
+-- `ecolog.get_status()` only returned the env file basename.
 function _G.Ecolog_statusline()
-  local ok, ecolog = pcall(require, "ecolog")
+  local ok, sl = pcall(require, "ecolog.integrations.statusline")
   if not ok then
-    return "noenv"
+    return ""
   end
-  local ok_status, status = pcall(ecolog.get_status)
-  if not ok_status or not status or status == "" then
-    return "noenv"
-  end
-  return status
+  local s = sl.get_statusline() -- already contains %#hl# markup and %* resets, cached 1 s
+  return s ~= "" and s or "%#StatusLineEnv#noenv"
 end
 
--- Statusline highlight groups (uses kanagawa theme globals when available)
-vim.api.nvim_create_autocmd("ColorScheme", {
-  callback = function()
-    local fg = vim.g.kanagawa_fg or "#c8c093"
-    local bg = vim.g.kanagawa_bg
-    local fg_dim = "#a6a69c"
-    vim.api.nvim_set_hl(0, "StatusLinePath", { fg = fg, bg = bg, bold = true })
-    vim.api.nvim_set_hl(0, "StatusLineBG", { bg = bg })
-    vim.api.nvim_set_hl(0, "StatusLine", { fg = fg, bg = bg })
-    vim.api.nvim_set_hl(0, "StatusLineEnv", { fg = fg_dim, bg = bg, italic = true })
-  end,
-})
-
-vim.opt.laststatus = 3
-vim.opt.ls = 3
+-- Statusline highlight groups live in the ColorScheme handler in lua/config/autocmds.lua
 vim.opt.statusline =
-  "%#StatusLineBG# %#StatusLinePath#%{%v:lua.Statusline_path()%}%#StatusLine#%#StatusLineBG# %= %#StatusLineEnv#%{%v:lua.Ecolog_statusline()%} "
+  "%#StatusLineBG# %#StatusLinePath#%{%v:lua.Statusline_path()%}%#StatusLineBG#%{%v:lua.Statusline_rec()%}%= %#StatusLineEnv#%{%v:lua.Ecolog_statusline()%} "
 vim.opt.winborder = "single"
+vim.opt.wildoptions:append("fuzzy") -- fuzzy :b / :h / :set / user-command candidates in the cmdline menu
 
 vim.opt.relativenumber = false
 vim.opt.colorcolumn = "120"
