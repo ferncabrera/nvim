@@ -349,3 +349,67 @@ vim.keymap.set(
   ),
   { desc = "Typecheck project (tsc)" }
 )
+
+-- ── Diagnostics as references for agents ──────────────────────────────────────────────────────
+-- Only open buffers carry LSP diagnostics (vtsls/eslint diagnose what is loaded); <leader>ck runs tsc
+-- project-wide. A count picks the minimum severity: 1<leader>tq = errors, 2 = warnings+, 3 = info+.
+local function diag_severity()
+  return ({ vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN, vim.diagnostic.severity.INFO })[vim.v.count]
+end
+
+local function diag_root()
+  return vim.fs.root(0, ".git") or LazyVim.root()
+end
+
+-- one line per diagnostic: path:line:col severity [source/code] message
+local function diag_lines()
+  local root, lines = diag_root(), {}
+  local sev = diag_severity()
+  local diags = vim.diagnostic.get(nil, sev and { severity = { min = sev } } or nil)
+  table.sort(diags, function(a, b)
+    if a.bufnr ~= b.bufnr then
+      return vim.api.nvim_buf_get_name(a.bufnr) < vim.api.nvim_buf_get_name(b.bufnr)
+    end
+    return a.lnum == b.lnum and a.col < b.col or a.lnum < b.lnum
+  end)
+  for _, d in ipairs(diags) do
+    local name = vim.api.nvim_buf_get_name(d.bufnr)
+    local path = vim.fs.relpath(root, name) or vim.fn.fnamemodify(name, ":~:.")
+    local tag = d.source and (d.code and ("%s/%s"):format(d.source, d.code) or d.source) or nil
+    lines[#lines + 1] = ("%s:%d:%d %s%s %s"):format(
+      path,
+      d.lnum + 1,
+      d.col + 1,
+      vim.diagnostic.severity[d.severity]:lower(),
+      tag and (" [" .. tag .. "]") or "",
+      (d.message:gsub("%s*\n%s*", " "))
+    )
+  end
+  return lines
+end
+
+-- Workspace diagnostics -> quickfix -> Trouble (copyable list; yank lines from the Trouble window)
+vim.keymap.set("n", "<leader>tq", function()
+  local sev = diag_severity()
+  vim.diagnostic.setqflist({
+    open = false,
+    title = "Diagnostics" .. (sev and (" (" .. vim.diagnostic.severity[sev]:lower() .. "+)") or ""),
+    severity = sev and { min = sev } or nil,
+  })
+  local n = #vim.fn.getqflist()
+  if n == 0 then
+    return vim.notify("No diagnostics", vim.log.levels.INFO)
+  end
+  require("trouble").open("qflist")
+  vim.notify(("%d diagnostics in quickfix"):format(n))
+end, { desc = "Diagnostics -> quickfix (Trouble)" })
+
+-- Same list as plain text on the clipboard, paths relative to the repo root: paste straight into a prompt
+vim.keymap.set("n", "<leader>tQ", function()
+  local lines = diag_lines()
+  if #lines == 0 then
+    return vim.notify("No diagnostics", vim.log.levels.INFO)
+  end
+  vim.fn.setreg("+", table.concat(lines, "\n") .. "\n")
+  vim.notify(("Copied %d diagnostics (%s)"):format(#lines, vim.fn.fnamemodify(diag_root(), ":~")))
+end, { desc = "Diagnostics -> clipboard (agent refs)" })
