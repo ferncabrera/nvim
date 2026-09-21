@@ -31,9 +31,13 @@ end
 
 -- Macro recording indicator. 0.12 redraws the statusline when recording starts/stops, so no autocmd is
 -- needed; the previous RecordingEnter handlers recoloured `StatusLine`, which this statusline never paints.
+-- Rendered as a rounded pill (U+E0B6 / U+E0B4 edges) with a space either side.
 function _G.Statusline_rec()
   local r = vim.fn.reg_recording()
-  return r ~= "" and ("%#StatusLineRec# 󰑊 @" .. r .. " %#StatusLineBG#") or ""
+  if r == "" then
+    return ""
+  end
+  return " %#StatusLineRecEdge#\u{E0B6}%#StatusLineRec#󰑊 @" .. r .. "%#StatusLineRecEdge#\u{E0B4}%#StatusLineBG# "
 end
 
 -- ecolog's statusline integration (E/S icons, shelter state, var count, configured in ecolog.lua);
