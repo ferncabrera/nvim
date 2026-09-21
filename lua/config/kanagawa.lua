@@ -2,8 +2,9 @@
 local kanagawa = require("kanagawa")
 
 kanagawa.setup({
-  -- 'background' is the single switch: set at startup from the macOS appearance (init.lua), by
-  -- <leader>ub, or by the terminal's OSC 11 theme-change notifications (0.11+ TUI).
+  -- 'background' is the single switch: set at startup from the macOS appearance (init.lua) or by
+  -- <leader>ub. (The 0.12 TUI does not subscribe to terminal theme-change notifications, so it does
+  -- not follow macOS live; :restart / <leader>ub after switching appearance.)
   background = {
     dark = "dragon",
     light = "lotus",

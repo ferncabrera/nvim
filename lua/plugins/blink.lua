@@ -105,7 +105,7 @@ return {
             score_offset = -10,
             async = true, -- LSP items paint immediately; rg items merge in when the process finishes
             min_keyword_length = 3,
-            transform_items = kind(" ", "Ripgrep"),
+            transform_items = kind("\u{E644} ", "Ripgrep"),
             opts = {
               -- searched once per new word (is_incomplete_forward = false), then cached for that word
               prefix_min_len = 3,
@@ -169,7 +169,7 @@ return {
               capture_history = false,
               trigger_chars = {}, -- the default "." was registered as a global completion trigger
             },
-            transform_items = kind(" ", "tmux"),
+            transform_items = kind("\u{EBC8} ", "tmux"),
           },
           yank = {
             name = "yank",

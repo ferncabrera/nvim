@@ -159,20 +159,15 @@ end, { desc = "Toggle Statusline" })
 
 -- Semantic tokens per buffer/client (vtsls/gopls/rust-analyzer compute + decode them after every edit;
 -- treesitter already provides nearly everything kanagawa uses). Toggle to measure on big TS files.
+-- bufnr only: passing client_id as well stores the marker on the client and silently disables tokens
+-- for every buffer that attaches to it afterwards
 Snacks.toggle({
   name = "Semantic Tokens",
   get = function()
-    for _, c in ipairs(vim.lsp.get_clients({ bufnr = 0, method = "textDocument/semanticTokens/full" })) do
-      if vim.lsp.semantic_tokens.is_enabled({ bufnr = 0, client_id = c.id }) then
-        return true
-      end
-    end
-    return false
+    return vim.lsp.semantic_tokens.is_enabled({ bufnr = 0 })
   end,
   set = function(state)
-    for _, c in ipairs(vim.lsp.get_clients({ bufnr = 0, method = "textDocument/semanticTokens/full" })) do
-      vim.lsp.semantic_tokens.enable(state, { bufnr = 0, client_id = c.id })
-    end
+    vim.lsp.semantic_tokens.enable(state, { bufnr = 0 })
   end,
 }):map("<leader>uH")
 
@@ -260,13 +255,25 @@ function _G.claude_popup(target)
   end
 end
 
+-- send-keys / paste-buffer take a target-pane: "=name:" = exact session, current window, active pane
+-- (a bare "=name" is rejected by pane commands)
+local function tmux_or_notify(cmd, opts)
+  local res = vim.system(cmd, opts or {}):wait()
+  if res.code ~= 0 then
+    vim.notify("tmux: " .. vim.trim(res.stderr or ""), vim.log.levels.ERROR)
+    return false
+  end
+  return true
+end
+
 local function with_claude(build)
   local target, root = claude_target()
   if not target then
     return vim.notify("No Claude tmux session for this project (prefix ^A to start one)", vim.log.levels.WARN)
   end
-  vim.system({ "tmux", "send-keys", "-t", target, "-l", build(root) }):wait()
-  claude_popup(target)
+  if tmux_or_notify({ "tmux", "send-keys", "-t", target .. ":", "-l", build(root) }) then
+    claude_popup(target)
+  end
 end
 
 local function relpath(root)
@@ -302,9 +309,12 @@ vim.keymap.set({ "n", "x" }, "<leader>tA", function()
   if not target then
     return vim.notify("No Claude tmux session for this project", vim.log.levels.WARN)
   end
-  vim.system({ "tmux", "load-buffer", "-b", "nvim2claude", "-" }, { stdin = text }):wait()
-  vim.system({ "tmux", "paste-buffer", "-p", "-d", "-b", "nvim2claude", "-t", target }):wait() -- bracketed paste
-  claude_popup(target)
+  if
+    tmux_or_notify({ "tmux", "load-buffer", "-b", "nvim2claude", "-" }, { stdin = text })
+    and tmux_or_notify({ "tmux", "paste-buffer", "-p", "-d", "-b", "nvim2claude", "-t", target .. ":" }) -- bracketed paste
+  then
+    claude_popup(target)
+  end
 end, { desc = "Claude: paste buffer/selection as prompt" })
 
 -- ── Project-wide typecheck into quickfix/Trouble after an agent run ────────────────────────────

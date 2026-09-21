@@ -16,12 +16,14 @@ return {
   },
   opts = function(_, opts)
     local augend = require("dial.augend")
-    -- decimal, hex, %Y/%m/%d, bool and lua/python and/or are already in the extra's default group
+    -- decimal, hex, %Y/%m/%d, bool and &&/|| are already in the extra's default group (copied into every
+    -- filetype group); and/or only in its lua/python groups, so keep it global as before
     vim.list_extend(opts.groups.default, {
       augend.semver.alias.semver,
       augend.constant.new({ elements = { "let", "const" } }),
+      augend.constant.new({ elements = { "and", "or" }, word = true, cyclic = true }),
       augend.constant.new({ elements = { "yes", "no" } }),
-      augend.constant.new({ elements = { "<", ">" } }),
+      augend.constant.new({ elements = { "<", ">" }, word = false }), -- word = true never matches non-word chars
     })
   end,
 }

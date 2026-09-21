@@ -32,11 +32,12 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 })
 
 local sev = vim.diagnostic.severity
+-- nerd-font glyphs as escapes: private-use-area characters are invisible in most diff tools
 local diag_icons = {
-  { sev.ERROR, "", "DiagnosticSignError" },
-  { sev.WARN, "", "DiagnosticSignWarn" },
-  { sev.INFO, "", "DiagnosticSignInfo" },
-  { sev.HINT, "", "DiagnosticSignHint" },
+  { sev.ERROR, "\u{F00D}", "DiagnosticSignError" },
+  { sev.WARN, "\u{F071}", "DiagnosticSignWarn" },
+  { sev.INFO, "\u{F05A}", "DiagnosticSignInfo" },
+  { sev.HINT, "\u{F4E0}", "DiagnosticSignHint" },
 }
 local function diag_label(buf)
   local counts, out = vim.diagnostic.count(buf), {} -- one call instead of four list copies
@@ -52,7 +53,7 @@ local function diag_label(buf)
   return out
 end
 
-local git_icons = { removed = "", changed = "", added = "" }
+local git_icons = { removed = "\u{F458}", changed = "\u{F459}", added = "\u{F457}" }
 local function git_diff(buf)
   local signs = vim.b[buf].gitsigns_status_dict
   local labels = {}
@@ -109,6 +110,9 @@ return {
       },
       render = function(props)
         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+        if filename == "" then
+          filename = "\u{F420}"
+        end
         local modified_icon = vim.bo[props.buf].modified and "⚪ " or ""
 
         local icon
@@ -137,7 +141,7 @@ return {
           local breadcrumbs = {}
           for _, item in ipairs(navic.get_data(props.buf) or {}) do
             table.insert(breadcrumbs, {
-              { " ", guifg = hl_attr("NavicSeparator", "fg") },
+              { " \u{EAB6} ", guifg = hl_attr("NavicSeparator", "fg") },
               { item.icon, guifg = hl_attr("NavicIcons" .. item.type, "fg") },
               { item.name, guifg = hl_attr("NavicText", "fg") },
             })
@@ -171,8 +175,8 @@ return {
           breadcrumbs_section,
           has_diag and { diag } or {},
           git_diff_section,
-          (not search_active) and { "", guifg = colors.bg, guibg = vim.g.kanagawa_bg }
-            or { "", guibg = vim.g.kanagawa_bg, guifg = hl_attr("IncSearch", "bg") },
+          (not search_active) and { "\u{E0B6}", guifg = colors.bg, guibg = vim.g.kanagawa_bg }
+            or { "\u{E0B6}", guibg = vim.g.kanagawa_bg, guifg = hl_attr("IncSearch", "bg") },
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { icon, guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},

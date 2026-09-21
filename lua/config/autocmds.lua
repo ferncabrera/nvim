@@ -108,10 +108,15 @@ vim.api.nvim_create_autocmd({ "CursorHold", "BufEnter" }, {
   end,
 })
 
--- unmodified buffers are auto-reloaded by 'autoread'; say so
+-- unmodified buffers are auto-reloaded by 'autoread'; say so. Post also fires after the "ask" dialog is
+-- answered OK (buffer kept, still modified) and when a deleted file reappears, hence the guard/reset.
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
   group = agent,
   callback = function(ev)
+    vim.b[ev.buf].agent_deleted_warned = nil
+    if vim.bo[ev.buf].modified then
+      return
+    end
     Snacks.notify.info(
       ("Reloaded %s from disk (u = undo)"):format(vim.fn.fnamemodify(ev.file, ":.")),
       { title = "External edit" }
@@ -178,7 +183,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- The only owner of the custom highlight groups, driven by kanagawa's palette so light/dark switches
--- (<leader>ub, OSC 11) recolour everything. Previously three ColorScheme handlers fought over StatusLine*
+-- (<leader>ub) recolour everything. Previously three ColorScheme handlers fought over StatusLine*
 -- with hex values hardcoded per MODE/THEME.
 local function custom_hl()
   if vim.g.colors_name ~= "kanagawa" then

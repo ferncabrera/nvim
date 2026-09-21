@@ -56,7 +56,7 @@ return {
         end,
         {
           pane = 2,
-          icon = " ",
+          icon = "\u{E725} ",
           title = "Git Status",
           section = "terminal",
           ttl = 5 * 60, -- default is 3600 s: the dashboard showed hour-old git status

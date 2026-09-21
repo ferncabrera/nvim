@@ -26,7 +26,7 @@ function _G.Statusline_path()
     return ""
   end
 
-  return " " .. vim.fn.fnamemodify(path, ":h") .. "/"
+  return "\u{E5FE} " .. vim.fn.fnamemodify(path, ":h") .. "/"
 end
 
 -- Macro recording indicator. 0.12 redraws the statusline when recording starts/stops, so no autocmd is
@@ -49,7 +49,7 @@ end
 
 -- Statusline highlight groups live in the ColorScheme handler in lua/config/autocmds.lua
 vim.opt.statusline =
-  "%#StatusLineBG# %#StatusLinePath#%{%v:lua.Statusline_path()%}%#StatusLineBG#%{%v:lua.Statusline_rec()%}%= %#StatusLineEnv#%{%v:lua.Ecolog_statusline()%} "
+  "%#StatusLineBG# %#StatusLinePath#%{%v:lua.Statusline_path()%}%#StatusLineBG#%{%v:lua.Statusline_rec()%}%=\u{EBA3} %#StatusLineEnv#%{%v:lua.Ecolog_statusline()%} "
 vim.opt.winborder = "single"
 vim.opt.wildoptions:append("fuzzy") -- fuzzy :b / :h / :set / user-command candidates in the cmdline menu
 
