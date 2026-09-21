@@ -1,5 +1,6 @@
 return {
   "JezerM/oil-lsp-diagnostics.nvim",
+  ft = "oil",
   dependencies = { "stevearc/oil.nvim" },
   opts = {},
   config = function(_, opts)

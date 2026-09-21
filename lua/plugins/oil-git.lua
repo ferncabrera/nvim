@@ -1,5 +1,6 @@
 return {
   "malewicz1337/oil-git.nvim",
+  ft = "oil", -- lazy.nvim re-fires the FileType event for `ft` triggers, so the plugin's own autocmds still run
   dependencies = { "stevearc/oil.nvim" },
   opts = {
     show_branch = false, -- Show current Git branch in oil buffers

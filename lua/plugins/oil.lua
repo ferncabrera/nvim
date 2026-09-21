@@ -1,8 +1,9 @@
+local detail = false -- toggled by `ga`; was an implicit global
+
 return {
   {
     "stevearc/oil.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    lazy = false,
+    lazy = false, -- upstream recommendation: oil owns `nvim <dir>` (default_file_explorer)
     keys = {
       {
         "-",

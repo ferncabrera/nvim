@@ -30,11 +30,10 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "tokyonight", "habamax" } },
-  checker = {
-    enabled = true, -- check for plugin updates periodically
-    notify = false, -- notify on update
-  }, -- automatically check for plugin updates
+  install = { colorscheme = { "kanagawa", "habamax" } },
+  -- the checker's fast_check() reads git metadata for every plugin on the main thread (~60 ms) right
+  -- after VeryLazy on every launch, and notify = false hid the result anyway. Use :Lazy check / :Lazy sync.
+  checker = { enabled = false },
   performance = {
     rtp = {
       -- disable some rtp plugins

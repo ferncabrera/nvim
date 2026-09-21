@@ -1,13 +1,13 @@
--- lua/plugins/colorschemes.lua
 return {
   {
     "rebelot/kanagawa.nvim",
-    lazy = false, -- load immediately (so our colorscheme isn’t overridden later)
-    priority = 1000, -- load before any other colorscheme
+    lazy = true, -- lazy.nvim loads it on ColorSchemePre when LazyVim runs :colorscheme kanagawa
     config = function()
       require("config.kanagawa")
-
-      vim.cmd("colorscheme kanagawa") -- :contentReference[oaicite:0]{index=0}
     end,
   },
+  { "LazyVim/LazyVim", opts = { colorscheme = "kanagawa" } },
+  -- LazyVim's default colorscheme was still loaded first (full highlight pass + every ColorScheme
+  -- autocmd firing twice) before kanagawa did `hi clear` and repainted.
+  { "folke/tokyonight.nvim", enabled = false },
 }

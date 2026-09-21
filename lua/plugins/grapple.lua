@@ -1,9 +1,8 @@
 return {
   "cbochs/grapple.nvim",
-  dependencies = { "nvim-tree/nvim-web-devicons" },
   opts = {
     scope = "global", -- also try out "git_branch"
-    icons = true, -- setting to "true" requires "nvim-web-devicons"
+    icons = true, -- LazyVim's mini.icons mock answers require("nvim-web-devicons")
     status = false,
     style = "basename",
   },
