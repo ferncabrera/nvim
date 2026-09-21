@@ -1,7 +1,3 @@
--- Global variables.
-MAP = vim.keymap.set
-DEL = vim.keymap.del
-
 -- macOS appearance at startup. Reading the plist directly costs 0.03 ms; the previous
 -- io.popen("defaults read ...") forked a shell + the defaults CLI for ~8 ms on every launch.
 local function detect_dark_mode()

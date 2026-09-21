@@ -1,6 +1,4 @@
-local discipline = require("fern.discipline")
-
--- discipline.cowboy()
+-- require("fern.discipline").cowboy() -- hjkl-spam nag, off by choice
 
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
@@ -100,34 +98,6 @@ vim.keymap.set("n", "<leader>to", ":e <C-r>+<CR>", { noremap = true, desc = "Go 
 
 -- <leader>qq: LazyVim's default Quit All (the CopilotChat save branch here could never run: copilotchat.lua returns {})
 
--- restore last auto-saved session
--- vim.keymap.set("n", "<leader>al", function()
---   local session_name = vim.fn.fnameescape(vim.fn.fnamemodify(vim.fn.getcwd(), ":t"))
---
---   if not package.loaded["CopilotChat"] then
---     vim.cmd("CopilotChat")
---     vim.cmd("CopilotChatLoad " .. session_name)
---     return
---   end
---
---   local ok, chat = pcall(require, "CopilotChat")
---
---   -- Plugin loaded. If window not visible, show it so user can inspect current history.
---   if chat.chat and not chat.chat:visible() then
---     chat.open()
---     local choice = vim.fn.confirm(
---       ("Restore CopilotChat session '%s'? This will replace current chat history."):format(session_name),
---       "&Yes\n&No",
---       2
---     )
---     if choice ~= 1 then
---       return
---     end
---   end
---   -- If window already visible, proceed without extra prompt (user can see it)
---   chat.load(session_name)
--- end, { desc = "CopilotChatLoad _project_name_" })
-
 -- Toggle vim-dadbod's default connection (:DB + completion) from the project env instead of a
 -- hardcoded URL. Reads ecolog's DATABASE_URL, then $DBUI_URL / $DATABASE_URL.
 vim.keymap.set("n", "<leader>tD", function()
@@ -149,60 +119,17 @@ vim.g.snacks_animate = false
 vim.g.incline_show_git_diff = true
 vim.g.incline_show_diagnostics = true
 vim.g.incline_show_navic = false
--- vim.g.lualine_show_last_modified = false
--- vim.g.lualine_show_count_info = false
--- vim.g.lualine_show_filetype_info = false
-
-local noice = require("noice")
-
+-- vim.notify is already routed through noice; requiring noice here only hard-coupled this file to its load order
 local function notify_toggle(name, state)
   if state then
-    -- Show warning message with ON color
-    noice.notify(name .. ": ON", "info")
+    vim.notify(name .. ": ON", vim.log.levels.INFO)
   else
-    -- Show warning message with OFF color (you can customize the message)
-    noice.notify(name .. ": OFF", "warn")
+    vim.notify(name .. ": OFF", vim.log.levels.WARN)
   end
 end
 
--- vim.keymap.set("n", "<leader>ta", function()
---   local any_enabled = vim.g.lualine_show_last_modified
---     or vim.g.lualine_show_count_info
---     or vim.g.lualine_show_filetype_info
---
---   local new_state = not any_enabled
---
---   vim.g.lualine_show_last_modified = new_state
---   vim.g.lualine_show_count_info = new_state
---   vim.g.lualine_show_filetype_info = new_state
---
---   require("lualine").refresh()
---
---   local msg = "Lualine All Info: " .. (new_state and "ON" or "OFF")
---   noice.notify(msg, new_state and "info" or "warn")
--- end, { desc = "Toggle all Lualine Info", silent = true })
-
--- vim.keymap.set("n", "<leader>tm", function()
---   vim.g.lualine_show_last_modified = not vim.g.lualine_show_last_modified
---   require("lualine").refresh()
---   notify_toggle("Lualine Last Modified", vim.g.lualine_show_last_modified)
--- end, { desc = "Toggle lualine_show_last_modified", silent = true })
-
--- vim.keymap.set("n", "<leader>tl", function()
---   vim.g.lualine_show_count_info = not vim.g.lualine_show_count_info
---   require("lualine").refresh()
---   notify_toggle("Lualine Count Info", vim.g.lualine_show_count_info)
--- end, { desc = "Toggle lualine_show_count_info", silent = true })
-
--- vim.keymap.set("n", "<leader>tt", function()
---   vim.g.lualine_show_filetype_info = not vim.g.lualine_show_filetype_info
---   require("lualine").refresh()
---   notify_toggle("Lualine Filetype Info", vim.g.lualine_show_filetype_info)
--- end, { desc = "Toggle lualine_show_filetype_info", silent = true })
-
 vim.keymap.set("n", "<leader>tg", function()
   vim.g.incline_show_git_diff = not vim.g.incline_show_git_diff
-  -- require("lualine").refresh()
   notify_toggle("Incline Git Diff", vim.g.incline_show_git_diff)
 end, { desc = "Toggle incline_show_git_diff", silent = true })
 

@@ -1,19 +1,2 @@
-return {
-  "nvim-treesitter/nvim-treesitter-context",
-  event = "LazyFile",
-  opts = function()
-    local tsc = require("treesitter-context")
-    Snacks.toggle({
-      name = "Treesitter Context",
-      get = tsc.enabled,
-      set = function(state)
-        if state then
-          tsc.enable()
-        else
-          tsc.disable()
-        end
-      end,
-    }):map("<leader>ut")
-    return { mode = "topline", max_lines = 7 }
-  end,
-}
+-- the ui.treesitter-context extra provides the spec and the <leader>ut toggle; only the values differ
+return { "nvim-treesitter/nvim-treesitter-context", opts = { mode = "topline", max_lines = 7 } }
