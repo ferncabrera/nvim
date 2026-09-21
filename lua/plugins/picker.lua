@@ -2,6 +2,9 @@
 return {
   "folke/snacks.nvim",
   opts = {
+    -- Ghostty kitty graphics + tmux passthrough are set up: `:e shot.png` renders, markdown images show
+    -- in a float on hover (inline = true renders them in place while editing)
+    image = { enabled = true, doc = { enabled = true, inline = false, float = true, max_width = 80, max_height = 40 } },
     styles = {
       zen = {
         keys = { q = "close" },

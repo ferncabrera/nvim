@@ -248,3 +248,167 @@ Snacks.toggle({
     end
   end,
 }):map("<leader>uH")
+
+-- ── Reviewing agent changes ────────────────────────────────────────────────────────────────────
+-- Point gitsigns at merge-base(default branch) so every hunk the branch (or an agent) produced shows in
+-- the gutter with ]h/[h/<leader>ghp while you edit; while active <leader>ghr/ghR revert committed changes.
+vim.keymap.set("n", "<leader>tb", function()
+  local gs = require("gitsigns")
+  if vim.g.gitsigns_review_base then
+    vim.g.gitsigns_review_base = nil
+    gs.change_base(nil, true)
+    return vim.notify("gitsigns: base = index")
+  end
+  local sha, base = require("fern.git").merge_base()
+  if not sha then
+    return vim.notify("gitsigns: no default branch / merge-base found", vim.log.levels.WARN)
+  end
+  vim.g.gitsigns_review_base = sha
+  gs.change_base(sha, true)
+  vim.notify(("gitsigns: base = merge-base(%s) %s"):format(base, sha:sub(1, 8)))
+end, { desc = "Toggle hunks vs main (review agent branch)" })
+
+-- Hop between git worktrees (parallel Claude sessions): new tab, tcd, file picker
+vim.keymap.set("n", "<leader>gw", function()
+  local out = vim.system({ "git", "worktree", "list", "--porcelain" }, { text = true }):wait().stdout or ""
+  local items = {}
+  for block in (out .. "\n\n"):gmatch("(.-)\n\n") do
+    local path = block:match("^worktree ([^\n]+)")
+    if path then
+      local branch = block:match("\nbranch refs/heads/([^\n]+)") or "(detached)"
+      items[#items + 1] = { text = ("%-45s %s"):format(branch, vim.fn.fnamemodify(path, ":~")), path = path }
+    end
+  end
+  Snacks.picker({
+    title = "Git Worktrees",
+    items = items,
+    format = "text",
+    layout = { preset = "select" },
+    confirm = function(picker, item)
+      picker:close()
+      vim.cmd.tabnew()
+      vim.cmd.tcd(vim.fn.fnameescape(item.path))
+      Snacks.picker.files({ cwd = item.path })
+    end,
+  })
+end, { desc = "Git worktrees (Claude sessions)" })
+
+-- ── Claude Code in the tmux popup (no plugin) ──────────────────────────────────────────────────
+-- Sessions are created by ~/.config/tmux/scripts/claude-popup.sh as "claude-<full path slug>", possibly
+-- for a sub-project, so try cwd, LazyVim root and git root.
+function _G.claude_target()
+  for _, dir in ipairs({ vim.fn.getcwd(), LazyVim.root(), LazyVim.root.git() }) do
+    if dir and dir ~= "" then
+      local target = "=claude-" .. (dir:gsub("[^%w_%-]", "_"))
+      if vim.system({ "tmux", "has-session", "-t", target }):wait().code == 0 then
+        return target, dir
+      end
+    end
+  end
+  return nil
+end
+
+-- Mirror tmux.reset.conf: inside a claude-*/misc-* session switch-client instead of nesting a popup
+function _G.claude_popup(target)
+  local cur = vim.trim(vim.fn.system({ "tmux", "display-message", "-p", "#{session_name}" }))
+  if cur:match("^claude%-") or cur:match("^misc%-") then
+    vim.system({ "tmux", "switch-client", "-t", target })
+  else
+    vim.system({
+      "tmux",
+      "display-popup",
+      "-w",
+      "92%",
+      "-h",
+      "85%",
+      "-x",
+      "C",
+      "-y",
+      "C",
+      "-b",
+      "rounded",
+      "-E",
+      "tmux attach-session -t " .. target,
+    })
+  end
+end
+
+local function with_claude(build)
+  local target, root = claude_target()
+  if not target then
+    return vim.notify("No Claude tmux session for this project (prefix ^A to start one)", vim.log.levels.WARN)
+  end
+  vim.system({ "tmux", "send-keys", "-t", target, "-l", build(root) }):wait()
+  claude_popup(target)
+end
+
+local function relpath(root)
+  return vim.fs.relpath(root, vim.api.nvim_buf_get_name(0)) or vim.fn.expand("%:.")
+end
+
+vim.keymap.set("n", "<leader>ta", function()
+  with_claude(function(root)
+    return "@" .. relpath(root) .. " "
+  end)
+end, { desc = "Claude: send @file" })
+
+vim.keymap.set("x", "<leader>ta", function()
+  local s, e = vim.fn.line("v"), vim.fn.line(".")
+  if s > e then
+    s, e = e, s
+  end
+  with_claude(function(root)
+    return ("@%s (lines %d-%d) "):format(relpath(root), s, e)
+  end)
+end, { desc = "Claude: send @file + line range" })
+
+-- Draft long prompts in <leader>. (Snacks scratch) and ship the buffer/selection as one bracketed paste
+vim.keymap.set({ "n", "x" }, "<leader>tA", function()
+  local text
+  if vim.fn.mode():match("[vV\22]") then
+    vim.cmd([[silent normal! "zy]])
+    text = vim.fn.getreg("z")
+  else
+    text = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n")
+  end
+  local target = claude_target()
+  if not target then
+    return vim.notify("No Claude tmux session for this project", vim.log.levels.WARN)
+  end
+  vim.system({ "tmux", "load-buffer", "-b", "nvim2claude", "-" }, { stdin = text }):wait()
+  vim.system({ "tmux", "paste-buffer", "-p", "-d", "-b", "nvim2claude", "-t", target }):wait() -- bracketed paste
+  claude_popup(target)
+end, { desc = "Claude: paste buffer/selection as prompt" })
+
+-- ── Project-wide typecheck into quickfix/Trouble after an agent run ────────────────────────────
+-- vtsls only diagnoses open buffers. Run from a buffer inside a package with tsconfig.json.
+local function project_check(cmd, efm, name)
+  return function()
+    vim.notify(name .. " running...", vim.log.levels.INFO, { title = "check" })
+    local cwd = vim.fs.root(0, "tsconfig.json") or LazyVim.root()
+    vim.system(
+      cmd,
+      { cwd = cwd, text = true },
+      vim.schedule_wrap(function(res)
+        local out = (res.stdout or "") .. (res.stderr or "")
+        vim.fn.setqflist({}, " ", { title = name, lines = vim.split(out, "\n", { trimempty = true }), efm = efm })
+        if #vim.fn.getqflist() == 0 then
+          vim.notify(name .. ": clean", vim.log.levels.INFO, { title = "check" })
+        else
+          require("trouble").open("qflist")
+        end
+      end)
+    )
+  end
+end
+-- errorformat from $VIMRUNTIME/compiler/tsc.vim
+vim.keymap.set(
+  "n",
+  "<leader>ck",
+  project_check(
+    { "npx", "tsc", "--noEmit", "--pretty", "false" },
+    "%f %#(%l\\,%c): %trror TS%n: %m,%trror TS%n: %m,%-G%.%#",
+    "tsc"
+  ),
+  { desc = "Typecheck project (tsc)" }
+)

@@ -98,6 +98,76 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
+-- ── External edits (Claude Code editing files while they are open) ────────────────────────────
+-- LazyVim's checktime only fires on FocusGained/TermClose/TermLeave; while you stay in the nvim pane
+-- and an agent edits files elsewhere, buffers went stale until you left and came back. Reloads are
+-- undoable (u): 'undofile' + 'undoreload' defaults.
+local agent = vim.api.nvim_create_augroup("agent_edits", { clear = true })
+
+-- poll for on-disk changes while idle in normal mode (updatetime = 200 ms) and on buffer enter.
+-- CursorHoldI is deliberately absent: checktime in a modified buffer mid-insert pops the W12 prompt.
+vim.api.nvim_create_autocmd({ "CursorHold", "BufEnter" }, {
+  group = agent,
+  callback = function()
+    if vim.bo.buftype == "" and vim.fn.getcmdwintype() == "" then
+      vim.cmd("silent! checktime")
+    end
+  end,
+})
+
+-- unmodified buffers are auto-reloaded by 'autoread'; say so
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = agent,
+  callback = function(ev)
+    Snacks.notify.info(
+      ("Reloaded %s from disk (u = undo)"):format(vim.fn.fnamemodify(ev.file, ":.")),
+      { title = "External edit" }
+    )
+  end,
+})
+
+-- only reached for modified buffers / deleted files: decide instead of the blocking W12 dialog
+vim.api.nvim_create_autocmd("FileChangedShell", {
+  group = agent,
+  callback = function(ev)
+    local name = vim.fn.fnamemodify(ev.file, ":.")
+    if vim.v.fcs_reason == "deleted" then
+      vim.v.fcs_choice = ""
+      -- fires again on every subsequent checktime, so warn once per buffer
+      if not vim.b[ev.buf].agent_deleted_warned then
+        vim.b[ev.buf].agent_deleted_warned = true
+        Snacks.notify.warn(
+          name .. " was deleted on disk (buffer kept; <leader>bd to drop)",
+          { title = "External edit" }
+        )
+      end
+    elseif vim.bo[ev.buf].modified then
+      vim.v.fcs_choice = "ask" -- genuine conflict: you and Claude both changed it
+    else
+      vim.v.fcs_choice = "reload"
+    end
+  end,
+})
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = agent,
+  callback = function(ev)
+    vim.b[ev.buf].agent_deleted_warned = nil
+  end,
+})
+
+-- Claude Code prompt files (Ctrl+G / /memory spawn $EDITOR on claude-prompt-<uuid>.md): plain text,
+-- no prettier/markdownlint/markdown-toc on :w, no diagnostics, <CR> sends it back.
+vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+  group = vim.api.nvim_create_augroup("claude_prompt_buffers", { clear = true }),
+  pattern = "*/claude-*/claude-prompt-*.md", -- /tmp, /private/tmp and a custom CLAUDE_CODE_TMPDIR
+  callback = function(ev)
+    vim.b[ev.buf].autoformat = false
+    vim.diagnostic.enable(false, { bufnr = ev.buf })
+    vim.bo[ev.buf].textwidth = 0
+    vim.keymap.set("n", "<CR>", "<cmd>wq<cr>", { buffer = ev.buf, desc = "Send prompt to Claude" })
+  end,
+})
+
 -- grug-far: toggle hidden/ignored files from inside the search buffer
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "grug-far",
