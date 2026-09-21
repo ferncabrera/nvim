@@ -90,12 +90,17 @@ return {
       configuration = {
         patterns = {
           ["DATABASE_URL"] = "full",
+          ["*_KEY"] = "full",
+          ["*TOKEN*"] = "full",
+          ["*SECRET*"] = "full",
         },
         sources = {
           ["base.env"] = "none",
           [".env.local"] = "none",
           [".env.example"] = "none",
           [".secrets.template.env"] = "none",
+          [".secrets.enc.env"] = "full", -- sops ciphertext: never show as if it were a value
+          ["shell"] = "full",
         },
         partial_mode = {
           min_mask = 5,
@@ -104,27 +109,24 @@ return {
         },
         mask_char = "*",
       },
+      -- cmp/snacks were off, so the blink docs window ("**Value:** ...") and the picker rendered real values
       modules = {
         files = true,
         peek = false,
         snacks_previewer = true,
-        snacks = false,
-        cmp = false,
+        snacks = true,
+        cmp = true,
       },
     },
     load_shell = {
       enabled = true, -- Enable shell variable loading
       override = false, -- When false, .env files take precedence over shell variables
-      -- Optional: filter specific shell variables
-      -- filter = function(key, value)
-      --   -- Example: only load specific variables
-      --   return key:match("^(PATH|HOME|USER)$") ~= nil
-      -- end,
-      -- Optional: transform shell variables before loading
-      transform = function(key, value)
-        -- Example: prefix shell variables for clarity
-        return "[SHELL] " .. value
+      -- keep exported tokens/keys (CLAUDE_CODE_*_TOKEN, *_KEY, ...) out of the completion candidates
+      filter = function(key)
+        return not key:match("TOKEN") and not key:match("SECRET") and not key:match("KEY$")
       end,
+      -- the old "[SHELL] " transform was redundant (blink shows detail = "shell"), broke `types = true`
+      -- detection and corrupted EcologCopy
     },
     env_file_patterns = {
       "common/config/base.env",

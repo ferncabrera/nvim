@@ -69,10 +69,13 @@ return {
         "~/Code/open_ims/microservices/ims/migration-job",
         "~/Code/open_ims/microservices/ims/shared",
       },
+      -- hidden/ignored/exclude are set per source on purpose: at the top level of `picker` snacks merges
+      -- them into every source, so grep ran rg with --no-ignore and returned coverage HTML, Claude
+      -- worktrees and gitignored Playwright .auth/*.json session state.
       sources = {
         files = {
           hidden = true,
-          ignored = true,
+          ignored = true, -- deliberate: gitignored files stay findable; <a-i> toggles it per picker
           exclude = {
             "node_modules",
             "dist",
@@ -80,23 +83,19 @@ return {
             ".yarn",
             ".venv",
             "__pycache__",
+            ".claude/worktrees",
+            "coverage",
+            "coverage-site",
+            "**/.auth",
           },
         },
+        grep = { hidden = true, ignored = false },
+        grep_word = { hidden = true, ignored = false },
         explorer = {
           ignored = false,
           hidden = true,
           exclude = {},
         },
-      },
-      hidden = true,
-      ignored = true,
-      exclude = {
-        "node_modules",
-        "dist",
-        ".git",
-        ".yarn",
-        ".venv",
-        "__pycache__",
       },
     },
   },

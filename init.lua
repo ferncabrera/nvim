@@ -17,9 +17,6 @@ end
 MODE = detect_dark_mode() and "dark" or "light"
 THEME = (MODE == "light") and "lotus" or "dragon"
 
-vim.env.FZF_DEFAULT_OPTS = "--bind ctrl-d:page-down,ctrl-u:page-up"
--- vim.env.BAT_THEME = ""
-
 -- if vim.env.AUTO_NVIM_RESTORE == "1" then
 --   vim.schedule(function()
 --     require("persistence").load()

@@ -10,26 +10,9 @@ return {
         },
         opts = { skip = true },
       })
-      local focused = true
-      vim.api.nvim_create_autocmd("FocusGained", {
-        callback = function()
-          focused = true
-        end,
-      })
-      vim.api.nvim_create_autocmd("FocusLost", {
-        callback = function()
-          focused = false
-        end,
-      })
-      table.insert(opts.routes, 1, {
-        filter = {
-          cond = function()
-            return not focused
-          end,
-        },
-        view = "notify_send",
-        opts = { stop = false },
-      })
+      -- blink.cmp owns signature help (signature.enabled = true); noice's auto_open requested it a second time
+      opts.lsp = opts.lsp or {}
+      opts.lsp.signature = { auto_open = { enabled = false } }
 
       opts.commands = {
         all = {

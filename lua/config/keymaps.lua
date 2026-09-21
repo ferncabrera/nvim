@@ -152,18 +152,21 @@ end, { desc = "Quit All & CopilotChatSave _project_name_" })
 --   chat.load(session_name)
 -- end, { desc = "CopilotChatLoad _project_name_" })
 
+-- Toggle vim-dadbod's default connection (:DB + completion) from the project env instead of a
+-- hardcoded URL. Reads ecolog's DATABASE_URL, then $DBUI_URL / $DATABASE_URL.
 vim.keymap.set("n", "<leader>tD", function()
-  if vim.g.db == nil then
-    vim.g.db = "postgresql://admin_user:admin123@localhost:32001/open-ims-dev"
-    vim.notify(
-      "DB connection string set (postgresql://admin_user:admin123@localhost:32001/open-ims-dev)",
-      vim.log.levels.INFO
-    )
-  else
+  if vim.g.db then
     vim.g.db = nil
-    vim.notify("DB connection string unset", vim.log.levels.INFO)
+    return vim.notify("DB connection unset", vim.log.levels.INFO)
   end
-end, { desc = "Toggle DB connection string" })
+  local vars = require("ecolog").get_env_vars()
+  local url = (vars.DATABASE_URL and vars.DATABASE_URL.raw_value) or vim.env.DBUI_URL or vim.env.DATABASE_URL
+  if not url then
+    return vim.notify("No DATABASE_URL / DBUI_URL in env", vim.log.levels.WARN)
+  end
+  vim.g.db = url
+  vim.notify("DB connection set from env (" .. url:gsub("//.-@", "//***@") .. ")", vim.log.levels.INFO)
+end, { desc = "Toggle DB connection (from env)" })
 
 vim.g.snacks_animate = false
 

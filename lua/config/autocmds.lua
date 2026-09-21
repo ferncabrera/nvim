@@ -88,6 +88,22 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- grug-far: toggle hidden/ignored files from inside the search buffer
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "grug-far",
+  callback = function(ev)
+    vim.keymap.set({ "i", "n", "x" }, "<A-h>", function()
+      local state = unpack(require("grug-far").get_instance(0):toggle_flags({ "--hidden", "--glob !.git/" }))
+      vim.notify("grug-far: toggled --hidden --glob !.git/ " .. (state and "ON" or "OFF"))
+    end, { desc = "Toggle Hidden Files", buffer = ev.buf })
+
+    vim.keymap.set({ "i", "n", "x" }, "<A-i>", function()
+      local state = unpack(require("grug-far").get_instance(0):toggle_flags({ "--no-ignore" }))
+      vim.notify("grug-far: toggled --no-ignore " .. (state and "ON" or "OFF"))
+    end, { desc = "Toggle Ignored Files", buffer = ev.buf })
+  end,
+})
+
 -- StatusLine highlight for LazyVim (without lualine)
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("CustomStatuslineColors", { clear = true }),
@@ -112,8 +128,10 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   pattern = "*",
   callback = function()
     vim.api.nvim_set_hl(0, "MatchParen", { fg = "#EEF5FF", bg = "#D27E99", bold = true })
-    vim.api.nvim_set_hl(0, "CopilotChatHeader", { fg = "#b35b79", bold = true })
-    vim.api.nvim_set_hl(0, "CopilotChatSeparator", { fg = "#5e857a" })
+    -- flash.nvim labels (previously set once via :hi in the flash spec and lost on colorscheme reload)
+    vim.api.nvim_set_hl(0, "FlashLabel", { fg = "#f2ecbc", bg = "#b35b79" })
+    vim.api.nvim_set_hl(0, "FlashCurrent", { fg = "#f2ecbc", bg = "#e98a00" })
+    vim.api.nvim_set_hl(0, "FlashPromptIcon", { fg = "#b35b79" })
   end,
 })
 

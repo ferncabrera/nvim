@@ -14,8 +14,6 @@ vim.g.lazyvim_blink_main = true
 vim.g.lazyvim_picker = "snacks"
 vim.g.copilot_no_tab_map = true
 
-vim.lsp.enable("postgres_lsp")
-
 function _G.Statusline_path()
   local bt = vim.bo.buftype
   if bt ~= "" then
