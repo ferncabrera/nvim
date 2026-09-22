@@ -18,15 +18,29 @@ return {
   opts = function(_, opts)
     local hooks = require("ibl.hooks")
     -- create the highlight groups in the highlight setup hook, so they are reset every time the colorscheme changes
-    hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-      vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#b35b79" })
-      vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-      vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-      vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-      vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-      vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-      vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-    end)
+    if vim.o.background == "dark" then
+      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+        -- WAVE #e46876
+        vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#c4746e" })
+        vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#c4746e" })
+        vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#c4746e" })
+        vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#c4746e" })
+        vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#c4746e" })
+        vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#c4746e" })
+        vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#c4746e" })
+      end)
+    else
+      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+        vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#b35b79" })
+        vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#b35b79" })
+        vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#b35b79" })
+        vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#b35b79" })
+        vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#b35b79" })
+        vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#b35b79" })
+        vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#b35b79" })
+      end)
+    end
+
     opts.indent = { char = "│", tab_char = "│", highlight = "LineNr" }
     opts.scope = { show_start = true, show_end = true, highlight = highlight }
     return opts
