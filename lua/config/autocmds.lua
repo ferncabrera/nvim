@@ -166,6 +166,9 @@ vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
   end,
 })
 
+-- Never show `~` filler below the true end of a file (see lua/fern/scroll.lua); <leader>uo toggles it
+require("fern.scroll").enable()
+
 -- grug-far: toggle hidden/ignored files from inside the search buffer
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "grug-far",

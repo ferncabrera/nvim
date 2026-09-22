@@ -14,7 +14,7 @@ Personal LazyVim 16 config on Neovim 0.12, macOS + Ghostty + tmux. `review.md` i
 - `lua/config/autocmds.lua` owns the custom highlight groups (single `ColorScheme` handler driven by
   kanagawa's palette); do not hardcode colours per light/dark elsewhere. `'background'` is the theme switch
   (`dragon` dark / `lotus` light).
-- `lua/fern/` holds small shared helpers (`git.lua`, `discipline.lua`).
+- `lua/fern/` holds small shared helpers (`git.lua`, `scroll.lua` = no scrolling past EOF, `discipline.lua`).
 - Run `stylua lua init.lua` (Mason's stylua, `stylua.toml`: 2 spaces, width 120) before committing.
 - No credentials in Lua. Env values come from ecolog (`<leader>e` group); secrets stay masked in completion.
 

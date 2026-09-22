@@ -171,6 +171,17 @@ Snacks.toggle({
   end,
 }):map("<leader>uH")
 
+-- Keep the end of the file at the bottom of the window (no scrolling past EOF); lua/fern/scroll.lua
+Snacks.toggle({
+  name = "Clamp scroll at EOF",
+  get = function()
+    return require("fern.scroll").enabled
+  end,
+  set = function(state)
+    require("fern.scroll")[state and "enable" or "disable"]()
+  end,
+}):map("<leader>uo")
+
 -- ── Reviewing agent changes ────────────────────────────────────────────────────────────────────
 -- Point gitsigns at merge-base(default branch) so every hunk the branch (or an agent) produced shows in
 -- the gutter with ]h/[h/<leader>ghp while you edit; while active <leader>ghr/ghR revert committed changes.
