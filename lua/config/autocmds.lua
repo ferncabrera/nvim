@@ -201,6 +201,7 @@ local function custom_hl()
   local t = colors.theme
   local k = require("kanagawa")
   vim.g.kanagawa_bg, vim.g.kanagawa_fg = t.ui.bg, t.ui.fg
+  vim.g.kanagawa_bg_p1 = t.ui.bg_p1 -- incline info block
   vim.g.kanagawa_variant = k._CURRENT_THEME or k.config.background[vim.o.background] -- "dragon" | "lotus", for incline
   vim.api.nvim_set_hl(0, "StatusLine", { fg = t.ui.fg, bg = t.ui.bg })
   vim.api.nvim_set_hl(0, "StatusLineBG", { bg = t.ui.bg })

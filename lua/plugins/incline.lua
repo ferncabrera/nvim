@@ -39,36 +39,41 @@ local diag_icons = {
   { sev.INFO, "\u{F05A}", "DiagnosticSignInfo" },
   { sev.HINT, "\u{F4E0}", "DiagnosticSignHint" },
 }
-local function diag_label(buf)
+local function diag_items(buf)
   local counts, out = vim.diagnostic.count(buf), {} -- one call instead of four list copies
   for _, d in ipairs(diag_icons) do
     if counts[d[1]] then
-      out[#out + 1] = { d[2] .. counts[d[1]] .. " ", group = d[3] }
+      out[#out + 1] = { d[2] .. counts[d[1]], group = d[3] }
     end
-  end
-  if #out > 0 then
-    out[#out + 1] = { "" }
-    return { " ", out }
   end
   return out
 end
 
 local git_icons = { removed = "\u{F458}", changed = "\u{F459}", added = "\u{F457}" }
-local function git_diff(buf)
+local function git_items(buf)
   local signs = vim.b[buf].gitsigns_status_dict
-  local labels = {}
+  local out = {}
   if signs == nil then
-    return labels
+    return out
   end
-  for name, icon in pairs(git_icons) do
+  for _, name in ipairs({ "added", "changed", "removed" }) do -- stable order (pairs() shuffled it)
     if tonumber(signs[name]) and signs[name] > 0 then
-      table.insert(labels, { icon .. signs[name] .. " ", group = "Diff" .. name })
+      out[#out + 1] = { git_icons[name] .. signs[name], group = "Diff" .. name }
     end
   end
-  if #labels > 0 then
-    table.insert(labels, { "" })
+  return out
+end
+
+-- items separated by single spaces
+local function join(items, sep)
+  local out = {}
+  for i, item in ipairs(items) do
+    if i > 1 then
+      out[#out + 1] = sep
+    end
+    out[#out + 1] = item
   end
-  return labels
+  return out
 end
 
 return {
@@ -128,29 +133,42 @@ return {
 
         local colors = get_colors(props)
 
-        -- compute each section once and reuse it
-        local diag = (vim.g.incline_show_diagnostics and props.focused) and diag_label(props.buf) or {}
-        local gd = (vim.g.incline_show_git_diff and props.focused) and git_diff(props.buf) or {}
-        local has_diag, has_git = #diag > 0, #gd > 0
-
-        local git_diff_section = has_git and { has_diag and "" or " ", gd } or {}
-
-        -- Navic breadcrumbs: only computed while shown (<leader>tm)
-        local breadcrumbs_section = {}
+        -- Info fields (navic > diagnostics > git), each computed once, only for the focused window
+        local fields = {}
         if vim.g.incline_show_navic and props.focused and navic.is_available(props.buf) then
-          local breadcrumbs = {}
+          local crumbs = {}
           for _, item in ipairs(navic.get_data(props.buf) or {}) do
-            table.insert(breadcrumbs, {
-              { " \u{EAB6} ", guifg = hl_attr("NavicSeparator", "fg") },
+            crumbs[#crumbs + 1] = {
               { item.icon, guifg = hl_attr("NavicIcons" .. item.type, "fg") },
               { item.name, guifg = hl_attr("NavicText", "fg") },
-            })
+            }
           end
-          if #breadcrumbs > 0 then
-            local show_space = not (has_diag or has_git)
-            breadcrumbs_section = show_space and { breadcrumbs, { " " } } or { breadcrumbs }
+          if #crumbs > 0 then
+            fields[#fields + 1] = join(crumbs, { " \u{EAB6} ", guifg = hl_attr("NavicSeparator", "fg") })
           end
         end
+        if vim.g.incline_show_diagnostics and props.focused then
+          vim.list_extend(fields, diag_items(props.buf))
+        end
+        if vim.g.incline_show_git_diff and props.focused then
+          vim.list_extend(fields, git_items(props.buf))
+        end
+
+        -- The visible fields form one block with its own background and a rounded outer cap (U+E0B6),
+        -- joined seamlessly to the filename pill: the pill's own edge is drawn on the block colour when
+        -- any field is shown and on the editor background otherwise. No fields -> no block, no cap.
+        local has_fields = #fields > 0
+        local info_bg = vim.g.kanagawa_bg_p1 or vim.g.kanagawa_bg
+        local info_block = has_fields
+            and {
+              guibg = info_bg,
+              { "\u{E0B6}", guifg = info_bg, guibg = vim.g.kanagawa_bg },
+              " ",
+              join(fields, " "),
+              " ",
+            }
+          or {}
+        local edge_bg = has_fields and info_bg or vim.g.kanagawa_bg
 
         -- Search count: check hlsearch first (searchcount used to run on every render even with it off),
         -- and keep Neovim's own limits ('maxsearchcount', 20 ms timeout) so big buffers do not stall.
@@ -172,11 +190,9 @@ return {
         return {
           guifg = vim.g.kanagawa_fg,
           guibg = vim.g.kanagawa_bg,
-          breadcrumbs_section,
-          has_diag and { diag } or {},
-          git_diff_section,
-          (not search_active) and { "\u{E0B6}", guifg = colors.bg, guibg = vim.g.kanagawa_bg }
-            or { "\u{E0B6}", guibg = vim.g.kanagawa_bg, guifg = hl_attr("IncSearch", "bg") },
+          info_block,
+          (not search_active) and { "\u{E0B6}", guifg = colors.bg, guibg = edge_bg }
+            or { "\u{E0B6}", guibg = edge_bg, guifg = hl_attr("IncSearch", "bg") },
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { icon, guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
