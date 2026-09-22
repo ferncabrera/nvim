@@ -26,7 +26,9 @@ Personal LazyVim 16 config on Neovim 0.12, macOS + Ghostty + tmux. `review.md` i
 - blink: `<Tab>` = `select_and_accept` (super-tab preset), `<A-1..0>` accept by index, borderless menu,
   heavy source list gated by filetype/context rather than removed.
 - Explorers: neo-tree (`<leader>fe`) and oil (`-`, owns `nvim <dir>`); `<leader>e` belongs to ecolog.
-- `<leader>t` is the personal group: paths (`tc/tf/tp`), diff (`td`, diffview `tv/tV/th/tH`, gitsigns base
-  `tb`), Claude popup (`ta/tA`), toggles (`tg/ti/tm/tt`), `tu` undotree, `tD` db.
+- `<leader>t` is the personal group: Claude (`ta/tA`), diagnostics (`tq/tQ`), git/diff (`tb`, `td`,
+  diffview `tv/tV/th/tH`), paths (`tc/tf/tp/to/t.`), substitute (`ts/tS`), db (`tD`), toggles
+  (`tg/ti/tm/tt/tB` scrollbar, `tu` undotree). Every custom key gets a `desc` where it is defined and an
+  icon in `lua/plugins/which-key.lua` (glyphs as `\u{XXXX}` escapes).
 - Claude Code runs in a tmux popup session (`claude-<path slug>`), not in an nvim terminal; no
   claudecode.nvim.

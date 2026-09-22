@@ -24,7 +24,7 @@ return {
   cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
   opts = { enhanced_diff_hl = true, view = { merge_tool = { layout = "diff3_mixed" } } },
   keys = {
-    { "<leader>tv", toggle(), desc = "Diffview: working tree (toggle)" },
+    { "<leader>tv", toggle(), desc = "Diffview: working tree" },
     {
       "<leader>tV",
       toggle(function()
@@ -36,7 +36,7 @@ return {
         vim.notify(("diffview: branch + working tree vs merge-base(%s)"):format(base))
         return sha
       end),
-      desc = "Diffview: branch vs main (toggle)",
+      desc = "Diffview: branch vs main",
     },
     { "<leader>th", "<cmd>DiffviewFileHistory %<cr>", desc = "Diffview: file history" },
     { "<leader>tH", "<cmd>DiffviewFileHistory<cr>", desc = "Diffview: repo history" },

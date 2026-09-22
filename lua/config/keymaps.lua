@@ -12,7 +12,7 @@ vim.keymap.set("x", "<C-/>", "gc", { remap = true, silent = true, desc = "Toggle
 vim.keymap.set("n", "<C-_>", "gcc", { remap = true, silent = true, desc = "Toggle comment" })
 vim.keymap.set("x", "<C-_>", "gc", { remap = true, silent = true, desc = "Toggle comment" })
 
-vim.keymap.set("n", "<leader>ww", "<cmd>w<cr>", { desc = "Save" })
+vim.keymap.set("n", "<leader>ww", "<cmd>w<cr>", { desc = "Save file" })
 
 -- Take lines and move them (VSCode opt/alt functionality)
 -- vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -33,7 +33,7 @@ vim.keymap.set("n", "<leader>td", function()
   else
     vim.cmd("windo diffthis")
   end
-end, { desc = "Toggle diff for all windows" })
+end, { desc = "Diff: toggle all windows" })
 
 -- greatest remap ever
 -- vim.keymap.set("x", "<leader>pp", [["_dP]])
@@ -50,13 +50,13 @@ vim.keymap.set(
   "n",
   "<leader>ts",
   [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-  { desc = "primeagen string swap" }
+  { desc = "Substitute word in file" }
 )
 vim.keymap.set(
   "n",
   "<leader>tS",
   [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]],
-  { desc = "primeagen string swap (prompt)" }
+  { desc = "Substitute word (confirm)" }
 )
 vim.keymap.set("n", "<leader>tx", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable (chmod +x)" })
 
@@ -65,15 +65,15 @@ vim.keymap.set("i", "jj", "<Esc>", { noremap = false })
 vim.keymap.set("i", "jk", "<Esc>", { noremap = false })
 
 -- C root
-vim.keymap.set("n", "<leader>t.", "<cmd>LazyRoot<CR>", { desc = "LazyRoot" })
+vim.keymap.set("n", "<leader>t.", "<cmd>LazyRoot<CR>", { desc = "Cd to project root (LazyRoot)" })
 
 -- Better resizing
-vim.keymap.set("n", "<leader>w>", "<cmd>vertical resize +20<CR>", { desc = "Increase window width (20)" })
-vim.keymap.set("n", "<leader>w<", "<cmd>vertical resize -20<CR>", { desc = "Decrease window width (20)" })
+vim.keymap.set("n", "<leader>w>", "<cmd>vertical resize +20<CR>", { desc = "Window: widen (+20)" })
+vim.keymap.set("n", "<leader>w<", "<cmd>vertical resize -20<CR>", { desc = "Window: narrow (-20)" })
 
 -- Better resizing (vert)
-vim.keymap.set("n", "<leader>w+", "<cmd>resize +10<CR>", { desc = "Increase window height (10)" })
-vim.keymap.set("n", "<leader>w-", "<cmd>resize -10<CR>", { desc = "Decrease window height (10)" })
+vim.keymap.set("n", "<leader>w+", "<cmd>resize +10<CR>", { desc = "Window: taller (+10)" })
+vim.keymap.set("n", "<leader>w-", "<cmd>resize -10<CR>", { desc = "Window: shorter (-10)" })
 
 vim.keymap.set("n", "Q", "q", { noremap = true, desc = "Record macro" })
 vim.keymap.set("n", "q", "<Nop>", { noremap = true, desc = "Disable q macro" })
@@ -90,11 +90,11 @@ local function yank_path(mod, label)
     vim.notify("Copied " .. label .. ": " .. p)
   end
 end
-vim.keymap.set("n", "<leader>tc", yank_path(":t", "file name"), { desc = "Copy file name" })
-vim.keymap.set("n", "<leader>tf", yank_path(":p", "full path"), { desc = "Copy full path" })
-vim.keymap.set("n", "<leader>tp", yank_path(":.", "relative path"), { desc = "Copy relative path" })
+vim.keymap.set("n", "<leader>tc", yank_path(":t", "file name"), { desc = "Copy: file name" })
+vim.keymap.set("n", "<leader>tf", yank_path(":p", "full path"), { desc = "Copy: full path" })
+vim.keymap.set("n", "<leader>tp", yank_path(":.", "relative path"), { desc = "Copy: relative path" })
 
-vim.keymap.set("n", "<leader>to", ":e <C-r>+<CR>", { noremap = true, desc = "Go to location in clipboard" })
+vim.keymap.set("n", "<leader>to", ":e <C-r>+<CR>", { noremap = true, desc = "Open: path from clipboard" })
 
 -- <leader>qq: LazyVim's default Quit All (the CopilotChat save branch here could never run: copilotchat.lua returns {})
 
@@ -112,7 +112,7 @@ vim.keymap.set("n", "<leader>tD", function()
   end
   vim.g.db = url
   vim.notify("DB connection set from env (" .. url:gsub("//.-@", "//***@") .. ")", vim.log.levels.INFO)
-end, { desc = "Toggle DB connection (from env)" })
+end, { desc = "DB: connect from env" })
 
 vim.g.snacks_animate = false
 
@@ -131,19 +131,19 @@ end
 vim.keymap.set("n", "<leader>tg", function()
   vim.g.incline_show_git_diff = not vim.g.incline_show_git_diff
   notify_toggle("Incline Git Diff", vim.g.incline_show_git_diff)
-end, { desc = "Toggle incline_show_git_diff", silent = true })
+end, { desc = "Toggle: incline git diff", silent = true })
 
 vim.keymap.set("n", "<leader>ti", function()
   vim.g.incline_show_diagnostics = not vim.g.incline_show_diagnostics
   vim.cmd("redrawstatus!")
   notify_toggle("Incline Diagnostics", vim.g.incline_show_diagnostics)
-end, { desc = "Toggle incline_show_diagnostics", silent = true })
+end, { desc = "Toggle: incline diagnostics", silent = true })
 
 vim.keymap.set("n", "<leader>tm", function()
   vim.g.incline_show_navic = not vim.g.incline_show_navic
   vim.cmd("redrawstatus!")
   notify_toggle("Incline Navic", vim.g.incline_show_navic)
-end, { desc = "Toggle incline_show_navic", silent = true })
+end, { desc = "Toggle: incline breadcrumbs", silent = true })
 
 -- Toggle the (custom) statusline. Relocated here from the disabled lualine spec
 -- so it no longer relies on a side effect inside a plugin table.
@@ -153,7 +153,7 @@ vim.keymap.set("n", "<leader>tt", function()
   else
     vim.o.laststatus = 0
   end
-end, { desc = "Toggle Statusline" })
+end, { desc = "Toggle: statusline" })
 
 -- vim.keymap.set("n", "<C-c>", "<cmd>qa<CR>", { desc = "Quit All" })
 
@@ -199,7 +199,7 @@ vim.keymap.set("n", "<leader>tb", function()
   vim.g.gitsigns_review_base = sha
   gs.change_base(sha, true)
   vim.notify(("gitsigns: base = merge-base(%s) %s"):format(base, sha:sub(1, 8)))
-end, { desc = "Toggle hunks vs main (review agent branch)" })
+end, { desc = "Git: hunks vs main (review base)" })
 
 -- Hop between git worktrees (parallel Claude sessions): new tab, tcd, file picker
 vim.keymap.set("n", "<leader>gw", function()
@@ -305,7 +305,7 @@ vim.keymap.set("x", "<leader>ta", function()
   with_claude(function(root)
     return ("@%s (lines %d-%d) "):format(relpath(root), s, e)
   end)
-end, { desc = "Claude: send @file + line range" })
+end, { desc = "Claude: send @file + range" })
 
 -- Draft long prompts in <leader>. (Snacks scratch) and ship the buffer/selection as one bracketed paste
 vim.keymap.set({ "n", "x" }, "<leader>tA", function()
@@ -326,7 +326,7 @@ vim.keymap.set({ "n", "x" }, "<leader>tA", function()
   then
     claude_popup(target)
   end
-end, { desc = "Claude: paste buffer/selection as prompt" })
+end, { desc = "Claude: send buffer/selection" })
 
 -- ── Project-wide typecheck into quickfix/Trouble after an agent run ────────────────────────────
 -- vtsls only diagnoses open buffers. Run from a buffer inside a package with tsconfig.json.
@@ -413,7 +413,7 @@ vim.keymap.set("n", "<leader>tq", function()
   end
   require("trouble").open("qflist")
   vim.notify(("%d diagnostics in quickfix"):format(n))
-end, { desc = "Diagnostics -> quickfix (Trouble)" })
+end, { desc = "Diagnostics: quickfix (Trouble)" })
 
 -- Same list as plain text on the clipboard, paths relative to the repo root: paste straight into a prompt
 vim.keymap.set("n", "<leader>tQ", function()
@@ -423,4 +423,4 @@ vim.keymap.set("n", "<leader>tQ", function()
   end
   vim.fn.setreg("+", table.concat(lines, "\n") .. "\n")
   vim.notify(("Copied %d diagnostics (%s)"):format(#lines, vim.fn.fnamemodify(diag_root(), ":~")))
-end, { desc = "Diagnostics -> clipboard (agent refs)" })
+end, { desc = "Diagnostics: copy to clipboard" })

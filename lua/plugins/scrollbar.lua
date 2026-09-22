@@ -92,13 +92,13 @@ return {
     sb.setup(opts)
 
     Snacks.toggle({
-      name = "Scrollbar",
+      name = "scrollbar",
       get = function()
         return require("scrollbar.config").get().show
       end,
       set = function(state)
         require("scrollbar.utils")[state and "show" or "hide"]()
       end,
-    }):map("<leader>uB")
+    }):map("<leader>tB") -- personal group; see lua/plugins/which-key.lua
   end,
 }
