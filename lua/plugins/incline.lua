@@ -84,6 +84,24 @@ local function with_bg(item, bg, out)
   return out
 end
 
+-- The rounded caps are drawn against the editor background. When the float sits on a row that has its
+-- own background (the treesitter-context header, or the cursorline when incline is not hiding for it),
+-- that notch looks wrong, so the outer edge is drawn flat instead.
+local function over_highlighted_row(props)
+  if props.focused and vim.wo[props.win].cursorline and vim.api.nvim_win_call(props.win, vim.fn.winline) == 1 then
+    return true
+  end
+  for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.w[w].treesitter_context then
+      local cfg = vim.api.nvim_win_get_config(w)
+      if cfg.relative == "win" and cfg.win == props.win and not cfg.hide then
+        return true
+      end
+    end
+  end
+  return false
+end
+
 -- items separated by `sep`
 local function join(items, sep)
   local out = {}
@@ -179,12 +197,17 @@ return {
         -- any field is shown and on the editor background otherwise. No fields -> no block, no cap.
         local has_fields = #fields > 0
         local info_bg = vim.g.kanagawa_bg_p1 or vim.g.kanagawa_bg
+        local flat = over_highlighted_row(props)
+        -- outer edge of whatever comes first (info block, or the pill itself): rounded cap on the editor
+        -- background, or a plain cell of the same colour when the row underneath is highlighted
+        local function outer_edge(color)
+          return flat and { " ", guibg = color } or { "\u{E0B6}", guifg = color, guibg = vim.g.kanagawa_bg }
+        end
         local info_block = {}
         if has_fields then
-          info_block[1] = { "\u{E0B6}", guifg = info_bg, guibg = vim.g.kanagawa_bg } -- outer rounded cap
+          info_block[1] = outer_edge(info_bg)
           with_bg({ " ", join(fields, " "), " " }, info_bg, info_block)
         end
-        local edge_bg = has_fields and info_bg or vim.g.kanagawa_bg
 
         -- Search count: check hlsearch first (searchcount used to run on every render even with it off),
         -- and keep Neovim's own limits ('maxsearchcount', 20 ms timeout) so big buffers do not stall.
@@ -207,8 +230,10 @@ return {
           guifg = vim.g.kanagawa_fg,
           guibg = vim.g.kanagawa_bg,
           info_block,
-          (not search_active) and { "\u{E0B6}", guifg = colors.bg, guibg = edge_bg }
-            or { "\u{E0B6}", guibg = edge_bg, guifg = hl_attr("IncSearch", "bg") },
+          -- pill edge: joins the info block when there is one, otherwise it is the outer edge
+          has_fields
+              and { "\u{E0B6}", guifg = search_active and hl_attr("IncSearch", "bg") or colors.bg, guibg = info_bg }
+            or outer_edge(search_active and hl_attr("IncSearch", "bg") or colors.bg),
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { icon, guifg = colors.fg, guibg = colors.bg } or {},
           (not search_active) and { " ", guifg = colors.fg, guibg = colors.bg } or {},
