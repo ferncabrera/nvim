@@ -64,7 +64,27 @@ local function git_items(buf)
   return out
 end
 
--- items separated by single spaces
+-- Flatten an item into leaf items that each carry an explicit fg + bg. incline turns every table with
+-- attributes into one highlight extmark; when several same-priority marks start on the same column
+-- (a container plus its first child) Neovim does not reliably pick the innermost, so the info block
+-- never uses a container background: each cell gets exactly one mark.
+local function with_bg(item, bg, out)
+  out = out or {}
+  if type(item) == "string" then
+    out[#out + 1] = { item, guibg = bg }
+  elseif item[1] ~= nil and type(item[1]) == "string" and #item == 1 then
+    -- leaf: { text, group=... } or { text, guifg=... }
+    local fg = item.guifg or (item.group and hl_attr(item.group, "fg")) or nil
+    out[#out + 1] = { item[1], guifg = fg, guibg = bg }
+  else
+    for _, child in ipairs(item) do
+      with_bg(child, bg, out)
+    end
+  end
+  return out
+end
+
+-- items separated by `sep`
 local function join(items, sep)
   local out = {}
   for i, item in ipairs(items) do
@@ -159,15 +179,11 @@ return {
         -- any field is shown and on the editor background otherwise. No fields -> no block, no cap.
         local has_fields = #fields > 0
         local info_bg = vim.g.kanagawa_bg_p1 or vim.g.kanagawa_bg
-        local info_block = has_fields
-            and {
-              guibg = info_bg,
-              { "\u{E0B6}", guifg = info_bg, guibg = vim.g.kanagawa_bg },
-              " ",
-              join(fields, " "),
-              " ",
-            }
-          or {}
+        local info_block = {}
+        if has_fields then
+          info_block[1] = { "\u{E0B6}", guifg = info_bg, guibg = vim.g.kanagawa_bg } -- outer rounded cap
+          with_bg({ " ", join(fields, " "), " " }, info_bg, info_block)
+        end
         local edge_bg = has_fields and info_bg or vim.g.kanagawa_bg
 
         -- Search count: check hlsearch first (searchcount used to run on every render even with it off),
