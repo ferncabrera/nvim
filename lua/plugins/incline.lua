@@ -84,22 +84,24 @@ local function with_bg(item, bg, out)
   return out
 end
 
--- The rounded caps are drawn against the editor background. When the float sits on a row that has its
--- own background (the treesitter-context header, or the cursorline when incline is not hiding for it),
--- that notch looks wrong, so the outer edge is drawn flat instead.
-local function over_highlighted_row(props)
-  if props.focused and vim.wo[props.win].cursorline and vim.api.nvim_win_call(props.win, vim.fn.winline) == 1 then
-    return true
-  end
+-- A rounded cap is the glyph drawn in the block colour on top of whatever sits *behind* the float, so
+-- it has to use that row's real background: the treesitter-context bar when one is open over this
+-- window, the cursorline when the cursor is on the top row, otherwise the editor background. (Using
+-- the editor background everywhere left a dark notch on the context bar; drawing the cap flat instead
+-- squared off the pill.) When the row behind matches the block colour the cap simply reads as fill.
+local function under_bg(props)
   for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
     if vim.w[w].treesitter_context then
       local cfg = vim.api.nvim_win_get_config(w)
       if cfg.relative == "win" and cfg.win == props.win and not cfg.hide then
-        return true
+        return hl_attr("TreesitterContext", "bg") or vim.g.kanagawa_bg
       end
     end
   end
-  return false
+  if props.focused and vim.wo[props.win].cursorline and vim.api.nvim_win_call(props.win, vim.fn.winline) == 1 then
+    return hl_attr("CursorLine", "bg") or vim.g.kanagawa_bg
+  end
+  return vim.g.kanagawa_bg
 end
 
 -- items separated by `sep`
@@ -197,11 +199,10 @@ return {
         -- any field is shown and on the editor background otherwise. No fields -> no block, no cap.
         local has_fields = #fields > 0
         local info_bg = vim.g.kanagawa_bg_p1 or vim.g.kanagawa_bg
-        local flat = over_highlighted_row(props)
-        -- outer edge of whatever comes first (info block, or the pill itself): rounded cap on the editor
-        -- background, or a plain cell of the same colour when the row underneath is highlighted
+        local behind = under_bg(props)
+        -- outer edge of whatever comes first: the info block if there is one, otherwise the pill itself
         local function outer_edge(color)
-          return flat and { " ", guibg = color } or { "\u{E0B6}", guifg = color, guibg = vim.g.kanagawa_bg }
+          return { "\u{E0B6}", guifg = color, guibg = behind }
         end
         local info_block = {}
         if has_fields then
