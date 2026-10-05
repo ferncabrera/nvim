@@ -5,7 +5,7 @@
 -- lua/config/autocmds.lua ("wave" | "dragon" | "lotus"), so light/dark switches follow 'background'.
 local variant_colors = {
   wave = { fg = "#dcd7ba", focused = "#e46876", unfocused = "#2a2a37" },
-  dragon = { fg = "#f2ecbc", focused = "#c4746e", unfocused = "#393836" },
+  dragon = { fg = "#c5c9c5", focused = "#c4746e", unfocused = "#393836" },
   lotus = { fg = "#f2ecbc", focused = "#b35b79", unfocused = "#938056" },
 }
 
