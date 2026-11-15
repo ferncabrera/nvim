@@ -216,6 +216,20 @@ local function custom_hl()
   vim.api.nvim_set_hl(0, "FlashLabel", { fg = "#f2ecbc", bg = "#b35b79" })
   vim.api.nvim_set_hl(0, "FlashCurrent", { fg = "#f2ecbc", bg = "#e98a00" })
   vim.api.nvim_set_hl(0, "FlashPromptIcon", { fg = "#b35b79" })
+
+  -- nvim-scrollbar (lua/plugins/scrollbar.lua), coloured as v1 was: no track (the window shows through around the
+  -- thumb), and the thumb in the cursorline colour (kanagawa's CursorLine, which v1 read through CursorColumn).
+  -- blend = 0 keeps the thumb solid under the bar's show_through. The marks keep their own colours on top, and the
+  -- markdown bar shares these groups.
+  vim.api.nvim_set_hl(0, "ScrollbarThumb", { bg = t.ui.bg_p2, blend = 0 })
+  -- while dragging: the cursorline a step towards the text colour (the plugin's default, PmenuSel, is bg_p2 too)
+  local pressed = require("kanagawa.lib.color")(t.ui.bg_p2):blend(t.ui.fg, 0.2):to_hex()
+  vim.api.nvim_set_hl(0, "ScrollbarThumbPressed", { bg = pressed, blend = 0 })
+  -- The plugin merges these into its mark-over-thumb and markdown groups on setup and on its own ColorScheme
+  -- autocmd; redo that in case its autocmd ran before this one.
+  if package.loaded["scrollbar.highlights"] then
+    pcall(require("scrollbar.highlights").set_highlights)
+  end
 end
 
 vim.api.nvim_create_autocmd("ColorScheme", {

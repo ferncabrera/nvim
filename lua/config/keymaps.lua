@@ -78,13 +78,17 @@ vim.keymap.set("n", "<leader>w-", "<cmd>resize -10<CR>", { desc = "Window: short
 vim.keymap.set("n", "Q", "q", { noremap = true, desc = "Record macro" })
 vim.keymap.set("n", "q", "<Nop>", { noremap = true, desc = "Disable q macro" })
 
--- Copy the file name / full path / cwd-relative path of the current buffer to the clipboard.
+-- Copy the file name / full path / cwd-relative path of the current buffer to the clipboard; <leader>tp
+-- appends the cursor as path:line:col (1-based byte column, the same format as <leader>tQ).
 -- (<leader>tf used expand("%"), which is only a full path when the file was opened by an absolute name.)
-local function yank_path(mod, label)
+local function yank_path(mod, label, with_pos)
   return function()
     local p = vim.fn.expand("%" .. mod)
     if p == "" then
       return vim.notify("No file in buffer", vim.log.levels.WARN)
+    end
+    if with_pos then
+      p = ("%s:%d:%d"):format(p, vim.fn.line("."), vim.fn.col("."))
     end
     vim.fn.setreg("+", p)
     vim.notify("Copied " .. label .. ": " .. p)
@@ -92,9 +96,28 @@ local function yank_path(mod, label)
 end
 vim.keymap.set("n", "<leader>tc", yank_path(":t", "file name"), { desc = "Copy: file name" })
 vim.keymap.set("n", "<leader>tf", yank_path(":p", "full path"), { desc = "Copy: full path" })
-vim.keymap.set("n", "<leader>tp", yank_path(":.", "relative path"), { desc = "Copy: relative path" })
+vim.keymap.set("n", "<leader>tp", yank_path(":.", "relative path", true), { desc = "Copy: relative path:line:col" })
 
-vim.keymap.set("n", "<leader>to", ":e <C-r>+<CR>", { noremap = true, desc = "Open: path from clipboard" })
+-- Open the path on the clipboard; a trailing :line[:col] (what <leader>tp copies) puts the cursor there.
+-- http(s) URLs open as text: oil disables netrw, so the runtime's plugin/net.lua fetches them into a nofile buffer.
+vim.keymap.set("n", "<leader>to", function()
+  local text = vim.trim(vim.fn.getreg("+"))
+  local path, lnum, col = text, nil, nil
+  if not text:find("^%a[%w+.-]*://") then -- a URL keeps its :port (http://localhost:3000)
+    path, lnum, col = text:match("^(.-):(%d+):?(%d*)$")
+    path = path or text
+  end
+  if path == "" then
+    return vim.notify("Clipboard is empty", vim.log.levels.WARN)
+  end
+  -- already in that file: only move the cursor (:edit would reload it, or fail with E37 if it is modified)
+  if vim.fn.fnamemodify(path, ":p") ~= vim.api.nvim_buf_get_name(0) then
+    vim.cmd("edit " .. vim.fn.fnameescape(path))
+  end
+  if lnum then
+    vim.fn.cursor(tonumber(lnum), tonumber(col) or 1)
+  end
+end, { desc = "Open: path[:line:col] from clipboard" })
 
 -- <leader>qq: LazyVim's default Quit All (the CopilotChat save branch here could never run: copilotchat.lua returns {})
 

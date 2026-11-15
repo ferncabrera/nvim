@@ -19,6 +19,7 @@ local icons = {
   crumbs = "\u{EAB6}", -- chevron-right  navic breadcrumbs
   ui = "\u{F0675}", -- palette        statusline
   scroll = "\u{F1550}", -- scroll-wheel   scrollbar
+  minimap = "\u{F034D}", -- map            minimap
   scrollup = "\u{F1551}", -- scroll-wheel   EOF clamp
   undo = "\u{F021}", -- rotate         undotree
   code = "\u{F121}", -- code           semantic tokens
@@ -66,8 +67,8 @@ return {
       -- Paths / files -----------------------------------------------------
       ico("<leader>tc", icons.copy, "yellow"), -- copy file name
       ico("<leader>tf", icons.copy, "yellow"), -- copy full path
-      ico("<leader>tp", icons.copy, "yellow"), -- copy relative path
-      ico("<leader>to", icons.file, "cyan"), -- open path from clipboard
+      ico("<leader>tp", icons.copy, "yellow"), -- copy relative path:line:col
+      ico("<leader>to", icons.file, "cyan"), -- open path[:line:col] from clipboard
       ico("<leader>t.", icons.folder, "cyan"), -- cd to project root
       ico("<leader>tx", icons.shell, "red"), -- chmod +x
 
@@ -85,6 +86,7 @@ return {
       ico("<leader>tm", icons.crumbs, "yellow"), -- incline breadcrumbs
       ico("<leader>tt", icons.ui, "yellow"), -- statusline
       ico("<leader>tB", icons.scroll, "yellow"), -- scrollbar
+      ico("<leader>tM", icons.minimap, "yellow"), -- overview minimap
       ico("<leader>tu", icons.undo, "purple"), -- undotree
       ico("<leader>uH", icons.code, "yellow"), -- semantic tokens
       ico("<leader>uo", icons.scrollup, "yellow"), -- clamp scroll at EOF
